@@ -1,0 +1,6 @@
+[submodule "thorin"]
+	path = thorin
+	url = git@github.com:AnyDSL/thorin.git
+[submodule "impala"]
+	path = impala
+	url = git@github.com:AnyDSL/impala.git

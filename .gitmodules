@@ -7,3 +7,6 @@
 [submodule "llvm"]
 	path = llvm
 	url = git@github.com:llvm-mirror/llvm.git
+[submodule "clang"]
+	path = llvm/tools/clang
+	url = git@github.com:llvm-mirror/clang.git

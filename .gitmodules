@@ -4,3 +4,6 @@
 [submodule "impala"]
 	path = impala
 	url = git@github.com:AnyDSL/impala.git
+[submodule "llvm"]
+	path = llvm
+	url = git@github.com:llvm-mirror/llvm.git

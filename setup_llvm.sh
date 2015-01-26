@@ -13,6 +13,6 @@ cd ${CUR}
 mkdir llvm_build
 mkdir llvm_install
 cd llvm_build
-cmake ../llvm -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=${CUR}/llvm_install
-make install -j`cat /proc/cpuinfo \\| grep processor \\| echo \`wc -l\` + 1 \\| bc`
+cmake ../llvm -DLLVM_REQUIRES_RTTI=true -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=${CUR}/llvm_install
+make install -j`cat /proc/cpuinfo | grep processor | echo \`wc -l\` + 1 | bc`
 cd ${CUR}

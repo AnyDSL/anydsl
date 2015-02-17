@@ -1,6 +1,14 @@
 #!/bin/bash
 set -eu
 
+if [ ! -e config.sh ]
+then
+    echo "first configure your build:"
+    echo "cp config.sh.template config.sh"
+    echo "edit config.sh"
+    exit -1
+fi
+
 source config.sh
 
 CUR=`pwd`

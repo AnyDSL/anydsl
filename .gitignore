@@ -1,4 +1,6 @@
+config.sh
+impala
 llvm
 llvm_build
 llvm_install
-config.sh
+thorin

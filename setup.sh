@@ -1,8 +1,9 @@
 #!/bin/bash
+set -eu
 
-THREADS=2
+source config.sh
+
 CUR=`pwd`
-BRANCH=master
 
 # fetch sources
 wget http://llvm.org/releases/3.4.2/llvm-3.4.2.src.tar.gz
@@ -26,17 +27,17 @@ mkdir -p impala/build
 
 # build llvm
 cd llvm_build
-cmake ../llvm -DLLVM_REQUIRES_RTTI=true -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX="${CUR}/llvm_install"
+cmake ../llvm -DLLVM_REQUIRES_RTTI=true -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX="${CUR}/llvm_install"
 make install -j${THREADS}
 
 # build thorin
 cd "${CUR}/thorin/build"
-cmake .. -DCMAKE_BUILD_TYPE=Debug -DLLVM_DIR="${CUR}/llvm_install/share/llvm/cmake"
+cmake .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DLLVM_DIR="${CUR}/llvm_install/share/llvm/cmake"
 make -j${THREADS}
 
 # build impala
 cd "${CUR}/impala/build"
-cmake .. -DCMAKE_BUILD_TYPE=Debug -DLLVM_DIR="${CUR}/llvm_install/share/llvm/cmake" -DTHORIN_DIR="${CUR}/thorin"
+cmake .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DLLVM_DIR="${CUR}/llvm_install/share/llvm/cmake" -DTHORIN_DIR="${CUR}/thorin"
 make -j${THREADS}
 export PATH="${CUR}/llvm_install/bin:${CUR}/impala/build/bin:$PATH"
 

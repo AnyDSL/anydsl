@@ -1,0 +1,3 @@
+: ${THREADS:=2}
+: ${BRANCH:=master}
+: ${BUILD_TYPE:=Debug}

@@ -35,17 +35,17 @@ mkdir -p impala/build
 
 # build llvm
 cd llvm_build
-cmake ../llvm -DLLVM_REQUIRES_RTTI=true -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX="${CUR}/llvm_install"
+cmake ../llvm -DLLVM_REQUIRES_RTTI:BOOL=true -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX:PATH="${CUR}/llvm_install"
 make install -j${THREADS}
 
 # build thorin
 cd "${CUR}/thorin/build"
-cmake .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DLLVM_DIR="${CUR}/llvm_install/share/llvm/cmake"
+cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake"
 make -j${THREADS}
 
 # build impala
 cd "${CUR}/impala/build"
-cmake .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DLLVM_DIR="${CUR}/llvm_install/share/llvm/cmake" -DTHORIN_DIR="${CUR}/thorin"
+cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake" -DTHORIN_DIR:PATH="${CUR}/thorin"
 make -j${THREADS}
 export PATH="${CUR}/llvm_install/bin:${CUR}/impala/build/bin:$PATH"
 

@@ -50,9 +50,9 @@ cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_in
 make -j${THREADS}
 export PATH="${CUR}/llvm_install/bin:${CUR}/impala/build/bin:$PATH"
 
-# Setting up commit-hooks
-cp "${CUR}/scripts/post-commit-impala.hook" "${CUR}/impala/.git/hooks/post-commit"
-cp "${CUR}/scripts/post-commit-thorin.hook" "${CUR}/thorin/.git/hooks/post-commit"
+# setting up commit-hooks
+ln -s "${CUR}/scripts/post-commit-impala.hook" "${CUR}/impala/.git/hooks/post-commit"
+ln -s "${CUR}/scripts/post-commit-thorin.hook" "${CUR}/thorin/.git/hooks/post-commit"
 
 # go back to current dir
 cd "${CUR}"

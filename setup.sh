@@ -26,6 +26,7 @@ mv cfe-3.4.2.src clang
 cd "${CUR}"
 git clone git@github.com:AnyDSL/thorin.git -b ${BRANCH}
 git clone git@github.com:AnyDSL/impala.git -b ${BRANCH}
+git clone git@github.com:AnyDSL/anydsl.github.io
 
 # create build/install dirs
 mkdir -p llvm_build
@@ -48,6 +49,10 @@ cd "${CUR}/impala/build"
 cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake" -DTHORIN_DIR:PATH="${CUR}/thorin"
 make -j${THREADS}
 export PATH="${CUR}/llvm_install/bin:${CUR}/impala/build/bin:$PATH"
+
+# Setting up commit-hooks
+cp "${CUR}/scripts/post-commit-impala.hook" "${CUR}/impala/.git/hooks/post-commit"
+cp "${CUR}/scripts/post-commit-thorin.hook" "${CUR}/thorin/.git/hooks/post-commit"
 
 # go back to current dir
 cd "${CUR}"

@@ -16,3 +16,5 @@ cp -R ../"$1"/html/* doxygen/"$1"/
 git add doxygen/"$1"/*
 git commit -m "updating doxygen for commit AnyDSL/$1@$2"
 git push
+
+#echo "updating doxygen for commit AnyDSL/$1@$2"

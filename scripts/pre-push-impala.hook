@@ -1,4 +1,5 @@
-#!/bin/bash -e
+#!/bin/bash
+set -eu
 
 local_branch="$(git rev-parse --abbrev-ref HEAD)"
 revert=false
@@ -23,7 +24,6 @@ do
     			SHA1="$(git rev-parse HEAD)"
 
     			../scripts/update.sh "$DIR" "$SHA1"
-			#echo "$remote_ref - $local_sha - $remote_sha update"
 		fi
 	fi
 done

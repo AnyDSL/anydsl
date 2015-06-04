@@ -51,8 +51,8 @@ make -j${THREADS}
 export PATH="${CUR}/llvm_install/bin:${CUR}/impala/build/bin:$PATH"
 
 # Setting up commit-hooks
-cp "${CUR}/scripts/post-commit-impala.hook" "${CUR}/impala/.git/hooks/post-commit"
-cp "${CUR}/scripts/post-commit-thorin.hook" "${CUR}/thorin/.git/hooks/post-commit"
+cp "${CUR}/scripts/pre-push-impala.hook" "${CUR}/impala/.git/hooks/pre-push"
+cp "${CUR}/scripts/pre-push-thorin.hook" "${CUR}/thorin/.git/hooks/pre-push"
 
 # go back to current dir
 cd "${CUR}"

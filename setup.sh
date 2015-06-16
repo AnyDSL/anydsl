@@ -41,7 +41,7 @@ make install -j${THREADS}
 
 # build thorin
 cd "${CUR}/thorin/build"
-cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake"
+cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake" -DBUILD_STATIC=OFF
 make -j${THREADS}
 
 # build impala

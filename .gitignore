@@ -6,3 +6,4 @@ llvm_build/
 llvm_install/
 thorin/
 config.sh
+project.sh

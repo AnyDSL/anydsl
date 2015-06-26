@@ -59,7 +59,12 @@ ln -s "${CUR}/scripts/pre-commit-wiki.hook" "${CUR}/anydsl.wiki/.git/hooks/pre-p
 # go back to current dir
 cd "${CUR}"
 
+
+cat > "project.sh" <<_EOF_
+export PATH="${CUR}/llvm_install/bin:${CUR}/impala/build/bin:\$PATH"
+_EOF_
+
 echo
-echo "Put the following line into your '~/.bashrc' in order to have 'impala' and 'clang' in your path:"
-echo "export PATH=${CUR}/llvm_install/bin:${CUR}/impala/build/bin:\$PATH"
-echo "WARNING: Note that this will override any system installation of llvm/clang."
+echo "Use the following command in order to have 'impala' and 'clang' in your path:"
+echo "source project.sh"
+echo "WARNING: Note that this will override any system installation of llvm/clang in you current shell session."

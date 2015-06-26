@@ -27,6 +27,7 @@ cd "${CUR}"
 git clone git@github.com:AnyDSL/thorin.git -b ${BRANCH}
 git clone git@github.com:AnyDSL/impala.git -b ${BRANCH}
 git clone git@github.com:AnyDSL/anydsl.github.io
+git clone https://github.com/AnyDSL/anydsl.wiki.git
 
 # create build/install dirs
 mkdir -p llvm_build
@@ -50,8 +51,10 @@ cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_in
 make -j${THREADS}
 export PATH="${CUR}/llvm_install/bin:${CUR}/impala/build/bin:$PATH"
 
+# symlink git hooks
 ln -s "${CUR}/scripts/pre-push-impala.hook" "${CUR}/impala/.git/hooks/pre-push"
 ln -s "${CUR}/scripts/pre-push-thorin.hook" "${CUR}/thorin/.git/hooks/pre-push"
+ln -s "${CUR}/scripts/pre-commit-wiki.hook" "${CUR}/anydsl.wiki/.git/hooks/pre-push"
 
 # go back to current dir
 cd "${CUR}"

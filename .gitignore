@@ -1,7 +1,8 @@
-anydsl.wiki
+anydsl.github.io/
+anydsl.wiki/
+impala/
+llvm/
+llvm_build/
+llvm_install/
+thorin/
 config.sh
-impala
-llvm
-llvm_build
-llvm_install
-thorin

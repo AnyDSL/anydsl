@@ -28,26 +28,33 @@ git clone git@github.com:AnyDSL/thorin.git -b ${BRANCH}
 git clone git@github.com:AnyDSL/impala.git -b ${BRANCH}
 git clone git@github.com:AnyDSL/anydsl.github.io
 git clone https://github.com/AnyDSL/anydsl.wiki.git
+git clone git@github.com:simoll/libwfv.git
 
 # create build/install dirs
-mkdir -p llvm_build
-mkdir -p llvm_install
-mkdir -p thorin/build
-mkdir -p impala/build
+mkdir -p llvm_build/
+mkdir -p llvm_install/
+mkdir -p thorin/build/
+mkdir -p impala/build/
+mkdir -p libwfv/build/
 
 # build llvm
 cd llvm_build
 cmake ../llvm -DLLVM_REQUIRES_RTTI:BOOL=true -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX:PATH="${CUR}/llvm_install"
 make install -j${THREADS}
 
+# build libwfv
+cd "${CUR}/libwfv/build"
+cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake"
+make -j${THREADS}
+
 # build thorin
 cd "${CUR}/thorin/build"
-cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake"
+cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake" -DWFV2_DIR:PATH="${CUR}/libwfv"
 make -j${THREADS}
 
 # build impala
 cd "${CUR}/impala/build"
-cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake" -DTHORIN_DIR:PATH="${CUR}/thorin"
+cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake" -DTHORIN_DIR:PATH="${CUR}/thorin" -DWFV2_DIR:PATH="${CUR}/libwfv"
 make -j${THREADS}
 export PATH="${CUR}/llvm_install/bin:${CUR}/impala/build/bin:$PATH"
 
@@ -59,7 +66,7 @@ ln -s "${CUR}/scripts/pre-commit-wiki.hook" "${CUR}/anydsl.wiki/.git/hooks/pre-c
 # go back to current dir
 cd "${CUR}"
 
-
+# source this file to put clang and impala in your path
 cat > "project.sh" <<_EOF_
 export PATH="${CUR}/llvm_install/bin:${CUR}/impala/build/bin:\$PATH"
 _EOF_

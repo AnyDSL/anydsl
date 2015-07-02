@@ -61,7 +61,8 @@ export PATH="${CUR}/llvm_install/bin:${CUR}/impala/build/bin:$PATH"
 # symlink git hooks
 ln -s "${CUR}/scripts/pre-push-impala.hook" "${CUR}/impala/.git/hooks/pre-push"
 ln -s "${CUR}/scripts/pre-push-thorin.hook" "${CUR}/thorin/.git/hooks/pre-push"
-ln -s "${CUR}/scripts/pre-commit-wiki.hook" "${CUR}/anydsl.wiki/.git/hooks/pre-commit"
+ln -s "${CUR}/scripts/post-merge" "${CUR}/impala/.git/hooks/."
+ln -s "${CUR}/scripts/post-merge" "${CUR}/thorin/.git/hooks/."
 
 # go back to current dir
 cd "${CUR}"

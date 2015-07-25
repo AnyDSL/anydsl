@@ -15,6 +15,7 @@ syn match   thorinLambda    '^\s*[0-9a-zA-Z_]\+' contains=ALLBUT,thorinLambda
 syn keyword thorinKeyword   eq ne gt ge lt le
 syn keyword thorinKeyword   add sub mul div rem
 syn keyword thorinKeyword   and or xor shl shr
+syn keyword thorinKeyword   extern
 " Special treatment for fn as type constructor and br as intrinsic function
 syn keyword thorinKeyword   br fn
 

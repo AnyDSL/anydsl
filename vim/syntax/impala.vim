@@ -8,7 +8,7 @@ if exists("b:current_syntax")
 endif
 
 syn keyword     impalaKeyword       if else while for return break continue let
-syn keyword     impalaType          bool int mut
+syn keyword     impalaType          bool int mut static
 syn match       impalaNumber        '\<\d\+\>'
 syn keyword     impalaFunction      fn
 

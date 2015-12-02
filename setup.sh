@@ -58,11 +58,19 @@ make -j${THREADS}
 cd "${CUR}/impala/build"
 cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake" -DTHORIN_DIR:PATH="${CUR}/thorin" -DWFV2_DIR:PATH="${CUR}/libwfv"
 make -j${THREADS}
-export PATH="${CUR}/llvm_install/bin:${CUR}/impala/build/bin:$PATH"
+
+cd "${CUR}"
+
+# source this file to put clang and impala in your path
+cat > "project.sh" <<_EOF_
+export PATH="${CUR}/llvm_install/bin:${CUR}/impala/build/bin:\$PATH"
+_EOF_
+
+source project
 
 # configure stincilla but don't build yet
 cd "${CUR}/stincilla/build"
-cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake" -DTHORIN_DIR:PATH="${CUR}/thorin"
+cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake" -DTHORIN_DIR:PATH="${CUR}/thorin" -DBACKEND:STRING="cpu"
 #make -j${THREADS}
 
 # symlink git hooks
@@ -71,15 +79,8 @@ cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_in
 ln -s "${CUR}/scripts/post-merge" "${CUR}/impala/.git/hooks/."
 ln -s "${CUR}/scripts/post-merge" "${CUR}/thorin/.git/hooks/."
 
-# go back to current dir
-cd "${CUR}"
-
-# source this file to put clang and impala in your path
-cat > "project.sh" <<_EOF_
-export PATH="${CUR}/llvm_install/bin:${CUR}/impala/build/bin:\$PATH"
-_EOF_
-
 echo
 echo "Use the following command in order to have 'impala' and 'clang' in your path:"
 echo "source project.sh"
+echo "This has already been done for this shell session"
 echo "WARNING: Note that this will override any system installation of llvm/clang in you current shell session."

@@ -29,6 +29,7 @@ git clone git@github.com:AnyDSL/impala.git -b ${BRANCH}
 git clone git@github.com:AnyDSL/anydsl.github.io
 git clone https://github.com/AnyDSL/anydsl.wiki.git
 git clone git@github.com:simoll/libwfv.git
+git clone --recursive git@github.com:AnyDSL/stincilla.git
 
 # create build/install dirs
 mkdir -p llvm_build/
@@ -36,6 +37,7 @@ mkdir -p llvm_install/
 mkdir -p thorin/build/
 mkdir -p impala/build/
 mkdir -p libwfv/build/
+mkdir -p stincilla/build/
 
 # build llvm
 cd llvm_build
@@ -57,6 +59,11 @@ cd "${CUR}/impala/build"
 cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake" -DTHORIN_DIR:PATH="${CUR}/thorin" -DWFV2_DIR:PATH="${CUR}/libwfv"
 make -j${THREADS}
 export PATH="${CUR}/llvm_install/bin:${CUR}/impala/build/bin:$PATH"
+
+# configure stincilla but don't build yet
+cd "${CUR}/stincilla/build"
+cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake" -DTHORIN_DIR:PATH="${CUR}/thorin"
+#make -j${THREADS}
 
 # symlink git hooks
 #ln -s "${CUR}/scripts/pre-push-impala.hook" "${CUR}/impala/.git/hooks/pre-push"

@@ -1,3 +1,6 @@
 : ${THREADS:=2}
 : ${BRANCH:=master}
 : ${BUILD_TYPE:=Debug}
+
+# set this to true if you don't have a github account
+: ${HTTPS:=false}

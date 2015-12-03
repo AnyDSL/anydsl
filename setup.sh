@@ -13,12 +13,6 @@ source config.sh
 
 CUR=`pwd`
 
-if [ "${1-}" == "https" ]; then
-    HTTPS=true
-else
-    HTTPS=false
-fi
-
 function url {
     if $HTTPS; then
         echo "https://$1"

@@ -1,5 +1,5 @@
 #!/bin/sh
--set eu
+set -eu
 
 if [ -z "$1" ]; then
     echo "Please supply a directory to install cmake!"

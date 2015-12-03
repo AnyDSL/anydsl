@@ -13,6 +13,20 @@ source config.sh
 
 CUR=`pwd`
 
+if [ "${1-}" == "https" ]; then
+    HTTPS=true
+else
+    HTTPS=false
+fi
+
+function url {
+    if $HTTPS; then
+        echo "https://$1"
+    else
+        echo "git@$1"
+    fi
+}
+
 # fetch sources
 wget http://llvm.org/releases/3.4.2/llvm-3.4.2.src.tar.gz
 tar xf llvm-3.4.2.src.tar.gz
@@ -24,12 +38,10 @@ tar xf cfe-3.4.2.src.tar.gz
 rm cfe-3.4.2.src.tar.gz
 mv cfe-3.4.2.src clang
 cd "${CUR}"
-git clone git@github.com:AnyDSL/thorin.git -b ${BRANCH}
-git clone git@github.com:AnyDSL/impala.git -b ${BRANCH}
-git clone git@github.com:AnyDSL/anydsl.github.io
-git clone https://github.com/AnyDSL/anydsl.wiki.git
-git clone git@github.com:simoll/libwfv.git
-git clone --recursive git@github.com:AnyDSL/stincilla.git
+git clone `url github.com:AnyDSL/thorin.git` -b ${BRANCH}
+git clone `url github.com:AnyDSL/impala.git` -b ${BRANCH}
+git clone `url github.com:simoll/libwfv.git`
+git clone --recursive `url github.com:AnyDSL/stincilla.git`
 
 # create build/install dirs
 mkdir -p llvm_build/

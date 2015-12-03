@@ -40,8 +40,6 @@ mv cfe-3.4.2.src clang
 cd "${CUR}"
 git clone `url github.com:AnyDSL/thorin.git` -b ${BRANCH}
 git clone `url github.com:AnyDSL/impala.git` -b ${BRANCH}
-git clone `url github.com:AnyDSL/anydsl.github.io`
-git clone https://github.com/AnyDSL/anydsl.wiki.git
 git clone `url github.com:simoll/libwfv.git`
 git clone --recursive `url github.com:AnyDSL/stincilla.git`
 

@@ -6,7 +6,7 @@ cd "${DIR}"/..
 
 
 # fetch sources
-git clone `url github.com:AnyDSL/anydsl.github.io`
+git clone git@github.com:AnyDSL/anydsl.github.io
 git clone https://github.com/AnyDSL/anydsl.wiki.git
 
 # symlink git hook

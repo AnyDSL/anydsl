@@ -31,6 +31,9 @@ tar -xvf clang+llvm-3.6.2-x86_64-linux-gnu-ubuntu-14.04.tar.xz
 rm clang+llvm-3.6.2-x86_64-linux-gnu-ubuntu-14.04.tar.xz
 mv clang+llvm-3.6.2-x86_64-linux-gnu-ubuntu-14.04/ llvm_install/
 
+mkdir -p /home/development/llvm/3.6.2/final/Phase3/Release/llvmCore-3.6.2-final.install/
+cp -R llvm_install/ /home/development/llvm/3.6.2/final/Phase3/Release/llvmCore-3.6.2-final.install/
+
 # build libwfv
 #cd "${CUR}/libwfv/build"
 #cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake"

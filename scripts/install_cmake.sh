@@ -11,7 +11,7 @@ if [ "$#" -ne 1 ]; then
 fi
 
 if [ -d $1 ]; then
-    wget https://cmake.org/files/v3.4/cmake-3.4.1-Linux-x86_64.sh
+    wget --no-check-certificate https://cmake.org/files/v3.4/cmake-3.4.1-Linux-x86_64.sh
     sed -i '/interactive=TRUE/c\interactive=FALSE' cmake-3.4.1-Linux-x86_64.sh
     chmod +x cmake-3.4.1-Linux-x86_64.sh
     ./cmake-3.4.1-Linux-x86_64.sh --prefix=$1

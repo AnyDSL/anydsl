@@ -13,7 +13,7 @@ source config.sh
 
 CUR=`pwd`
 
-function url {
+function remote {
     if $HTTPS; then
         echo "https://$1"
     else
@@ -32,10 +32,10 @@ tar xf cfe-3.4.2.src.tar.gz
 rm cfe-3.4.2.src.tar.gz
 mv cfe-3.4.2.src clang
 cd "${CUR}"
-git clone `url github.com:AnyDSL/thorin.git` -b ${BRANCH}
-git clone `url github.com:AnyDSL/impala.git` -b ${BRANCH}
-git clone `url github.com:simoll/libwfv.git`
-git clone --recursive `url github.com:AnyDSL/stincilla.git`
+git clone `remote github.com:AnyDSL/thorin.git` -b ${BRANCH}
+git clone `remote github.com:AnyDSL/impala.git` -b ${BRANCH}
+git clone `remote github.com:simoll/libwfv.git`
+git clone --recursive `remote github.com:AnyDSL/stincilla.git`
 
 # create build/install dirs
 mkdir -p llvm_build/

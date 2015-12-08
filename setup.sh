@@ -82,8 +82,6 @@ cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_in
 # symlink git hooks
 #ln -s "${CUR}/scripts/pre-push-impala.hook" "${CUR}/impala/.git/hooks/pre-push"
 #ln -s "${CUR}/scripts/pre-push-thorin.hook" "${CUR}/thorin/.git/hooks/pre-push"
-ln -s "${CUR}/scripts/post-merge" "${CUR}/impala/.git/hooks/."
-ln -s "${CUR}/scripts/post-merge" "${CUR}/thorin/.git/hooks/."
 
 echo
 echo "Use the following command in order to have 'impala' and 'clang' in your path:"

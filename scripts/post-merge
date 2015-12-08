@@ -1,5 +1,0 @@
-#!/bin/sh
-#
-# triggers a re-run of cmake after a merge
-
-touch CMakeLists.txt

@@ -41,12 +41,12 @@ mv clang+llvm-3.6.2-x86_64-linux-gnu-ubuntu-14.04/ llvm_install/
 
 # build thorin
 cd "${CUR}/thorin/build"
-cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake"
+cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} #-DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake"
 make -j${THREADS}
 
 # build impala
 cd "${CUR}/impala/build"
-cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake" -DTHORIN_DIR:PATH="${CUR}/thorin"
+cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DTHORIN_DIR:PATH="${CUR}/thorin" #-DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake" 
 make -j${THREADS}
 
 cd "${CUR}"

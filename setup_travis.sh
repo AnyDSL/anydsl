@@ -21,6 +21,7 @@ git clone --recursive https://github.com/AnyDSL/stincilla.git
 
 # create build/install dirs
 mkdir -p thorin/build/
+rm -rf thorin/build/
 mkdir -p impala/build/
 mkdir -p libwfv/build/
 mkdir -p stincilla/build/

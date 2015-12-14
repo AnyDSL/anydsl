@@ -43,7 +43,7 @@ find /home/travis/build/AnyDSL/thorin/anydsl/llvm_install/share/llvm/cmake/ -typ
 
 # build thorin
 cd "${CUR}/thorin/build"
-CXX=/home/travis/build/AnyDSL/thorin/anydsl/llvm_install/bin/clang++ cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake" -DCMAKE_CXX_COMPLER=/home/travis/build/AnyDSL/thorin/anydsl/llvm_install/bin/clang++
+CXX=clang++ cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake" -DCMAKE_CXX_COMPLER=clang++
 make -j${THREADS}
 
 # build impala

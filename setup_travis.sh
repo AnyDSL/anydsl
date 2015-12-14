@@ -43,12 +43,12 @@ find /home/travis/build/AnyDSL/thorin/anydsl/llvm_install/share/llvm/cmake/ -typ
 
 # build thorin
 cd "${CUR}/thorin/build"
-cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake"
+cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake" -DCMAKE_CXX_COMPLER=/home/travis/build/AnyDSL/thorin/anydsl/llvm_install/bin/clang++
 make -j${THREADS}
 
 # build impala
 cd "${CUR}/impala/build"
-cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake" -DTHORIN_DIR:PATH="${CUR}/thorin"
+cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake" -DTHORIN_DIR:PATH="${CUR}/thorin" -DCMAKE_CXX_COMPLER=/home/travis/build/AnyDSL/thorin/anydsl/llvm_install/bin/clang++
 make -j${THREADS}
 
 cd "${CUR}"
@@ -62,7 +62,7 @@ source project
 
 # configure stincilla but don't build yet
 cd "${CUR}/stincilla/build"
-cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake" -DTHORIN_DIR:PATH="${CUR}/thorin" -DBACKEND:STRING="cpu"
+cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake" -DTHORIN_DIR:PATH="${CUR}/thorin" -DBACKEND:STRING="cpu" -DCMAKE_CXX_COMPLER=/home/travis/build/AnyDSL/thorin/anydsl/llvm_install/bin/clang++
 #make -j${THREADS}
 
 # symlink git hooks

@@ -21,7 +21,6 @@ git clone --recursive https://github.com/AnyDSL/stincilla.git
 
 # create build/install dirs
 mkdir -p thorin/build/
-rm -rf thorin/build/
 mkdir -p impala/build/
 mkdir -p libwfv/build/
 mkdir -p stincilla/build/
@@ -44,7 +43,7 @@ find /home/travis/build/AnyDSL/thorin/anydsl/llvm_install/share/llvm/cmake/ -typ
 
 # build thorin
 cd "${CUR}/thorin/build"
-cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake" -DCMAKE_CXX_COMPLER=/home/travis/build/AnyDSL/thorin/anydsl/llvm_install/bin/clang++
+CXX=/home/travis/build/AnyDSL/thorin/anydsl/llvm_install/bin/clang++ cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake" -DCMAKE_CXX_COMPLER=/home/travis/build/AnyDSL/thorin/anydsl/llvm_install/bin/clang++
 make -j${THREADS}
 
 # build impala

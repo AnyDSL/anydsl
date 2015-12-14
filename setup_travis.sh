@@ -31,6 +31,8 @@ tar -xvf clang+llvm-3.6.2-x86_64-linux-gnu-ubuntu-14.04.tar.xz
 rm clang+llvm-3.6.2-x86_64-linux-gnu-ubuntu-14.04.tar.xz
 mv clang+llvm-3.6.2-x86_64-linux-gnu-ubuntu-14.04/ llvm_install/
 
+find /home/travis/build/AnyDSL/thorin/anydsl/llvm_install/share/llvm/cmake/ -type f -exec sed -i 's#/home/development/llvm/3.6.2/final/Phase3/Release/llvmCore-3.6.2-final.install/#/home/travis/build/AnyDSL/thorin/anydsl/llvm_install/#g' {} \;
+
 #mkdir -p /home/development/llvm/3.6.2/final/Phase3/Release/llvmCore-3.6.2-final.install/
 #cp -R llvm_install/ /home/development/llvm/3.6.2/final/Phase3/Release/llvmCore-3.6.2-final.install/
 

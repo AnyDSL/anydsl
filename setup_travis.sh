@@ -53,5 +53,5 @@ make -j${THREADS}
 
 # configure stincilla but don't build yet
 cd "${CUR}/stincilla/build"
-CXX=${CUR}/llvm_install/bin/clang++ cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake" -DTHORIN_DIR:PATH="${CUR}/thorin" -DBACKEND:STRING="cpu" -DCMAKE_CXX_COMPLER=/home/travis/build/AnyDSL/thorin/anydsl/llvm_install/bin/clang++
+CXX=${CUR}/llvm_install/bin/clang++ cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake" -DTHORIN_DIR:PATH="${CUR}/thorin" -DBACKEND:STRING="cpu"
 #make -j${THREADS}

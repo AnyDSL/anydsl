@@ -43,36 +43,15 @@ find /home/travis/build/AnyDSL/thorin/anydsl/llvm_install/share/llvm/cmake/ -typ
 
 # build thorin
 cd "${CUR}/thorin/build"
-CXX=clang++ cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake" -DCMAKE_CXX_COMPLER=clang++
+CXX=${CUR}/llvm_install/bin/clang++ cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake"
 make -j${THREADS}
 
 # build impala
 cd "${CUR}/impala/build"
-cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake" -DTHORIN_DIR:PATH="${CUR}/thorin" -DCMAKE_CXX_COMPLER=/home/travis/build/AnyDSL/thorin/anydsl/llvm_install/bin/clang++
+CXX=${CUR}/llvm_install/bin/clang++ cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake" -DTHORIN_DIR:PATH="${CUR}/thorin"
 make -j${THREADS}
-
-cd "${CUR}"
-
-# source this file to put clang and impala in your path
-cat > "project.sh" <<_EOF_
-export PATH="${CUR}/llvm_install/bin:${CUR}/impala/build/bin:\$PATH"
-_EOF_
-
-source project
 
 # configure stincilla but don't build yet
 cd "${CUR}/stincilla/build"
-cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake" -DTHORIN_DIR:PATH="${CUR}/thorin" -DBACKEND:STRING="cpu" -DCMAKE_CXX_COMPLER=/home/travis/build/AnyDSL/thorin/anydsl/llvm_install/bin/clang++
+CXX=${CUR}/llvm_install/bin/clang++ cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake" -DTHORIN_DIR:PATH="${CUR}/thorin" -DBACKEND:STRING="cpu" -DCMAKE_CXX_COMPLER=/home/travis/build/AnyDSL/thorin/anydsl/llvm_install/bin/clang++
 #make -j${THREADS}
-
-# symlink git hooks
-#ln -s "${CUR}/scripts/pre-push-impala.hook" "${CUR}/impala/.git/hooks/pre-push"
-#ln -s "${CUR}/scripts/pre-push-thorin.hook" "${CUR}/thorin/.git/hooks/pre-push"
-ln -s "${CUR}/scripts/post-merge" "${CUR}/impala/.git/hooks/."
-ln -s "${CUR}/scripts/post-merge" "${CUR}/thorin/.git/hooks/."
-
-echo
-echo "Use the following command in order to have 'impala' and 'clang' in your path:"
-echo "source project.sh"
-echo "This has already been done for this shell session"
-echo "WARNING: Note that this will override any system installation of llvm/clang in you current shell session."

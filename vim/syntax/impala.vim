@@ -9,7 +9,7 @@ endif
 
 syn keyword     impalaConditional   if else
 syn keyword     impalaException     return break continue
-syn keyword     impalaLoop          while for
+syn keyword     impalaLoop          while for with
 syn keyword     impalaStorageClass  let extern mut static
 syn keyword     impalaStructure     struct trait impl
 syn keyword     impalaTypedef       type

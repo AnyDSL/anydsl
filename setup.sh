@@ -61,9 +61,11 @@ mkdir -p libwfv/build/
 mkdir -p stincilla/build/
 
 # build libwfv
-cd "${CUR}/libwfv/build"
-cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake"
-make -j${THREADS}
+if [ "$FETCH_LLVM" = false ] ; then
+    cd "${CUR}/libwfv/build"
+    cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake"
+    make -j${THREADS}
+fi
 
 # build thorin
 cd "${CUR}/thorin/build"

@@ -14,9 +14,9 @@ CUR=`pwd`
 
 function remote {
     if $HTTPS; then
-        echo "https://$1"
+        echo "https://github.com/$1/$2.git"
     else
-        echo "git@$1"
+        echo "git@github.com:$1/$2.git"
     fi
 }
 
@@ -49,10 +49,10 @@ fi
 
 cd "${CUR}"
 ls -lah
-git clone `remote github.com:AnyDSL/thorin.git` -b ${BRANCH}
-git clone `remote github.com:AnyDSL/impala.git` -b ${BRANCH}
-git clone `remote github.com:simoll/libwfv.git`
-git clone --recursive `remote github.com:AnyDSL/stincilla.git`
+git clone `remote AnyDSL thorin` -b ${BRANCH}
+git clone `remote AnyDSL impala` -b ${BRANCH}
+git clone `remote simoll libwfv`
+git clone --recursive `remote AnyDSL stincilla`
 
 # create build/install dirs
 mkdir -p thorin/build/

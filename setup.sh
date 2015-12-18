@@ -48,7 +48,6 @@ else
 fi
 
 cd "${CUR}"
-ls -lah
 git clone `remote AnyDSL thorin` -b ${BRANCH}
 git clone `remote AnyDSL impala` -b ${BRANCH}
 git clone `remote simoll libwfv`

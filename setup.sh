@@ -21,7 +21,6 @@ function remote {
 }
 
 # create build/install dirs
-mkdir -p llvm_install/
 mkdir -p thorin/build/
 mkdir -p impala/build/
 mkdir -p libwfv/build/

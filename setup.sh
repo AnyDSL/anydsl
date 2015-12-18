@@ -20,12 +20,6 @@ function remote {
     fi
 }
 
-# create build/install dirs
-mkdir -p thorin/build/
-mkdir -p impala/build/
-mkdir -p libwfv/build/
-mkdir -p stincilla/build/
-
 # fetch sources
 if [ "$FETCH_LLVM" = true ] ; then
     wget http://llvm.org/releases/3.6.2/clang+llvm-3.6.2-x86_64-linux-gnu-ubuntu-14.04.tar.xz
@@ -59,6 +53,12 @@ git clone `remote github.com:AnyDSL/thorin.git` -b ${BRANCH}
 git clone `remote github.com:AnyDSL/impala.git` -b ${BRANCH}
 git clone `remote github.com:simoll/libwfv.git`
 git clone --recursive `remote github.com:AnyDSL/stincilla.git`
+
+# create build/install dirs
+mkdir -p thorin/build/
+mkdir -p impala/build/
+mkdir -p libwfv/build/
+mkdir -p stincilla/build/
 
 # build libwfv
 cd "${CUR}/libwfv/build"

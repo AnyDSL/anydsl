@@ -1,6 +1,7 @@
 : ${THREADS:=2}
 : ${BRANCH:=master}
 : ${BUILD_TYPE:=Debug}
+: ${FETCH_LLVM:=false}
 
 # set this to true if you don't have a github account
 : ${HTTPS:=false}

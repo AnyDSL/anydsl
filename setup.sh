@@ -54,6 +54,7 @@ else
 fi
 
 cd "${CUR}"
+ls -lah
 git clone `remote github.com:AnyDSL/thorin.git` -b ${BRANCH}
 git clone `remote github.com:AnyDSL/impala.git` -b ${BRANCH}
 git clone `remote github.com:simoll/libwfv.git`

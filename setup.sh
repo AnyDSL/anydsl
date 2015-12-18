@@ -21,7 +21,6 @@ function remote {
 }
 
 # create build/install dirs
-mkdir -p llvm_build/
 mkdir -p llvm_install/
 mkdir -p thorin/build/
 mkdir -p impala/build/
@@ -37,6 +36,8 @@ if [ "$FETCH_LLVM" = true ] ; then
     
     find /home/travis/work/anydsl/llvm_install/share/llvm/cmake/ -type f -exec sed -i 's#/home/development/llvm/3.6.2/final/Phase3/Release/llvmCore-3.6.2-final.install/#/home/travis/work/anydsl/llvm_install/#g' {} \;
 else
+    mkdir -p llvm_build/
+    
     wget http://llvm.org/releases/3.4.2/llvm-3.4.2.src.tar.gz
     tar xf llvm-3.4.2.src.tar.gz
     rm llvm-3.4.2.src.tar.gz

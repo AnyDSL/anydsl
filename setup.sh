@@ -86,4 +86,4 @@ echo
 echo "Use the following command in order to have 'impala' and 'clang' in your path:"
 echo "source project.sh"
 echo "This has already been done for this shell session"
-echo "WARNING: Note that this will override any system installation of llvm/clang in you current shell session."
+echo "WARNING: Note that this will override any system installation of llvm/clang in your current shell session."

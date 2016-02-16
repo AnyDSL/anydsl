@@ -71,7 +71,7 @@ cat > "project.sh" <<_EOF_
 export PATH="${CUR}/llvm_install/bin:${CUR}/impala/build/bin:\$PATH"
 _EOF_
 
-source project
+source project.sh
 
 # configure stincilla but don't build yet
 cd "${CUR}/stincilla/build"

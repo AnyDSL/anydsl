@@ -31,6 +31,7 @@ tar xf cfe-3.4.2.src.tar.gz
 rm cfe-3.4.2.src.tar.gz
 mv cfe-3.4.2.src clang
 cd "${CUR}"
+svn checkout svn://svn.code.sf.net/p/half/code/trunk half
 git clone `remote github.com:AnyDSL/thorin.git` -b ${BRANCH}
 git clone `remote github.com:AnyDSL/impala.git` -b ${BRANCH}
 git clone `remote github.com:simoll/libwfv.git`
@@ -54,14 +55,15 @@ cd "${CUR}/libwfv/build"
 cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake"
 make -j${THREADS}
 
+COMMON_CMAKE_VARS=-DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE}\ -DHalf_DIR:PATH="${CUR}/half/include"\ -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake"\ -DWFV2_DIR:PATH="${CUR}/libwfv"
 # build thorin
 cd "${CUR}/thorin/build"
-cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake" -DWFV2_DIR:PATH="${CUR}/libwfv"
+cmake .. ${COMMON_CMAKE_VARS}
 make -j${THREADS}
 
 # build impala
 cd "${CUR}/impala/build"
-cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake" -DTHORIN_DIR:PATH="${CUR}/thorin" -DWFV2_DIR:PATH="${CUR}/libwfv"
+cmake .. ${COMMON_CMAKE_VARS} -DTHORIN_DIR:PATH="${CUR}/thorin"
 make -j${THREADS}
 
 cd "${CUR}"

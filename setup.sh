@@ -21,21 +21,35 @@ function remote {
 }
 
 # fetch sources
-wget http://llvm.org/releases/3.4.2/llvm-3.4.2.src.tar.gz
-tar xf llvm-3.4.2.src.tar.gz
-rm llvm-3.4.2.src.tar.gz
-mv llvm-3.4.2.src llvm
-cd llvm/tools
-wget http://llvm.org/releases/3.4.2/cfe-3.4.2.src.tar.gz
-tar xf cfe-3.4.2.src.tar.gz
-rm cfe-3.4.2.src.tar.gz
-mv cfe-3.4.2.src clang
+if [ ! -e  "${CUR}/llvm" ]; then
+    wget http://llvm.org/releases/3.4.2/llvm-3.4.2.src.tar.gz
+    tar xf llvm-3.4.2.src.tar.gz
+    rm llvm-3.4.2.src.tar.gz
+    mv llvm-3.4.2.src llvm
+    cd llvm/tools
+    wget http://llvm.org/releases/3.4.2/cfe-3.4.2.src.tar.gz
+    tar xf cfe-3.4.2.src.tar.gz
+    rm cfe-3.4.2.src.tar.gz
+    mv cfe-3.4.2.src clang
+fi
+
 cd "${CUR}"
-svn checkout svn://svn.code.sf.net/p/half/code/trunk half
-git clone `remote github.com:AnyDSL/thorin.git` -b ${BRANCH}
-git clone `remote github.com:AnyDSL/impala.git` -b ${BRANCH}
-git clone `remote github.com:simoll/libwfv.git`
-git clone --recursive `remote github.com:AnyDSL/stincilla.git`
+
+if [ ! -e "${CUR}/half" ]; then
+    svn checkout svn://svn.code.sf.net/p/half/code/trunk half
+fi
+if [ ! -e "${CUR}/thorin" ]; then
+    git clone `remote github.com:AnyDSL/thorin.git` -b ${BRANCH}
+fi
+if [ ! -e "${CUR}/impala" ]; then
+    git clone `remote github.com:AnyDSL/impala.git` -b ${BRANCH}
+fi
+if [ ! -e "${CUR}/libwfv" ]; then
+    git clone `remote github.com:simoll/libwfv.git`
+fi
+if [ ! -e "${CUR}/stincilla" ]; then
+    git clone --recursive `remote github.com:AnyDSL/stincilla.git`
+fi
 
 # create build/install dirs
 mkdir -p llvm_build/

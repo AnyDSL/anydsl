@@ -60,9 +60,9 @@ mkdir -p libwfv/build/
 mkdir -p stincilla/build/
 
 # build llvm
-#cd llvm_build
-#cmake ../llvm -DLLVM_REQUIRES_RTTI:BOOL=true -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX:PATH="${CUR}/llvm_install"
-#make install -j${THREADS}
+cd llvm_build
+cmake ../llvm -DLLVM_REQUIRES_RTTI:BOOL=true -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX:PATH="${CUR}/llvm_install"
+make install -j${THREADS}
 
 # build libwfv
 cd "${CUR}/libwfv/build"

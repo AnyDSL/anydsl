@@ -14,9 +14,9 @@ CUR=`pwd`
 
 function remote {
     if $HTTPS; then
-        echo "https://$1"
+        echo "https://github.com/$1"
     else
-        echo "git@$1"
+        echo "git@github.com:$1"
     fi
 }
 
@@ -39,16 +39,16 @@ if [ ! -e "${CUR}/half" ]; then
     svn checkout svn://svn.code.sf.net/p/half/code/trunk half
 fi
 if [ ! -e "${CUR}/thorin" ]; then
-    git clone `remote github.com:AnyDSL/thorin.git` -b ${BRANCH}
+    git clone `remote AnyDSL/thorin.git` -b ${BRANCH}
 fi
 if [ ! -e "${CUR}/impala" ]; then
-    git clone `remote github.com:AnyDSL/impala.git` -b ${BRANCH}
+    git clone `remote AnyDSL/impala.git` -b ${BRANCH}
 fi
 if [ ! -e "${CUR}/libwfv" ]; then
-    git clone `remote github.com:simoll/libwfv.git`
+    git clone `remote simoll/libwfv.git`
 fi
 if [ ! -e "${CUR}/stincilla" ]; then
-    git clone --recursive `remote github.com:AnyDSL/stincilla.git`
+    git clone --recursive `remote AnyDSL/stincilla.git`
 fi
 
 # create build/install dirs

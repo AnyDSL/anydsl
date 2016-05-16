@@ -22,12 +22,12 @@ function remote {
 
 # fetch sources
 if [ "$FETCH_LLVM" = true ] ; then
-    wget http://llvm.org/releases/3.6.2/clang+llvm-3.6.2-x86_64-linux-gnu-ubuntu-14.04.tar.xz
-    tar -xvf clang+llvm-3.6.2-x86_64-linux-gnu-ubuntu-14.04.tar.xz
-    rm clang+llvm-3.6.2-x86_64-linux-gnu-ubuntu-14.04.tar.xz
-    mv clang+llvm-3.6.2-x86_64-linux-gnu-ubuntu-14.04/ llvm_install/
+    wget http://llvm.org/releases/3.8.0/clang+llvm-3.8.0-x86_64-linux-gnu-ubuntu-14.04.tar.xz
+    tar -xvf clang+llvm-3.8.0-x86_64-linux-gnu-ubuntu-14.04.tar.xz
+    rm clang+llvm-3.8.0-x86_64-linux-gnu-ubuntu-14.04.tar.xz
+    mv clang+llvm-3.8.0-x86_64-linux-gnu-ubuntu-14.04/ llvm_install/
     
-    find /home/travis/work/anydsl/llvm_install/share/llvm/cmake/ -type f -exec sed -i 's#/home/development/llvm/3.6.2/final/Phase3/Release/llvmCore-3.6.2-final.install/#/home/travis/work/anydsl/llvm_install/#g' {} \;
+    find /home/travis/work/anydsl/llvm_install/share/llvm/cmake/ -type f -exec sed -i 's#/home/development/llvm/3.8.0/final/Phase3/Release/llvmCore-3.8.0-final.install/#/home/travis/work/anydsl/llvm_install/#g' {} \;
 else
     mkdir -p llvm_build/
     

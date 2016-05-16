@@ -14,9 +14,9 @@ CUR=`pwd`
 
 function remote {
     if $HTTPS; then
-        echo "https://github.com/$1/$2.git"
+        echo "https://github.com/$1"
     else
-        echo "git@github.com:$1/$2.git"
+        echo "git@github.com:$1"
     fi
 }
 
@@ -31,15 +31,17 @@ if [ "$FETCH_LLVM" = true ] ; then
 else
     mkdir -p llvm_build/
     
-    wget http://llvm.org/releases/3.4.2/llvm-3.4.2.src.tar.gz
-    tar xf llvm-3.4.2.src.tar.gz
-    rm llvm-3.4.2.src.tar.gz
-    mv llvm-3.4.2.src llvm
-    cd llvm/tools
-    wget http://llvm.org/releases/3.4.2/cfe-3.4.2.src.tar.gz
-    tar xf cfe-3.4.2.src.tar.gz
-    rm cfe-3.4.2.src.tar.gz
-    mv cfe-3.4.2.src clang
+    if [ ! -e  "${CUR}/llvm" ]; then
+        wget http://llvm.org/releases/3.4.2/llvm-3.4.2.src.tar.gz
+        tar xf llvm-3.4.2.src.tar.gz
+        rm llvm-3.4.2.src.tar.gz
+        mv llvm-3.4.2.src llvm
+        cd llvm/tools
+        wget http://llvm.org/releases/3.4.2/cfe-3.4.2.src.tar.gz
+        tar xf cfe-3.4.2.src.tar.gz
+        rm cfe-3.4.2.src.tar.gz
+        mv cfe-3.4.2.src clang
+    fi
     
     # build llvm
     cd llvm_build
@@ -48,10 +50,22 @@ else
 fi
 
 cd "${CUR}"
-git clone `remote AnyDSL thorin` -b ${BRANCH}
-git clone `remote AnyDSL impala` -b ${BRANCH}
-git clone `remote simoll libwfv`
-git clone --recursive `remote AnyDSL stincilla`
+
+if [ ! -e "${CUR}/half" ]; then
+    svn checkout svn://svn.code.sf.net/p/half/code/trunk half
+fi
+if [ ! -e "${CUR}/thorin" ]; then
+    git clone `remote AnyDSL/thorin.git` -b ${BRANCH}
+fi
+if [ ! -e "${CUR}/impala" ]; then
+    git clone `remote AnyDSL/impala.git` -b ${BRANCH}
+fi
+if [ ! -e "${CUR}/libwfv" ]; then
+    git clone `remote simoll/libwfv.git`
+fi
+if [ ! -e "${CUR}/stincilla" ]; then
+    git clone --recursive `remote AnyDSL/stincilla.git`
+fi
 
 # create build/install dirs
 mkdir -p thorin/build/
@@ -66,14 +80,15 @@ if [ "$FETCH_LLVM" = false ] ; then
     make -j${THREADS}
 fi
 
+COMMON_CMAKE_VARS=-DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE}\ -DHalf_DIR:PATH="${CUR}/half/include"\ -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake"\ -DWFV2_DIR:PATH="${CUR}/libwfv"
 # build thorin
 cd "${CUR}/thorin/build"
-cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake" -DWFV2_DIR:PATH="${CUR}/libwfv"
+cmake .. ${COMMON_CMAKE_VARS}
 make -j${THREADS}
 
 # build impala
 cd "${CUR}/impala/build"
-cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake" -DTHORIN_DIR:PATH="${CUR}/thorin" -DWFV2_DIR:PATH="${CUR}/libwfv"
+cmake .. ${COMMON_CMAKE_VARS} -DTHORIN_DIR:PATH="${CUR}/thorin"
 make -j${THREADS}
 
 cd "${CUR}"
@@ -98,4 +113,4 @@ echo
 echo "Use the following command in order to have 'impala' and 'clang' in your path:"
 echo "source project.sh"
 echo "This has already been done for this shell session"
-echo "WARNING: Note that this will override any system installation of llvm/clang in you current shell session."
+echo "WARNING: Note that this will override any system installation of llvm/clang in your current shell session."

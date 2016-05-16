@@ -1,10 +1,13 @@
 anydsl.github.io/
 anydsl.wiki/
 impala/
+imbatracer/
 libwfv/
 llvm/
 llvm_build/
 llvm_install/
+stincilla/
 thorin/
+traversal/
 config.sh
 project.sh

@@ -14,7 +14,7 @@ echo "Executing doxygen on $1"
 doxygen doxyfile
 
 cd ../anydsl.github.io
-git pull
+git pull -s ours
 mkdir -p doxygen/"$1"
 cp -R ../"$1"/html/* doxygen/"$1"/
 

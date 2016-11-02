@@ -6,6 +6,7 @@ function usage {
 }
 
 if [ "$#" -ne 1 ]; then
+    usage
     exit 1
 fi
 

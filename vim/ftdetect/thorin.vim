@@ -1,1 +1,1 @@
-au BufRead,BufNewFile *.thorin set filetype=thorin
+au BufRead,BufNewFile *.thorin set filetype=thorin nospell

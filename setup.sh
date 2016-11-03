@@ -27,7 +27,8 @@ if [ "${TRAVIS-}" == true ] ; then
     rm clang+llvm-3.8.1-x86_64-linux-gnu-ubuntu-14.04.tar.xz
     mv clang+llvm-3.8.1-x86_64-linux-gnu-ubuntu-14.04/ llvm_install/
     
-    find /home/travis/work/anydsl/llvm_install/share/llvm/cmake/ -type f -exec sed -i 's#/home/development/llvm/3.8.1/final/Phase3/Release/llvmCore-3.8.1-final.install/#/home/travis/work/anydsl/llvm_install/#g' {} \;
+    find /home/travis/work/anydsl/llvm_install/share/llvm/cmake/ -type f -exec \
+        sed -i 's#/home/development/llvm/3.8.1/final/Phase3/Release/llvmCore-3.8.1-final.install/#/home/travis/work/anydsl/llvm_install/#g' {} \;
 else
     mkdir -p llvm_build/
     
@@ -41,13 +42,16 @@ else
         tar xf cfe-3.8.1.src.tar.xz
         rm cfe-3.8.1.src.tar.xz
         mv cfe-3.8.1.src clang
-        cd ../..
+        cd "${CUR}"
     fi
     
     # build llvm
-    cd llvm_build
-    cmake ../llvm ${LLVM_OPTIONS} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX:PATH="${CUR}/llvm_install" -DLLVM_ENABLE_RTTI:BOOL=ON
-    ${LLVM_MAKE} install
+    if [ ! -e "${CUR}/llvm_install/share/llvm/cmake" ]; then
+        cd llvm_build
+        cmake ../llvm -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX:PATH="${CUR}/llvm_install" \
+            -DLLVM_ENABLE_RTTI:BOOL=ON -DLLVM_INCLUDE_TESTS:BOOL=OFF -DLLVM_TARGETS_TO_BUILD="AArch64;AMDGPU;ARM;NVPTX;X86" ${LLVM_OPTIONS} 
+        ${LLVM_MAKE} install
+    fi
 fi
 
 cd "${CUR}"
@@ -74,7 +78,7 @@ mkdir -p impala/build/
 mkdir -p libwfv/build/
 mkdir -p stincilla/build/
 
- #build libwfv
+# build libwfv
 if false ; then
     cd "${CUR}/libwfv/build"
     cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake"
@@ -82,6 +86,7 @@ if false ; then
 fi
 
 COMMON_CMAKE_VARS=-DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE}\ -DHalf_DIR:PATH="${CUR}/half/include"\ -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake" #-DWFV2_DIR:PATH="${CUR}/libwfv"
+
 # build thorin
 cd "${CUR}/thorin/build"
 cmake .. ${COMMON_CMAKE_VARS}

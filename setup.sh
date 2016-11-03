@@ -47,7 +47,7 @@ else
     # build llvm
     cd llvm_build
     cmake ../llvm -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX:PATH="${CUR}/llvm_install" ${LLVM_OPTIONS}
-    make install -j${THREADS}
+    make install
 fi
 
 cd "${CUR}"

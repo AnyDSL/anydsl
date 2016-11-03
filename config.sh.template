@@ -1,8 +1,18 @@
-: ${THREADS:=2}
-: ${LLVM_OPTIONS:="-DLLVM_PARALLEL_COMPILE_JOBS=4 -DLLVM_PARALLEL_LINK_JOBS=1"}
+# number of threads used for compilation
+: ${THREADS:=4}
+
+# which branch to check out for thorin/impala?
 : ${BRANCH:=master}
+
 : ${BUILD_TYPE:=Debug}
-: ${FETCH_LLVM:=false}
+
+# use this for ninja
+: ${LLVM_OPTIONS:="-G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DLLVM_PARALLEL_COMPILE_JOBS=${THREADS} -DLLVM_PARALLEL_LINK_JOBS=1"}
+: ${LLVM_MAKE:="ninja"}
+
+# use this for good ole make
+#: ${LLVM_OPTIONS:=""}
+#: ${LLVM_MAKE:="make -j${THREADS}"}
 
 # set this to true if you don't have a github account
 : ${HTTPS:=false}

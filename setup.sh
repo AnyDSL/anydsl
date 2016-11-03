@@ -21,7 +21,7 @@ function remote {
 }
 
 # fetch sources
-if $FETCH_LLVM; then
+if [ "${TRAVIS-}" == true ] ; then
     wget http://llvm.org/releases/3.8.1/clang+llvm-3.8.1-x86_64-linux-gnu-ubuntu-14.04.tar.xz
     tar -xvf clang+llvm-3.8.1-x86_64-linux-gnu-ubuntu-14.04.tar.xz
     rm clang+llvm-3.8.1-x86_64-linux-gnu-ubuntu-14.04.tar.xz
@@ -46,8 +46,8 @@ else
     
     # build llvm
     cd llvm_build
-    cmake ../llvm -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX:PATH="${CUR}/llvm_install" ${LLVM_OPTIONS}
-    make install
+    cmake ../llvm ${LLVM_OPTIONS} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX:PATH="${CUR}/llvm_install"
+    ${LLVM_MAKE} install
 fi
 
 cd "${CUR}"
@@ -75,7 +75,7 @@ mkdir -p libwfv/build/
 mkdir -p stincilla/build/
 
 # build libwfv
-if [ "$FETCH_LLVM" = false ] ; then
+if [ "${TRAVIS-}" != true ] ; then
     cd "${CUR}/libwfv/build"
     cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake"
     make -j${THREADS}

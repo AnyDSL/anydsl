@@ -26,9 +26,6 @@ if [ "${TRAVIS-}" == true ] ; then
     tar -xvf clang+llvm-3.8.1-x86_64-linux-gnu-ubuntu-14.04.tar.xz
     rm clang+llvm-3.8.1-x86_64-linux-gnu-ubuntu-14.04.tar.xz
     mv clang+llvm-3.8.1-x86_64-linux-gnu-ubuntu-14.04/ llvm_install/
-    
-    find /home/travis/work/anydsl/llvm_install/share/llvm/cmake/ -type f -exec \
-        sed -i 's#/home/development/llvm/3.8.1/final/Phase3/Release/llvmCore-3.8.1-final.install/#/home/travis/work/anydsl/llvm_install/#g' {} \;
 else
     mkdir -p llvm_build/
     

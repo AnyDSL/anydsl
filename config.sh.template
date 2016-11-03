@@ -4,13 +4,14 @@
 # which branch to check out for thorin/impala?
 : ${BRANCH:=master}
 
+# use Debug or Release
 : ${BUILD_TYPE:=Debug}
 
-# use this for ninja
+# use this for ninja ...
 : ${LLVM_OPTIONS:="-G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DLLVM_PARALLEL_COMPILE_JOBS=${THREADS} -DLLVM_PARALLEL_LINK_JOBS=1"}
 : ${LLVM_MAKE:="ninja"}
 
-# use this for good ole make
+# ... or this for good ol'make
 #: ${LLVM_OPTIONS:=""}
 #: ${LLVM_MAKE:="make -j${THREADS}"}
 

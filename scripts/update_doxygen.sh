@@ -15,6 +15,7 @@ doxygen doxyfile
 
 cd ../anydsl.github.io
 git pull -s ours
+git rm -r doxygen/"$1"/
 mkdir -p doxygen/"$1"
 cp -R ../"$1"/html/* doxygen/"$1"/
 
@@ -24,6 +25,6 @@ else
     MESSAGE="updating doxygen for commit AnyDSL/$1@$2"
 fi
 
-git add doxygen/"$1"/*
+git add doxygen/"$1"/
 git commit -m "$MESSAGE"
 git push

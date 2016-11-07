@@ -45,9 +45,9 @@ else
     # build llvm
     if [ ! -e "${CUR}/llvm_install/share/llvm/cmake" ]; then
         cd llvm_build
-        cmake ../llvm -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX:PATH="${CUR}/llvm_install" \
-            -DLLVM_ENABLE_RTTI:BOOL=ON -DLLVM_INCLUDE_TESTS:BOOL=OFF -DLLVM_TARGETS_TO_BUILD="AArch64;AMDGPU;ARM;NVPTX;X86" ${LLVM_OPTIONS} 
-        ${LLVM_MAKE} install
+        cmake ../llvm ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX:PATH="${CUR}/llvm_install" \
+            -DLLVM_ENABLE_RTTI:BOOL=ON -DLLVM_INCLUDE_TESTS:BOOL=OFF -DLLVM_TARGETS_TO_BUILD="AArch64;AMDGPU;ARM;NVPTX;X86"
+        ${MAKE} install
     fi
 fi
 
@@ -57,10 +57,10 @@ if [ ! -e "${CUR}/half" ]; then
     svn checkout svn://svn.code.sf.net/p/half/code/trunk half
 fi
 if [ ! -e "${CUR}/thorin" ]; then
-    git clone `remote AnyDSL/thorin.git` -b ${BRANCH}
+    git clone `remote AnyDSL/thorin.git`
 fi
 if [ ! -e "${CUR}/impala" ]; then
-    git clone `remote AnyDSL/impala.git` -b ${BRANCH}
+    git clone `remote AnyDSL/impala.git`
 fi
 #if [ ! -e "${CUR}/libwfv" ]; then
     #git clone `remote simoll/libwfv.git`
@@ -78,21 +78,21 @@ mkdir -p stincilla/build/
 # build libwfv
 if false ; then
     cd "${CUR}/libwfv/build"
-    cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake"
+    cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake"
     make -j${THREADS}
 fi
 
-COMMON_CMAKE_VARS=-DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE}\ -DHalf_DIR:PATH="${CUR}/half/include"\ -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake" #-DWFV2_DIR:PATH="${CUR}/libwfv"
+COMMON_CMAKE_VARS=${CMAKE_MAKE}\ -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE}\ -DHalf_DIR:PATH="${CUR}/half/include"\ -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake" #-DWFV2_DIR:PATH="${CUR}/libwfv"
 
 # build thorin
 cd "${CUR}/thorin/build"
 cmake .. ${COMMON_CMAKE_VARS}
-make -j${THREADS}
+${MAKE}
 
 # build impala
 cd "${CUR}/impala/build"
 cmake .. ${COMMON_CMAKE_VARS} -DTHORIN_DIR:PATH="${CUR}/thorin"
-make -j${THREADS}
+${MAKE}
 
 cd "${CUR}"
 
@@ -105,8 +105,8 @@ source project.sh
 
 # configure stincilla but don't build yet
 cd "${CUR}/stincilla/build"
-cmake .. -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake" -DTHORIN_DIR:PATH="${CUR}/thorin" -DBACKEND:STRING="cpu"
-#make -j${THREADS}
+cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake" -DTHORIN_DIR:PATH="${CUR}/thorin" -DBACKEND:STRING="cpu"
+#${MAKE}
 
 # symlink git hooks
 #ln -s "${CUR}/scripts/pre-push-impala.hook" "${CUR}/impala/.git/hooks/pre-push"

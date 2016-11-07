@@ -1,19 +1,12 @@
-# number of threads used for compilation
-: ${THREADS:=4}
-
-# which branch to check out for thorin/impala?
-: ${BRANCH:=master}
-
 # use Debug or Release
 : ${BUILD_TYPE:=Debug}
 
-# use this for ninja ...
-: ${LLVM_OPTIONS:="-G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DLLVM_PARALLEL_COMPILE_JOBS=${THREADS} -DLLVM_PARALLEL_LINK_JOBS=1"}
-: ${LLVM_MAKE:="ninja"}
+: ${CMAKE_MAKE:=""}
+: ${MAKE:="make -j4"}
 
-# ... or this for good ol'make
-#: ${LLVM_OPTIONS:=""}
-#: ${LLVM_MAKE:="make -j${THREADS}"}
+# use this for ninja instead of make
+#: ${CMAKE_MAKE:="-G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DLLVM_PARALLEL_COMPILE_JOBS=4 -DLLVM_PARALLEL_LINK_JOBS=1"}
+#: ${MAKE:="ninja"}
 
 # set this to true if you don't have a github account
 : ${HTTPS:=false}

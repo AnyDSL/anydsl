@@ -18,7 +18,7 @@ do
             if [ -z "$changes" ]; then
                 continue;
             fi
-            ../scripts/update.sh $1 $(git rev-parse HEAD)
+            ../scripts/update_doxygen.sh $1 $(git rev-parse HEAD)
         fi
     fi
 done

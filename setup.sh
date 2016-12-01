@@ -62,9 +62,9 @@ fi
 if [ ! -e "${CUR}/impala" ]; then
     git clone `remote AnyDSL/impala.git`
 fi
-#if [ ! -e "${CUR}/libwfv" ]; then
-    #git clone `remote simoll/libwfv.git`
-#fi
+if [ ! -e "${CUR}/rv" ]; then
+    git clone `remote simoll/rv.git`
+fi
 if [ ! -e "${CUR}/stincilla" ]; then
     git clone --recursive `remote AnyDSL/stincilla.git`
 fi
@@ -72,17 +72,15 @@ fi
 # create build/install dirs
 mkdir -p thorin/build/
 mkdir -p impala/build/
-mkdir -p libwfv/build/
+mkdir -p rv/build/
 mkdir -p stincilla/build/
 
-# build libwfv
-if false ; then
-    cd "${CUR}/libwfv/build"
-    cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake"
-    make -j${THREADS}
-fi
+# build rv
+cd "${CUR}/rv/build"
+cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake"
+${MAKE}
 
-COMMON_CMAKE_VARS=${CMAKE_MAKE}\ -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE}\ -DHalf_DIR:PATH="${CUR}/half/include"\ -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake" #-DWFV2_DIR:PATH="${CUR}/libwfv"
+COMMON_CMAKE_VARS=${CMAKE_MAKE}\ -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE}\ -DHalf_DIR:PATH="${CUR}/half/include"\ -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake"\ -DRV_DIR:PATH="${CUR}/rv"
 
 # build thorin
 cd "${CUR}/thorin/build"

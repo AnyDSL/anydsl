@@ -66,7 +66,7 @@ if [ ! -e "${CUR}/impala" ]; then
     git clone `remote AnyDSL/impala.git`
 fi
 if [ ! -e "${CUR}/rv" ]; then
-    git clone `remote simoll/rv.git`
+    git clone `remote cdl-saarland/rv.git`
 fi
 if [ ! -e "${CUR}/stincilla" ]; then
     git clone --recursive `remote AnyDSL/stincilla.git`

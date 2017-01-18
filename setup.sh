@@ -56,6 +56,9 @@ cd "${CUR}"
 if [ ! -e "${CUR}/half" ]; then
     svn checkout svn://svn.code.sf.net/p/half/code/trunk half
 fi
+if [ ! -e "${CUR}/runtime" ]; then
+    git clone `remote AnyDSL/runtime.git`
+fi
 if [ ! -e "${CUR}/thorin" ]; then
     git clone `remote AnyDSL/thorin.git`
 fi
@@ -70,6 +73,7 @@ if [ ! -e "${CUR}/stincilla" ]; then
 fi
 
 # create build/install dirs
+mkdir -p runtime/build/
 mkdir -p thorin/build/
 mkdir -p impala/build/
 mkdir -p rv/build/
@@ -81,6 +85,11 @@ cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="
 ${MAKE}
 
 COMMON_CMAKE_VARS=${CMAKE_MAKE}\ -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE}\ -DHalf_DIR:PATH="${CUR}/half/include"\ -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake"\ -DRV_DIR:PATH="${CUR}/rv"
+
+# build runtime
+cd "${CUR}/runtime/build"
+cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE}
+${MAKE}
 
 # build thorin
 cd "${CUR}/thorin/build"
@@ -103,7 +112,7 @@ source project.sh
 
 # configure stincilla but don't build yet
 cd "${CUR}/stincilla/build"
-cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake" -DTHORIN_DIR:PATH="${CUR}/thorin" -DBACKEND:STRING="cpu"
+cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DAnyDSL-runtime_DIR:PATH="${CUR}/runtime" -DBACKEND:STRING="cpu"
 #${MAKE}
 
 echo

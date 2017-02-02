@@ -112,7 +112,7 @@ if ( NOT LLVM_DIR )
     set(LLVM_TARGETS AArch64 AMDGPU ARM NVPTX X86)
     # configure_build(llvm -DLLVM_INCLUDE_TESTS:BOOL=OFF "-DLLVM_TARGETS_TO_BUILD=${LLVM_TARGETS}")
     # passing LLVM_TARGETS properly does not work
-    file(MAKE_DIRECTORY llvm/build)
+    file(MAKE_DIRECTORY ${SETUP_DIR}/llvm/build)
     execute_process(
         COMMAND ${CMAKE_COMMAND} ${SPECIFY_GENERATOR} ${SPECIFY_BUILD_TYPE} -DLLVM_INCLUDE_TESTS:BOOL=OFF "-DLLVM_TARGETS_TO_BUILD=${LLVM_TARGETS}" ..
         WORKING_DIRECTORY ${SETUP_DIR}/llvm/build

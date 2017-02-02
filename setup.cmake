@@ -2,6 +2,7 @@
 if (NOT SETUP_DIR)
     set(SETUP_DIR ${CMAKE_CURRENT_LIST_DIR})
 endif()
+get_filename_component(SETUP_DIR ${SETUP_DIR} ABSOLUTE)
 # if (NOT GENERATOR)
     # set(GENERATOR "Visual Studio 14 2015 Win64")
 # endif ()

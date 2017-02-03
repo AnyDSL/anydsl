@@ -3,6 +3,9 @@ if (NOT SETUP_DIR)
     set(SETUP_DIR ${CMAKE_CURRENT_LIST_DIR})
 endif()
 get_filename_component(SETUP_DIR ${SETUP_DIR} ABSOLUTE)
+if (NOT FORCE_PULL)
+    set(FORCE_PULL false)
+endif ()
 if (CMAKE_BUILD_TYPE)
     set(CONFIGURATION_TYPES ${CMAKE_BUILD_TYPE})
 elseif (NOT CONFIGURATION_TYPES)
@@ -11,6 +14,7 @@ endif ()
 message(STATUS "SETUP_DIR: ${SETUP_DIR}")
 message(STATUS "GENERATOR: ${GENERATOR}")
 message(STATUS "CONFIGURATION_TYPES: ${CONFIGURATION_TYPES}")
+message(STATUS "FORCE_PULL: ${FORCE_PULL}")
 
 if (CMAKE_BUILD_TYPE)
     set (SPECIFY_BUILD_TYPE "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}")
@@ -103,7 +107,7 @@ FIND_PATH (THORIN_DIR thorin-config.cmake
     PATH_SUFFIXES
         share/thorin/cmake
 )
-if ( NOT THORIN_DIR )
+if ( (NOT THORIN_DIR) OR FORCE_PULL )
     clone_repository(thorin ${THORIN_URL})
     configure_build(thorin -DHalf_DIR=${Half_DIR} -DLLVM_DIR=${LLVM_DIR})
     compile(thorin)
@@ -122,7 +126,7 @@ FIND_PATH (AnyDSL_runtime_DIR anydsl_runtime-config.cmake
     PATH_SUFFIXES
         share/AnyDSL_runtime/cmake
 )
-if ( NOT AnyDSL_runtime_DIR )
+if ( NOT AnyDSL_runtime_DIR OR FORCE_PULL )
     clone_repository(runtime ${RUNTIME_URL})
     # TODO: pass OpenCL, CUDA, TBB
     configure_build(runtime)
@@ -142,7 +146,7 @@ FIND_PATH (IMPALA_DIR impala-config.cmake
     PATH_SUFFIXES
         share/impala/cmake
 )
-if ( NOT IMPALA_DIR )
+if ( NOT IMPALA_DIR OR FORCE_PULL )
     clone_repository(impala ${IMPALA_URL})
     configure_build(impala -DTHORIN_DIR=${THORIN_DIR} -DAnyDSL_runtime_DIR=${AnyDSL_runtime_DIR})
     compile(impala)

@@ -36,3 +36,17 @@ function(compile _path)
             OUTPUT_FILE ${_logfile})
     endforeach()
 endfunction()
+
+function(run_tests _path)
+    string(REPLACE "/" "_" _id ${_path})
+    # set(cfg Release)
+    foreach (cfg ${CONFIGURATION_TYPES})
+        set(_logfile ${SETUP_DIR}/testing_${_id}_${cfg}.xml)
+        message(STATUS "Running tests for ${_path} (${cfg}) -> ${_logfile}")
+        execute_process(
+            COMMAND ctest -C ${cfg} --no-compress-output -T Test
+            WORKING_DIRECTORY ${SETUP_DIR}/${_path})
+        file(STRINGS ${SETUP_DIR}/${_path}/Testing/TAG _tag LIMIT_COUNT 1)
+        file(RENAME ${SETUP_DIR}/${_path}/Testing/${_tag}/Test.xml ${_logfile})
+    endforeach()
+endfunction()

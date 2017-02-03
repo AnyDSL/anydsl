@@ -28,7 +28,7 @@ endfunction()
 function(compile _path)
     foreach (cfg ${CONFIGURATION_TYPES})
         execute_process(
-            COMMAND ${CMAKE_COMMAND} --build ${_path} --config ${cfg}
+            COMMAND ${CMAKE_COMMAND} --build ${_path} --config ${cfg} ${ARGN}
             WORKING_DIRECTORY ${SETUP_DIR})
     endforeach()
 endfunction()

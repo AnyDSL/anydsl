@@ -26,9 +26,13 @@ function(configure_build _path)
 endfunction()
 
 function(compile _path)
+    string(REPLACE "/" "_" _id ${_path})
     foreach (cfg ${CONFIGURATION_TYPES})
+        set(_logfile ${SETUP_DIR}/build_${_id}_${cfg}.log)
+        message(STATUS "Compiling ${_path} -> ${_logfile}")
         execute_process(
             COMMAND ${CMAKE_COMMAND} --build ${_path} --config ${cfg} ${ARGN}
-            WORKING_DIRECTORY ${SETUP_DIR})
+            WORKING_DIRECTORY ${SETUP_DIR}
+            OUTPUT_FILE ${_logfile})
     endforeach()
 endfunction()

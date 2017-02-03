@@ -91,7 +91,7 @@ if ( NOT LLVM_DIR )
         COMMAND ${CMAKE_COMMAND} ${SPECIFY_GENERATOR} ${SPECIFY_BUILD_TYPE} -DLLVM_INCLUDE_TESTS:BOOL=OFF "-DLLVM_TARGETS_TO_BUILD=${LLVM_TARGETS}" ..
         WORKING_DIRECTORY ${SETUP_DIR}/llvm/build
     )
-    compile(llvm)
+    compile(llvm/build)
     FIND_PATH (LLVM_DIR LLVMConfig.cmake PATHS ${SETUP_DIR}/llvm/build PATH_SUFFIXES share/llvm/cmake)
 endif ()
 message ( STATUS "LLVM_DIR: ${LLVM_DIR}" )
@@ -109,9 +109,9 @@ FIND_PATH (THORIN_DIR thorin-config.cmake
 )
 if ( (NOT THORIN_DIR) OR FORCE_PULL )
     clone_repository(thorin ${THORIN_URL})
-    configure_build(thorin -DHalf_DIR=${Half_DIR} -DLLVM_DIR=${LLVM_DIR})
+    configure_build(thorin/build -DHalf_DIR=${Half_DIR} -DLLVM_DIR=${LLVM_DIR})
 endif ()
-compile(thorin)
+compile(thorin/build)
 FIND_PATH (THORIN_DIR thorin-config.cmake PATHS ${THORIN_DIR} ${SETUP_DIR}/thorin/build PATH_SUFFIXES share/thorin/cmake)
 message ( STATUS "THORIN_DIR: ${THORIN_DIR}" )
 
@@ -129,9 +129,9 @@ FIND_PATH (AnyDSL_runtime_DIR anydsl_runtime-config.cmake
 if ( NOT AnyDSL_runtime_DIR OR FORCE_PULL )
     clone_repository(runtime ${RUNTIME_URL})
     # TODO: pass OpenCL, CUDA, TBB
-    configure_build(runtime)
+    configure_build(runtime/build)
 endif ()
-compile(runtime)
+compile(runtime/build)
 FIND_PATH (AnyDSL_runtime_DIR AnyDSL_runtime-config.cmake PATHS ${AnyDSL_runtime_DIR} ${SETUP_DIR}/runtime/build PATH_SUFFIXES share/AnyDSL_runtime/cmake)
 message ( STATUS "AnyDSL_runtime_DIR: ${AnyDSL_runtime_DIR}" )
 
@@ -148,8 +148,8 @@ FIND_PATH (IMPALA_DIR impala-config.cmake
 )
 if ( NOT IMPALA_DIR OR FORCE_PULL )
     clone_repository(impala ${IMPALA_URL})
-    configure_build(impala -DTHORIN_DIR=${THORIN_DIR} -DAnyDSL_runtime_DIR=${AnyDSL_runtime_DIR})
+    configure_build(impala/build -DTHORIN_DIR=${THORIN_DIR} -DAnyDSL_runtime_DIR=${AnyDSL_runtime_DIR})
 endif ()
-compile(impala)
+compile(impala/build)
 FIND_PATH (IMPALA_DIR impala-config.cmake PATHS ${SETUP_DIR}/impala/build PATH_SUFFIXES share/impala/cmake)
 message ( STATUS "IMPALA_DIR: ${IMPALA_DIR}" )

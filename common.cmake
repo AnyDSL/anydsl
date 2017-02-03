@@ -19,16 +19,16 @@ function(clone_repository _path _url)
 endfunction()
 
 function(configure_build _path)
-    file(MAKE_DIRECTORY ${SETUP_DIR}/${_path}/build)
+    file(MAKE_DIRECTORY ${SETUP_DIR}/${_path})
     execute_process(
         COMMAND ${CMAKE_COMMAND} ${SPECIFY_GENERATOR} ${SPECIFY_BUILD_TYPE} ${ARGN} ..
-        WORKING_DIRECTORY ${SETUP_DIR}/${_path}/build)
+        WORKING_DIRECTORY ${SETUP_DIR}/${_path})
 endfunction()
 
 function(compile _path)
     foreach (cfg ${CONFIGURATION_TYPES})
         execute_process(
-            COMMAND ${CMAKE_COMMAND} --build ${_path}/build --config ${cfg}
+            COMMAND ${CMAKE_COMMAND} --build ${_path} --config ${cfg}
             WORKING_DIRECTORY ${SETUP_DIR})
     endforeach()
 endfunction()

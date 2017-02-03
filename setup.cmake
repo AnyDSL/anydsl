@@ -57,6 +57,7 @@ FIND_PATH (LLVM_DIR LLVMConfig.cmake
     PATHS
         ${LLVM_DIR}
         $ENV{LLVM_DIR}
+        ${SETUP_DIR}/llvm
         ${SETUP_DIR}/llvm/build
     PATH_SUFFIXES
         share/llvm/cmake

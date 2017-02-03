@@ -7,11 +7,15 @@ function(decompress _filename)
 endfunction()
 
 function(clone_repository _path _url)
-    if(NOT EXISTS ${SETUP_DIR}/${_path})
+    if ( EXISTS ${SETUP_DIR}/${_path} )
+        execute_process(
+            COMMAND ${GIT_EXECUTABLE} pull origin
+            WORKING_DIRECTORY ${SETUP_DIR}/${_path})
+    else ()
         execute_process(
             COMMAND ${GIT_EXECUTABLE} clone --recursive ${_url} ${_path}
             WORKING_DIRECTORY ${SETUP_DIR})
-    endif()
+    endif ()
 endfunction()
 
 function(configure_build _path)

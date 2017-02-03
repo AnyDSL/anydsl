@@ -110,9 +110,9 @@ FIND_PATH (THORIN_DIR thorin-config.cmake
 if ( (NOT THORIN_DIR) OR FORCE_PULL )
     clone_repository(thorin ${THORIN_URL})
     configure_build(thorin -DHalf_DIR=${Half_DIR} -DLLVM_DIR=${LLVM_DIR})
-    compile(thorin)
-    FIND_PATH (THORIN_DIR thorin-config.cmake PATHS ${SETUP_DIR}/thorin/build PATH_SUFFIXES share/thorin/cmake)
 endif ()
+compile(thorin)
+FIND_PATH (THORIN_DIR thorin-config.cmake PATHS ${THORIN_DIR} ${SETUP_DIR}/thorin/build PATH_SUFFIXES share/thorin/cmake)
 message ( STATUS "THORIN_DIR: ${THORIN_DIR}" )
 
 # AnyDSL_runtime
@@ -130,9 +130,9 @@ if ( NOT AnyDSL_runtime_DIR OR FORCE_PULL )
     clone_repository(runtime ${RUNTIME_URL})
     # TODO: pass OpenCL, CUDA, TBB
     configure_build(runtime)
-    compile(runtime)
-    FIND_PATH (AnyDSL_runtime_DIR AnyDSL_runtime-config.cmake PATHS ${SETUP_DIR}/runtime/build PATH_SUFFIXES share/AnyDSL_runtime/cmake)
 endif ()
+compile(runtime)
+FIND_PATH (AnyDSL_runtime_DIR AnyDSL_runtime-config.cmake PATHS ${AnyDSL_runtime_DIR} ${SETUP_DIR}/runtime/build PATH_SUFFIXES share/AnyDSL_runtime/cmake)
 message ( STATUS "AnyDSL_runtime_DIR: ${AnyDSL_runtime_DIR}" )
 
 # impala
@@ -149,7 +149,7 @@ FIND_PATH (IMPALA_DIR impala-config.cmake
 if ( NOT IMPALA_DIR OR FORCE_PULL )
     clone_repository(impala ${IMPALA_URL})
     configure_build(impala -DTHORIN_DIR=${THORIN_DIR} -DAnyDSL_runtime_DIR=${AnyDSL_runtime_DIR})
-    compile(impala)
-    FIND_PATH (IMPALA_DIR impala-config.cmake PATHS ${SETUP_DIR}/impala/build PATH_SUFFIXES share/impala/cmake)
 endif ()
+compile(impala)
+FIND_PATH (IMPALA_DIR impala-config.cmake PATHS ${SETUP_DIR}/impala/build PATH_SUFFIXES share/impala/cmake)
 message ( STATUS "IMPALA_DIR: ${IMPALA_DIR}" )

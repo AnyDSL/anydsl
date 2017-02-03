@@ -15,3 +15,6 @@ rv/
 stincilla/
 thorin/
 traversal/
+config.sh
+project.sh
+build*

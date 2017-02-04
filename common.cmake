@@ -6,14 +6,14 @@ function(decompress _filename)
         WORKING_DIRECTORY ${SETUP_DIR})
 endfunction()
 
-function(clone_repository _path _url)
+function(clone_repository _path _url _branch)
     if ( EXISTS ${SETUP_DIR}/${_path} )
         execute_process(
-            COMMAND ${GIT_EXECUTABLE} pull origin
+            COMMAND ${GIT_EXECUTABLE} pull origin ${_branch}
             WORKING_DIRECTORY ${SETUP_DIR}/${_path})
     else ()
         execute_process(
-            COMMAND ${GIT_EXECUTABLE} clone --recursive ${_url} ${_path}
+            COMMAND ${GIT_EXECUTABLE} clone --branch ${_branch} --recursive ${_url} ${_path}
             WORKING_DIRECTORY ${SETUP_DIR})
     endif ()
 endfunction()

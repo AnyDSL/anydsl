@@ -14,7 +14,7 @@ message(STATUS "PLATFORM: ${PLATFORM}")
 include(common.cmake)
 
 # LLVM and clang
-SET ( LLVM_FILE llvm-3.8.0-${PLATFORM} )
+SET ( LLVM_FILE llvm-3.8.1-${PLATFORM} )
 SET ( LLVM_ARCHIVE ${LLVM_FILE}.zip )
 SET ( LLVM_URL "https://cloud.dfki.de/owncloud/index.php/s/OSbrh2q6AfAj8Pv/download?path=%2F&files=${LLVM_ARCHIVE}" )
 

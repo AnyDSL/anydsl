@@ -22,7 +22,11 @@ function(configure_build _path)
     file(MAKE_DIRECTORY ${SETUP_DIR}/${_path})
     execute_process(
         COMMAND ${CMAKE_COMMAND} ${SPECIFY_GENERATOR} ${SPECIFY_BUILD_TYPE} ${ARGN} ..
-        WORKING_DIRECTORY ${SETUP_DIR}/${_path})
+        WORKING_DIRECTORY ${SETUP_DIR}/${_path}
+        RESULT_VARIABLE _result)
+    if (_result )
+        message(FATAL_ERROR "configure_build(${_path} returned ${_result}")
+    endif()
 endfunction()
 
 function(compile _path)
@@ -33,7 +37,11 @@ function(compile _path)
         execute_process(
             COMMAND ${CMAKE_COMMAND} --build ${_path} --config ${cfg} ${ARGN}
             WORKING_DIRECTORY ${SETUP_DIR}
-            OUTPUT_FILE ${_logfile})
+            OUTPUT_FILE ${_logfile}
+            RESULT_VARIABLE _result)
+        if (_result )
+            message(FATAL_ERROR "compile(${_path} returned ${_result}")
+        endif()
     endforeach()
 endfunction()
 

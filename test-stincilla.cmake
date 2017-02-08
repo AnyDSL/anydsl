@@ -54,6 +54,6 @@ foreach (_be ${VALIDATE_BACKENDS})
         -DIMPALA_DIR=${IMPALA_DIR}
         -DAnyDSL_runtime_DIR=${AnyDSL_runtime_DIR}
         -DBACKEND=${_be})
-    compile(stincilla/build_${_be})
+    compile(stincilla/build_${_be} --clean-first)
     run_tests(stincilla/build_${_be})
 endforeach()

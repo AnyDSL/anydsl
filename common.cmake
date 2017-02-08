@@ -7,7 +7,7 @@ function(decompress _filename)
 endfunction()
 
 function(clone_repository _path _url _branch)
-	if ( EXISTS ${SETUP_DIR}/${_path} )
+    if ( EXISTS ${SETUP_DIR}/${_path} )
         execute_process(
             COMMAND ${GIT_EXECUTABLE} pull origin ${_branch}
             WORKING_DIRECTORY ${SETUP_DIR}/${_path})

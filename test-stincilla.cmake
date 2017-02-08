@@ -47,7 +47,13 @@ message ( STATUS "IMPALA_DIR: ${IMPALA_DIR}" )
 SET ( STINCILLA_URL "https://github.com/AnyDSL/stincilla" )
 
 clone_repository(stincilla ${STINCILLA_URL} cmake-for-jenkins)
-# TODO: perform the following steps for different backends
-configure_build(stincilla/build_cpu -DIMPALA_DIR=${IMPALA_DIR} -DAnyDSL_runtime_DIR=${AnyDSL_runtime_DIR} -DBACKEND=cpu)
-compile(stincilla/build_cpu)
-run_tests(stincilla/build_cpu)
+set (VALIDATE_BACKENDS cpu )
+
+foreach (_be ${VALIDATE_BACKENDS})
+    configure_build(stincilla/build_${_be}
+        -DIMPALA_DIR=${IMPALA_DIR}
+        -DAnyDSL_runtime_DIR=${AnyDSL_runtime_DIR}
+        -DBACKEND=${_be})
+    compile(stincilla/build_${_be})
+    run_tests(stincilla/build_${_be})
+endforeach()

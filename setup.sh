@@ -20,6 +20,18 @@ function remote {
     fi
 }
 
+function clone_or_update {
+    if [ ! -e "${CUR}/$2" ]; then
+        echo ">> clone $1/$2"
+        git clone --recursive `remote $1/$2.git`
+    else
+        echo ">> pull $1/$2"
+        cd $2
+        git pull
+        cd ..
+    fi
+}
+
 # fetch sources
 if [ "${TRAVIS-}" == true ] ; then
     wget http://llvm.org/releases/3.8.1/clang+llvm-3.8.1-x86_64-linux-gnu-ubuntu-14.04.tar.xz
@@ -56,21 +68,12 @@ cd "${CUR}"
 if [ ! -e "${CUR}/half" ]; then
     svn checkout svn://svn.code.sf.net/p/half/code/trunk half
 fi
-if [ ! -e "${CUR}/runtime" ]; then
-    git clone `remote AnyDSL/runtime.git`
-fi
-if [ ! -e "${CUR}/thorin" ]; then
-    git clone `remote AnyDSL/thorin.git`
-fi
-if [ ! -e "${CUR}/impala" ]; then
-    git clone `remote AnyDSL/impala.git`
-fi
-if [ ! -e "${CUR}/rv" ]; then
-    git clone `remote cdl-saarland/rv.git`
-fi
-if [ ! -e "${CUR}/stincilla" ]; then
-    git clone --recursive `remote AnyDSL/stincilla.git`
-fi
+
+clone_or_update cdl-saarland rv
+clone_or_update AnyDSL runtime
+clone_or_update AnyDSL thorin
+clone_or_update AnyDSL impala
+clone_or_update AnyDSL stincilla
 
 # create build/install dirs
 mkdir -p runtime/build/

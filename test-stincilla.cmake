@@ -47,7 +47,7 @@ message ( STATUS "IMPALA_DIR: ${IMPALA_DIR}" )
 SET ( STINCILLA_URL "https://github.com/AnyDSL/stincilla" )
 
 clone_repository(stincilla ${STINCILLA_URL} cmake-for-jenkins)
-set (VALIDATE_BACKENDS cpu )
+set (VALIDATE_BACKENDS cpu cuda )
 
 foreach (_be ${VALIDATE_BACKENDS})
     configure_build(stincilla/build_${_be}

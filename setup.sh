@@ -22,10 +22,10 @@ function remote {
 
 function clone_or_update {
     if [ ! -e "${CUR}/$2" ]; then
-        echo ">> clone $1/$2"
+        echo ">>> clone $1/$2"
         git clone --recursive `remote $1/$2.git`
     else
-        echo ">> pull $1/$2"
+        echo ">>> pull $1/$2"
         cd $2
         git pull
         cd ..

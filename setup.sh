@@ -1,6 +1,9 @@
 #!/bin/bash
 set -eu
 
+echo ">>> update meta project"
+git pull
+
 if [ ! -e config.sh ]; then
     echo "first configure your build:"
     echo "cp config.sh.template config.sh"

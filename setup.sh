@@ -107,17 +107,19 @@ cd "${CUR}/impala/build"
 cmake .. ${COMMON_CMAKE_VARS} -DTHORIN_DIR:PATH="${CUR}/thorin"
 ${MAKE}
 
+# source this file to put clang and impala in path
+cat > "project.sh" <<_EOF_
+export PATH="${CUR}/llvm_install/bin:${CUR}/impala/build/bin:\$PATH"
+_EOF_
+
+source "${CUR}/project.sh"
+
 # configure stincilla but don't build yet
 cd "${CUR}/stincilla/build"
 cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DAnyDSL-runtime_DIR:PATH="${CUR}/runtime" -DBACKEND:STRING="cpu"
 #${MAKE}
 
 cd "${CUR}"
-
-# source this file to put clang and impala in your path
-cat > "project.sh" <<_EOF_
-export PATH="${CUR}/llvm_install/bin:${CUR}/impala/build/bin:\$PATH"
-_EOF_
 
 echo
 echo "!!! Use the following command in order to have 'impala' and 'clang' in your path:"

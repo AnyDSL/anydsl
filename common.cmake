@@ -30,6 +30,14 @@ function(configure_build _path)
 endfunction()
 
 function(compile _path)
+    cmake_policy(SET CMP0057 NEW)
+    if("--pedantic" IN_LIST ARGN)
+        set(_pedantic true)
+        LIST(REMOVE_ITEM ARGN "--pedantic")
+    else()
+        set(_pedantic false)
+    endif()
+
     string(REPLACE "/" "_" _id ${_path})
     foreach (cfg ${CONFIGURATION_TYPES})
         set(_logfile ${SETUP_DIR}/build_${_id}_${cfg}.log)
@@ -39,7 +47,7 @@ function(compile _path)
             WORKING_DIRECTORY ${SETUP_DIR}
             OUTPUT_FILE ${_logfile}
             RESULT_VARIABLE _result)
-        if (_result )
+        if (_result AND _pedantic)
             message(FATAL_ERROR "compile(${_path} returned ${_result}")
         endif()
     endforeach()

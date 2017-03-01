@@ -2,7 +2,11 @@
 set -eu
 
 echo ">>> update meta project"
-git pull
+meta_out=$(git pull)
+if [ "$meta_out" != "Already up-to-date." ]; then
+    echo "meta project has been updated; please rerun script"
+    exit 0
+fi
 
 if [ ! -e config.sh ]; then
     echo "first configure your build:"

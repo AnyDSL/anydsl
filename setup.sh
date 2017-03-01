@@ -112,7 +112,7 @@ cmake .. ${COMMON_CMAKE_VARS} -DTHORIN_DIR:PATH="${CUR}/thorin"
 ${MAKE}
 
 # source this file to put clang and impala in path
-cat > "project.sh" <<_EOF_
+cat > "${CUR}/project.sh" <<_EOF_
 export PATH="${CUR}/llvm_install/bin:${CUR}/impala/build/bin:\$PATH"
 _EOF_
 

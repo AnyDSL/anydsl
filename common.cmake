@@ -57,7 +57,9 @@ function(run_tests _path)
     string(REPLACE "/" "_" _id ${_path})
     # set(cfg Release)
     foreach (cfg ${CONFIGURATION_TYPES})
-        set(_logfile ${SETUP_DIR}/testing_${_id}_${cfg}.xml)
+        set(_logdir ${SETUP_DIR}/testing/${_id}_${cfg})
+        file(MAKE_DIRECTORY ${_logdir})
+        set(_logfile ${_logdir}/results.xml)
         message(STATUS "Running tests for ${_path} (${cfg}) -> ${_logfile}")
         execute_process(
             COMMAND ctest -C ${cfg} --no-compress-output -T Test

@@ -2,12 +2,10 @@ anydsl.github.io/
 anydsl.wiki/
 config.sh
 fasis/
-half/
+half*
 imbatracer/
 impala/
-llvm/
-llvm_build/
-llvm_install/
+llvm*
 project.sh
 rodent/
 runtime/

@@ -1,6 +1,13 @@
 #!/bin/bash
 set -eu
 
+echo ">>> update meta project"
+meta_out=$(git pull)
+if [ "$meta_out" != "Already up-to-date." ]; then
+    echo "meta project has been updated; please rerun script"
+    exit 0
+fi
+
 if [ ! -e config.sh ]; then
     echo "first configure your build:"
     echo "cp config.sh.template config.sh"
@@ -17,6 +24,18 @@ function remote {
         echo "https://github.com/$1"
     else
         echo "git@github.com:$1"
+    fi
+}
+
+function clone_or_update {
+    if [ ! -e "${CUR}/$2" ]; then
+        echo ">>> clone $1/$2"
+        git clone --recursive `remote $1/$2.git`
+    else
+        echo ">>> pull $1/$2"
+        cd $2
+        git pull
+        cd ..
     fi
 }
 
@@ -56,21 +75,12 @@ cd "${CUR}"
 if [ ! -e "${CUR}/half" ]; then
     svn checkout svn://svn.code.sf.net/p/half/code/trunk half
 fi
-if [ ! -e "${CUR}/runtime" ]; then
-    git clone `remote AnyDSL/runtime.git`
-fi
-if [ ! -e "${CUR}/thorin" ]; then
-    git clone `remote AnyDSL/thorin.git`
-fi
-if [ ! -e "${CUR}/impala" ]; then
-    git clone `remote AnyDSL/impala.git`
-fi
-if [ ! -e "${CUR}/rv" ]; then
-    git clone `remote cdl-saarland/rv.git`
-fi
-if [ ! -e "${CUR}/stincilla" ]; then
-    git clone --recursive `remote AnyDSL/stincilla.git`
-fi
+
+clone_or_update cdl-saarland rv
+clone_or_update AnyDSL runtime
+clone_or_update AnyDSL thorin
+clone_or_update AnyDSL impala
+clone_or_update AnyDSL stincilla
 
 # create build/install dirs
 mkdir -p runtime/build/
@@ -101,22 +111,20 @@ cd "${CUR}/impala/build"
 cmake .. ${COMMON_CMAKE_VARS} -DTHORIN_DIR:PATH="${CUR}/thorin"
 ${MAKE}
 
-cd "${CUR}"
-
-# source this file to put clang and impala in your path
-cat > "project.sh" <<_EOF_
+# source this file to put clang and impala in path
+cat > "${CUR}/project.sh" <<_EOF_
 export PATH="${CUR}/llvm_install/bin:${CUR}/impala/build/bin:\$PATH"
 _EOF_
 
-source project.sh
+source "${CUR}/project.sh"
 
 # configure stincilla but don't build yet
 cd "${CUR}/stincilla/build"
 cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DAnyDSL-runtime_DIR:PATH="${CUR}/runtime" -DBACKEND:STRING="cpu"
 #${MAKE}
 
+cd "${CUR}"
+
 echo
-echo "Use the following command in order to have 'impala' and 'clang' in your path:"
-echo "source project.sh"
-echo "This has already been done for this shell session"
-echo "WARNING: Note that this will override any system installation of llvm/clang in your current shell session."
+echo "!!! Use the following command in order to have 'impala' and 'clang' in your path:"
+echo "!!! source project.sh"

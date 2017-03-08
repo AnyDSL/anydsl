@@ -14,25 +14,25 @@ message(STATUS "PLATFORM: ${PLATFORM}")
 include(common.cmake)
 
 # Half
-SET ( HALF_VERSION 1.11.0 )
-SET ( HALF_URL "http://downloads.sourceforge.net/project/half/half/${HALF_VERSION}/half-${HALF_VERSION}.zip" )
+SET ( HALF_FILE half-1.11.0 )
+SET ( HALF_ARCHIVE ${HALF_FILE}.zip )
+SET ( HALF_URL "https://cloud.dfki.de/owncloud/index.php/s/OSbrh2q6AfAj8Pv/download?path=%2F&files=${HALF_ARCHIVE}" )
 
 FIND_PATH (Half_DIR half.hpp
     PATHS
         ${Half_DIR}
         $ENV{Half_DIR}
-        ${SETUP_DIR}/half-${HALF_VERSION}
+        ${SETUP_DIR}/${HALF_FILE}
     PATH_SUFFIXES
         include
 )
 if ( NOT Half_DIR )
-    set(HALF_FILE half.zip)
-    if (NOT EXISTS ${SETUP_DIR}/${HALF_FILE})
+    if (NOT EXISTS ${SETUP_DIR}/${HALF_ARCHIVE})
         message(STATUS "Downloading ${HALF_URL}")
-        file(DOWNLOAD ${HALF_URL} ${SETUP_DIR}/${HALF_FILE})
+        file(DOWNLOAD ${HALF_URL} ${SETUP_DIR}/${HALF_ARCHIVE})
     endif ()
-    decompress(${HALF_FILE})
-    FIND_PATH (Half_DIR half.hpp PATHS ${SETUP_DIR}/half-${HALF_VERSION} PATH_SUFFIXES include)
+    decompress(${HALF_ARCHIVE})
+    FIND_PATH (Half_DIR half.hpp PATHS ${SETUP_DIR}/${HALF_FILE} PATH_SUFFIXES include)
 endif ()
 message ( STATUS "Half_DIR: ${Half_DIR}" )
 

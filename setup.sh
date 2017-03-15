@@ -29,9 +29,9 @@ function remote {
 
 function clone_or_update {
     cd "${CUR}"
-    mkdir -p "$2"/build/
     if [ ! -e "$2" ]; then
         echo ">>> clone $1/$2"
+        echo "git clone --recursive `remote $1/$2.git`"
         git clone --recursive `remote $1/$2.git`
     else
         echo ">>> pull $1/$2"
@@ -39,6 +39,7 @@ function clone_or_update {
         git pull
         cd ..
     fi
+    mkdir -p "$2"/build/
 }
 
 # fetch sources

@@ -10,3 +10,7 @@
 
 # set this to true if you don't have a github account
 : ${HTTPS:=false}
+
+# set this to false if you don't want to build with LLVM
+# setting to false is meant to speed up debugging and not recommended for end users
+: ${LLVM:=true}

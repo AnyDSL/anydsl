@@ -40,12 +40,7 @@ function clone_or_update {
 }
 
 # fetch sources
-if [ "${TRAVIS-}" == true ] ; then
-    wget http://llvm.org/releases/3.8.1/clang+llvm-3.8.1-x86_64-linux-gnu-ubuntu-14.04.tar.xz
-    tar -xvf clang+llvm-3.8.1-x86_64-linux-gnu-ubuntu-14.04.tar.xz
-    rm clang+llvm-3.8.1-x86_64-linux-gnu-ubuntu-14.04.tar.xz
-    mv clang+llvm-3.8.1-x86_64-linux-gnu-ubuntu-14.04/ llvm_install/
-else
+if [ "${LLVM-}" == true ] ; then
     mkdir -p llvm_build/
     
     if [ ! -e  "${CUR}/llvm" ]; then
@@ -76,7 +71,10 @@ if [ ! -e "${CUR}/half" ]; then
     svn checkout svn://svn.code.sf.net/p/half/code/trunk half
 fi
 
-clone_or_update cdl-saarland rv
+if [ "${LLVM-}" == true ] ; then
+    clone_or_update cdl-saarland rv
+fi
+
 clone_or_update AnyDSL runtime
 clone_or_update AnyDSL thorin
 clone_or_update AnyDSL impala
@@ -90,9 +88,11 @@ mkdir -p rv/build/
 mkdir -p stincilla/build/
 
 # build rv
-cd "${CUR}/rv/build"
-cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake"
-${MAKE}
+if [ "${LLVM-}" == true ] ; then
+    cd "${CUR}/rv/build"
+    cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake"
+    ${MAKE}
+fi
 
 COMMON_CMAKE_VARS=${CMAKE_MAKE}\ -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE}\ -DHalf_DIR:PATH="${CUR}/half/include"\ -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake"\ -DRV_DIR:PATH="${CUR}/rv"
 

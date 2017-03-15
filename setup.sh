@@ -28,7 +28,8 @@ function remote {
 }
 
 function clone_or_update {
-    if [ ! -e "${CUR}/$2" ]; then
+    cd "${CUR}"
+    if [ ! -e "$2" ]; then
         echo ">>> clone $1/$2"
         git clone --recursive `remote $1/$2.git`
         mkdir -p "$2"/build/
@@ -63,16 +64,12 @@ if [ "${LLVM-}" == true ] ; then
         cmake ../llvm ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX:PATH="${CUR}/llvm_install" \
             -DLLVM_ENABLE_RTTI:BOOL=ON -DLLVM_INCLUDE_TESTS:BOOL=OFF -DLLVM_TARGETS_TO_BUILD="AArch64;AMDGPU;ARM;NVPTX;X86"
         ${MAKE} install
+        cd "${CUR}"
     fi
 fi
 
-cd "${CUR}"
-
 if [ ! -e "${CUR}/half" ]; then
     svn checkout svn://svn.code.sf.net/p/half/code/trunk half
-fi
-
-if [ "${LLVM-}" == true ] ; then
 fi
 
 # rv

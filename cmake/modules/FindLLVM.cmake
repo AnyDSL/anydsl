@@ -51,7 +51,7 @@ if(NOT LLVM_DIR AND LLVM_FIND_REQUIRED)
     )
 
     if(MSVC)
-        foreach(_cfg ${CMAKE_CONFIGURATION_TYPE})
+        foreach(_cfg ${CMAKE_CONFIGURATION_TYPES})
             execute_process(COMMAND ${CMAKE_COMMAND} --build ${CONTRIB_DIR}/llvm/build --config ${_cfg} -- ${AnyDSL_BUILD_FLAGS})
         endforeach()
     elseif(DEFINED CMAKE_BUILD_TYPE)

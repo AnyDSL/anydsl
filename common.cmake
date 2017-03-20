@@ -1,21 +1,24 @@
 
 function(decompress _filename)
     message(STATUS "Extracting ${_filename}")
+	get_filename_component(_dir ${_filename} DIRECTORY)
+	get_filename_component(_file ${_filename} NAME)
     execute_process(
-        COMMAND ${CMAKE_COMMAND} -E tar xf ${_filename}
-        WORKING_DIRECTORY ${SETUP_DIR})
+        COMMAND ${CMAKE_COMMAND} -E tar xvf ${_file}
+        WORKING_DIRECTORY ${_dir})
 endfunction()
 
-function(clone_repository _path _url _branch)
-    if ( EXISTS ${SETUP_DIR}/${_path} )
+function(clone_repository _path _url _branch _cwd)
+	# get_filename_component(_dir ${_filename} DIRECTORY)
+    if(EXISTS ${_cwd}/${_path})
         execute_process(
             COMMAND ${GIT_EXECUTABLE} pull origin ${_branch}
-            WORKING_DIRECTORY ${SETUP_DIR}/${_path})
-    else ()
+            WORKING_DIRECTORY ${_cwd}/${_path})
+    else()
         execute_process(
             COMMAND ${GIT_EXECUTABLE} clone --branch ${_branch} --recursive ${_url} ${_path}
-            WORKING_DIRECTORY ${SETUP_DIR})
-    endif ()
+            WORKING_DIRECTORY ${_cwd})
+    endif()
 endfunction()
 
 function(configure_build _path)

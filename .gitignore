@@ -16,3 +16,4 @@ traversal/
 config.sh
 project.sh
 build*
+contrib/

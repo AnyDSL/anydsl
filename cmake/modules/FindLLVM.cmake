@@ -78,6 +78,3 @@ endif ()
 if(EXISTS ${LLVM_DIR}/LLVMConfig.cmake)
     include(${LLVM_DIR}/LLVMConfig.cmake)
 endif()
-
-# include(FindPackageHandleStandardArgs)
-# find_package_handle_standard_args(LLVM DEFAULT_MSG LLVM_DIR)

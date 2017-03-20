@@ -69,7 +69,7 @@ if(EXISTS ${CONTRIB_DIR}/llvm/build)
         message(STATUS "Building pre-configured LLVM at ${CONTRIB_DIR}/llvm/build (${CMAKE_BUILD_TYPE})")
         execute_process(COMMAND ${CMAKE_COMMAND} --build ${CONTRIB_DIR}/llvm/build -- ${AnyDSL_BUILD_FLAGS})
     else()
-        message(STATUS "Please build the pre-configured LLVM at ${CONTRIB_DIR}/llvm/build")
+        message(WARNING "Please build the pre-configured LLVM at ${CONTRIB_DIR}/llvm/build")
     endif()
 
     find_path(LLVM_DIR LLVMConfig.cmake PATHS ${CONTRIB_DIR}/llvm/build ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_BINARY_DIR} PATH_SUFFIXES share/llvm/cmake contrib/llvm/share/llvm/cmake)

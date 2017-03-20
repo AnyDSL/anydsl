@@ -7,10 +7,10 @@
 #  Half_INCLUDE_DIRS  - where to find Half library include file
 #  Half_FOUND         - True if Half library is found
 
-if(NOT PACKAGE_FIND_VERSION)
-    set(PACKAGE_FIND_VERSION 1.11.0)
+if(NOT Half_FIND_VERSION)
+    set(Half_FIND_VERSION 1.11.0)
 endif()
-set(Half_URL "https://svn.code.sf.net/p/half/code/tags/release-${PACKAGE_FIND_VERSION}")
+set(Half_URL "https://svn.code.sf.net/p/half/code/tags/release-${Half_FIND_VERSION}")
 
 find_path(Half_DIR half.hpp
     PATHS

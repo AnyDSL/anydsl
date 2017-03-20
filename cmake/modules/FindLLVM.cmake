@@ -48,12 +48,15 @@ endif()
 # this is fast if it previously happened and allows to resume LLVM builds
 if(EXISTS ${CONTRIB_DIR}/llvm/build)
     set(LLVM_TARGETS_TO_BUILD "AArch64;AMDGPU;ARM;NVPTX;X86" CACHE STRING "limit targets of LLVM" FORCE)
+    if(CMAKE_GENERATOR_PLATFORM)
+        set(SPECIFY_PLATFORM -A ${CMAKE_GENERATOR_PLATFORM})
+    endif()
+    set(LLVM_CMAKE_FLAGS
+        -DLLVM_INCLUDE_TESTS:BOOL=OFF
+        "-DLLVM_TARGETS_TO_BUILD=${LLVM_TARGETS_TO_BUILD}"
+        -DLLVM_ENABLE_RTTI:BOOL=ON)
     execute_process(
-        COMMAND ${CMAKE_COMMAND} -G ${CMAKE_GENERATOR}
-            -DLLVM_INCLUDE_TESTS:BOOL=OFF
-            "-DLLVM_TARGETS_TO_BUILD=${LLVM_TARGETS_TO_BUILD}"
-            -DLLVM_ENABLE_RTTI:BOOL=ON
-        ..
+        COMMAND ${CMAKE_COMMAND} -G ${CMAKE_GENERATOR} ${SPECIFY_PLATFORM} ${LLVM_CMAKE_FLAGS} ..
         WORKING_DIRECTORY ${CONTRIB_DIR}/llvm/build
     )
 

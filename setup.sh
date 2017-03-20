@@ -79,12 +79,9 @@ if [ "${LLVM-}" == true ] ; then
     cd "${CUR}/rv/build"
     cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake"
     ${MAKE}
-fi
-
-if [ "${LLVM-}" == true ] ; then
-    COMMON_CMAKE_VARS=${CMAKE_MAKE}\ -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE}\ -DHalf_DIR:PATH="${CUR}/half/include"\ -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake"\ -DRV_DIR:PATH="${CUR}/rv"
+    LLVM_VARS=-DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake"\ -DRV_DIR:PATH="${CUR}/rv"
 else
-    COMMON_CMAKE_VARS=${CMAKE_MAKE}\ -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE}\ -DHalf_DIR:PATH="${CUR}/half/include"\ -DCMAKE_DISABLE_FIND_PACKAGE_LLVM=TRUE\ -DCMAKE_DISABLE_FIND_PACKAGE_RV=TRUE
+    LLVM_VARS=-DCMAKE_DISABLE_FIND_PACKAGE_LLVM=TRUE\ -DCMAKE_DISABLE_FIND_PACKAGE_RV=TRUE
 fi
 
 # runtime
@@ -96,13 +93,13 @@ ${MAKE}
 # thorin
 clone_or_update AnyDSL thorin
 cd "${CUR}/thorin/build"
-cmake .. ${COMMON_CMAKE_VARS}
+cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} ${LLVM_VARS} -DHalf_DIR:PATH="${CUR}/half/include"
 ${MAKE}
 
 # impala
 clone_or_update AnyDSL impala
 cd "${CUR}/impala/build"
-cmake .. ${COMMON_CMAKE_VARS} -DTHORIN_DIR:PATH="${CUR}/thorin"
+cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DThorin_DIR:PATH="${CUR}/thorin/build/share/thorin/cmake"
 ${MAKE}
 
 # source this file to put clang and impala in path

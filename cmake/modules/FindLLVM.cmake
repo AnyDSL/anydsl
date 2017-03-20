@@ -18,6 +18,8 @@ find_path(LLVM_DIR LLVMConfig.cmake
     PATH_SUFFIXES
         share/llvm/cmake
 )
+
+# download and extract LLVM and CLANG
 if(NOT LLVM_DIR AND LLVM_FIND_REQUIRED)
     file(MAKE_DIRECTORY ${CONTRIB_DIR})
     set(LLVM_FILE ${CONTRIB_DIR}/llvm-${LLVM_FIND_VERSION}.tar.xz)
@@ -39,8 +41,13 @@ if(NOT LLVM_DIR AND LLVM_FIND_REQUIRED)
         decompress(${CLANG_FILE})
         file(RENAME ${CONTRIB_DIR}/cfe-${LLVM_FIND_VERSION}.src ${CONTRIB_DIR}/llvm/tools/clang)
     endif()
-    set(LLVM_TARGETS_TO_BUILD "AArch64;AMDGPU;ARM;NVPTX;X86" CACHE STRING "limit targets of LLVM" FORCE)
     file(MAKE_DIRECTORY ${CONTRIB_DIR}/llvm/build)
+endif()
+
+# always configure and build LLVM at AnyDSL's cmake configure time
+# this is fast if it previously happened and allows to resume LLVM builds
+if(EXISTS ${CONTRIB_DIR}/llvm/build)
+    set(LLVM_TARGETS_TO_BUILD "AArch64;AMDGPU;ARM;NVPTX;X86" CACHE STRING "limit targets of LLVM" FORCE)
     execute_process(
         COMMAND ${CMAKE_COMMAND} -G ${CMAKE_GENERATOR}
             -DLLVM_INCLUDE_TESTS:BOOL=OFF

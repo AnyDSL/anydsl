@@ -11,12 +11,13 @@ if(NOT LLVM_URL)
     set(LLVM_URL "http://llvm.org/releases/${LLVM_FIND_VERSION}/llvm-${LLVM_FIND_VERSION}.src.tar.xz")
 endif()
 
+set(LLVM_BUILD_DIR ${CONTRIB_DIR}/llvm/build)
 find_path(LLVM_DIR LLVMConfig.cmake
     PATHS
         ${LLVM_DIR}
         $ENV{LLVM_DIR}
         ${CONTRIB_DIR}/llvm
-        ${CONTRIB_DIR}/llvm/build
+        ${LLVM_BUILD_DIR}
     PATH_SUFFIXES
         share/llvm/cmake
 )
@@ -50,13 +51,13 @@ if(NOT LLVM_DIR AND LLVM_FIND_REQUIRED)
             decompress(${CLANG_FILE})
             file(RENAME ${CONTRIB_DIR}/cfe-${LLVM_FIND_VERSION}.src ${CONTRIB_DIR}/llvm/tools/clang)
         endif()
-        file(MAKE_DIRECTORY ${CONTRIB_DIR}/llvm/build)
+        file(MAKE_DIRECTORY ${LLVM_BUILD_DIR})
     endif()
 endif()
 
 # always configure and build LLVM at AnyDSL's cmake configure time
 # this is fast if it previously happened and allows to resume LLVM builds
-if(EXISTS ${CONTRIB_DIR}/llvm/build)
+if(EXISTS ${LLVM_BUILD_DIR} AND NOT TARGET LLVM)
     set(LLVM_TARGETS_TO_BUILD "AArch64;AMDGPU;ARM;NVPTX;X86" CACHE STRING "limit targets of LLVM" FORCE)
     if(CMAKE_GENERATOR_PLATFORM)
         set(SPECIFY_PLATFORM -A ${CMAKE_GENERATOR_PLATFORM})
@@ -67,7 +68,7 @@ if(EXISTS ${CONTRIB_DIR}/llvm/build)
         -DLLVM_ENABLE_RTTI:BOOL=ON)
     execute_process(
         COMMAND ${CMAKE_COMMAND} -G ${CMAKE_GENERATOR} ${SPECIFY_PLATFORM} ${LLVM_CMAKE_FLAGS} ..
-        WORKING_DIRECTORY ${CONTRIB_DIR}/llvm/build
+        WORKING_DIRECTORY ${LLVM_BUILD_DIR}
     )
 
     if(MSVC)
@@ -76,13 +77,15 @@ if(EXISTS ${CONTRIB_DIR}/llvm/build)
             execute_process(COMMAND ${CMAKE_COMMAND} --build ${CONTRIB_DIR}/llvm/build --config ${_cfg} -- ${AnyDSL_BUILD_FLAGS})
         endforeach()
     elseif(DEFINED CMAKE_BUILD_TYPE)
-        message(STATUS "Building pre-configured LLVM at ${CONTRIB_DIR}/llvm/build (${CMAKE_BUILD_TYPE})")
-        execute_process(COMMAND ${CMAKE_COMMAND} --build ${CONTRIB_DIR}/llvm/build -- ${AnyDSL_BUILD_FLAGS})
+        add_custom_target(LLVM ALL
+            COMMAND ${CMAKE_COMMAND} --build ${LLVM_BUILD_DIR} -- ${AnyDSL_BUILD_FLAGS}
+            COMMENT "Building pre-configured LLVM at ${LLVM_BUILD_DIR} (${CMAKE_BUILD_TYPE})"
+            VERBATIM)
     else()
-        message(WARNING "Please build the pre-configured LLVM at ${CONTRIB_DIR}/llvm/build")
+        message(WARNING "Please build the pre-configured LLVM at ${LLVM_BUILD_DIR}")
     endif()
 
-    find_path(LLVM_DIR LLVMConfig.cmake PATHS ${CONTRIB_DIR}/llvm/build ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_BINARY_DIR} PATH_SUFFIXES share/llvm/cmake contrib/llvm/share/llvm/cmake)
+    find_path(LLVM_DIR LLVMConfig.cmake PATHS ${LLVM_BUILD_DIR} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_BINARY_DIR} PATH_SUFFIXES share/llvm/cmake contrib/llvm/share/llvm/cmake)
 endif ()
 
 if(EXISTS ${LLVM_DIR}/LLVMConfig.cmake)

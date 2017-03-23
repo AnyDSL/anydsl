@@ -12,6 +12,10 @@ if(NOT LLVM_URL)
 endif()
 
 set(LLVM_BUILD_DIR ${CONTRIB_DIR}/llvm/build)
+if(CMAKE_BUILD_TYPE)
+    set(LLVM_BUILD_DIR ${LLVM_BUILD_DIR}_${CMAKE_BUILD_TYPE})
+endif()
+
 find_path(LLVM_DIR LLVMConfig.cmake
     PATHS
         ${LLVM_DIR}

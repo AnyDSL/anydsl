@@ -55,4 +55,7 @@ message(STATUS "AnyDSL_impala_DIR: ${AnyDSL_impala_DIR}")
 set(Impala_DIR ${AnyDSL_impala_DIR})
 set(IMPALA_DIR ${AnyDSL_impala_DIR})
 
+if (CTest_CONFIG_URL)
+    file(DOWNLOAD ${CTest_CONFIG_URL} ${CMAKE_CURRENT_SOURCE_DIR}/CTestConfig.cmake)
+endif()
 include(CTest)

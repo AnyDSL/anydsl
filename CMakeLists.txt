@@ -54,3 +54,5 @@ message(STATUS "AnyDSL_impala_DIR: ${AnyDSL_impala_DIR}")
 # preset of deprecated variables
 set(Impala_DIR ${AnyDSL_impala_DIR})
 set(IMPALA_DIR ${AnyDSL_impala_DIR})
+
+include(CTest)

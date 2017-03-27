@@ -43,6 +43,9 @@ message(STATUS "AnyDSL_thorin_DIR: ${AnyDSL_thorin_DIR}")
 # preset of deprecated variables
 set(Thorin_DIR ${AnyDSL_thorin_DIR})
 set(THORIN_DIR ${AnyDSL_thorin_DIR})
+if(TARGET LLVM)
+    add_dependencies(thorin LLVM)
+endif()
 
 # AnyDSL_runtime
 fetch_anydsl_package(AnyDSL_runtime_DIR runtime AnyDSL_runtime https://github.com/AnyDSL/runtime)

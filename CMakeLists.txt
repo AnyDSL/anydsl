@@ -21,7 +21,7 @@ message(STATUS "AnyDSL default branch: ${AnyDSL_DEFAULT_BRANCH}")
 message(STATUS "AnyDSL build flags: ${AnyDSL_BUILD_FLAGS}")
 
 # Half
-find_package(Half 1.12.0 REQUIRED)
+find_package(Half 1.11.0 REQUIRED)
 message(STATUS "Half_DIR: ${Half_DIR}")
 
 # LLVM and clang

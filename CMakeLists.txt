@@ -25,7 +25,7 @@ find_package(Half 1.12.0 REQUIRED)
 message(STATUS "Half_DIR: ${Half_DIR}")
 
 # LLVM and clang
-if(AnyDSL_LLVM_REQUIRED)
+if(AnyDSL_LLVM_REQUIRED AND NOT CMAKE_DISABLE_FIND_PACKAGE_LLVM)
     set(LLVM_REQUIRED "REQUIRED")
 endif()
 find_package(LLVM 3.8.1 EXACT ${LLVM_REQUIRED})

@@ -17,3 +17,4 @@ config.sh
 project.sh
 build*
 contrib/
+CTestConfig.cmake

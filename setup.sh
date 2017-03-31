@@ -1,7 +1,24 @@
 #!/bin/bash
 set -eu
 
-echo ">>> update meta project"
+COLOR_RED="\033[0;31m"
+COLOR_RESET="\033[0m"
+
+function git_branch {
+    local git_status="$(git status 2> /dev/null)"
+    local on_branch="On branch ([^${IFS}]*)"
+    local on_commit="HEAD detached at ([^${IFS}]*)"
+
+    if [[ $git_status =~ $on_branch ]]; then
+        local branch=${BASH_REMATCH[1]}
+        echo -e "$COLOR_RED($branch)$COLOR_RESET"
+    elif [[ $git_status =~ $on_commit ]]; then
+        local commit=${BASH_REMATCH[1]}
+        echo -e "$COLOR_RED($commit)$COLOR_RESET"
+    fi
+}
+
+echo ">>> update meta project $(git_branch)"
 meta_out=$(git pull)
 if [ "$meta_out" != "Already up-to-date." ]; then
     echo "meta project has been updated - I rerun the script"
@@ -34,8 +51,8 @@ function clone_or_update {
         echo "git clone --recursive `remote $1/$2.git`"
         git clone --recursive `remote $1/$2.git`
     else
-        echo ">>> pull $1/$2"
         cd $2
+        echo ">>> pull $1/$2 $(git_branch)"
         git pull
         cd ..
     fi

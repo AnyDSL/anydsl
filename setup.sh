@@ -23,6 +23,7 @@ meta_out=$(git pull)
 if [ "$meta_out" != "Already up-to-date." ]; then
     echo "meta project has been updated - I rerun the script"
     ./$0
+    exit
 fi
 
 if [ ! -e config.sh ]; then

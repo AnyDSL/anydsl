@@ -7,7 +7,7 @@ if exists("b:current_syntax")
     finish
 endif
 
-syn keyword     impalaConditional   if else
+syn keyword     impalaConditional   if else match
 syn keyword     impalaException     return break continue
 syn keyword     impalaRepeat        while for with in
 syn keyword     impalaStorageClass  let extern mut static

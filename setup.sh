@@ -63,7 +63,7 @@ function clone_or_update {
 # fetch sources
 if [ "${LLVM-}" == true ] ; then
     mkdir -p llvm_build/
-    
+
     if [ ! -e  "${CUR}/llvm" ]; then
         wget http://llvm.org/releases/3.8.1/llvm-3.8.1.src.tar.xz
         tar xf llvm-3.8.1.src.tar.xz
@@ -76,7 +76,7 @@ if [ "${LLVM-}" == true ] ; then
         mv cfe-3.8.1.src clang
         cd "${CUR}"
     fi
-    
+
     # build llvm
     if [ ! -e "${CUR}/llvm_install/share/llvm/cmake" ]; then
         cd llvm_build

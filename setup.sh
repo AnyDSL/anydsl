@@ -46,15 +46,19 @@ function remote {
 }
 
 function clone_or_update {
-    cd "${CUR}"
+    branch=${3:-master}
     if [ ! -e "$2" ]; then
         echo ">>> clone $1/$2"
         echo "git clone --recursive `remote $1/$2.git`"
         git clone --recursive `remote $1/$2.git`
+        cd $2
+        git checkout $branch
+        cd ..
     else
         cd $2
         echo ">>> pull $1/$2 $(git_branch)"
         git pull
+        git checkout $branch
         cd ..
     fi
     mkdir -p "$2"/build/
@@ -65,15 +69,17 @@ if [ "${LLVM-}" == true ] ; then
     mkdir -p llvm_build/
 
     if [ ! -e  "${CUR}/llvm" ]; then
-        wget http://llvm.org/releases/3.8.1/llvm-3.8.1.src.tar.xz
-        tar xf llvm-3.8.1.src.tar.xz
-        rm llvm-3.8.1.src.tar.xz
-        mv llvm-3.8.1.src llvm
+        wget http://releases.llvm.org/4.0.0/llvm-4.0.0.src.tar.xz
+        tar xf llvm-4.0.0.src.tar.xz
+        rm llvm-4.0.0.src.tar.xz
+        mv llvm-4.0.0.src llvm
         cd llvm/tools
-        wget http://llvm.org/releases/3.8.1/cfe-3.8.1.src.tar.xz
-        tar xf cfe-3.8.1.src.tar.xz
-        rm cfe-3.8.1.src.tar.xz
-        mv cfe-3.8.1.src clang
+        wget http://releases.llvm.org/4.0.0/cfe-4.0.0.src.tar.xz
+        tar xf cfe-4.0.0.src.tar.xz
+        rm cfe-4.0.0.src.tar.xz
+        mv cfe-4.0.0.src clang
+        # rv
+        clone_or_update cdl-saarland rv release_40
         cd "${CUR}"
     fi
 
@@ -85,40 +91,15 @@ if [ "${LLVM-}" == true ] ; then
         ${MAKE} install
         cd "${CUR}"
     fi
+
+    LLVM_VARS=-DLLVM_DIR:PATH="${CUR}/llvm_install/lib/cmake/llvm"
+else
+    LLVM_VARS=-DCMAKE_DISABLE_FIND_PACKAGE_LLVM=TRUE
 fi
 
 if [ ! -e "${CUR}/half" ]; then
     svn checkout svn://svn.code.sf.net/p/half/code/trunk half
 fi
-
-# rv
-if [ "${LLVM-}" == true ] ; then
-    clone_or_update cdl-saarland rv
-    cd "${CUR}/rv/build"
-    cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake"
-    ${MAKE}
-    LLVM_VARS=-DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake"\ -DRV_DIR:PATH="${CUR}/rv"
-else
-    LLVM_VARS=-DCMAKE_DISABLE_FIND_PACKAGE_LLVM=TRUE\ -DCMAKE_DISABLE_FIND_PACKAGE_RV=TRUE
-fi
-
-# runtime
-clone_or_update AnyDSL runtime
-cd "${CUR}/runtime/build"
-cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE}
-${MAKE}
-
-# thorin
-clone_or_update AnyDSL thorin
-cd "${CUR}/thorin/build"
-cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} ${LLVM_VARS} -DHalf_DIR:PATH="${CUR}/half/include"
-${MAKE}
-
-# impala
-clone_or_update AnyDSL impala
-cd "${CUR}/impala/build"
-cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DThorin_DIR:PATH="${CUR}/thorin/build/share/thorin/cmake"
-${MAKE}
 
 # source this file to put clang and impala in path
 cat > "${CUR}/project.sh" <<_EOF_
@@ -127,7 +108,29 @@ _EOF_
 
 source "${CUR}/project.sh"
 
+# runtime
+cd "${CUR}"
+clone_or_update AnyDSL runtime
+cd "${CUR}/runtime/build"
+cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE}
+${MAKE}
+
+# thorin
+cd "${CUR}"
+clone_or_update AnyDSL thorin llvm_40
+cd "${CUR}/thorin/build"
+cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} ${LLVM_VARS} -DHalf_DIR:PATH="${CUR}/half/include"
+${MAKE}
+
+# impala
+cd "${CUR}"
+clone_or_update AnyDSL impala llvm_40
+cd "${CUR}/impala/build"
+cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DThorin_DIR:PATH="${CUR}/thorin/build/share/thorin/cmake"
+${MAKE}
+
 # configure stincilla but don't build yet
+cd "${CUR}"
 clone_or_update AnyDSL stincilla
 cd "${CUR}/stincilla/build"
 cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DAnyDSL-runtime_DIR:PATH="${CUR}/runtime" -DBACKEND:STRING="cpu"

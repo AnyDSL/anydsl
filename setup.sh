@@ -46,15 +46,19 @@ function remote {
 }
 
 function clone_or_update {
-    cd "${CUR}"
+    branch=${3:-master}
     if [ ! -e "$2" ]; then
         echo ">>> clone $1/$2"
         echo "git clone --recursive `remote $1/$2.git`"
         git clone --recursive `remote $1/$2.git`
+        cd $2
+        git checkout $branch
+        cd ..
     else
         cd $2
         echo ">>> pull $1/$2 $(git_branch)"
         git pull
+        git checkout $branch
         cd ..
     fi
     mkdir -p "$2"/build/
@@ -93,7 +97,7 @@ fi
 
 # rv
 if [ "${LLVM-}" == true ] ; then
-    clone_or_update cdl-saarland rv
+    clone_or_update cdl-saarland rv release_38
     cd "${CUR}/rv/build"
     cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake"
     ${MAKE}
@@ -103,18 +107,21 @@ else
 fi
 
 # runtime
+cd "${CUR}"
 clone_or_update AnyDSL runtime
 cd "${CUR}/runtime/build"
 cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE}
 ${MAKE}
 
 # thorin
+cd "${CUR}"
 clone_or_update AnyDSL thorin
 cd "${CUR}/thorin/build"
 cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} ${LLVM_VARS} -DHalf_DIR:PATH="${CUR}/half/include"
 ${MAKE}
 
 # impala
+cd "${CUR}"
 clone_or_update AnyDSL impala
 cd "${CUR}/impala/build"
 cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DThorin_DIR:PATH="${CUR}/thorin/build/share/thorin/cmake"
@@ -128,6 +135,7 @@ _EOF_
 source "${CUR}/project.sh"
 
 # configure stincilla but don't build yet
+cd "${CUR}"
 clone_or_update AnyDSL stincilla
 cd "${CUR}/stincilla/build"
 cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DAnyDSL-runtime_DIR:PATH="${CUR}/runtime" -DBACKEND:STRING="cpu"

@@ -75,19 +75,19 @@ if [ "${LLVM-}" == true ] ; then
         tar xf cfe-4.0.0.src.tar.xz
         rm cfe-4.0.0.src.tar.xz
         mv cfe-4.0.0.src clang
-        # rv
-        clone_or_update cdl-saarland rv release_40
-        cd "${CUR}"
     fi
 
+    # rv
+    cd llvm/tools
+    clone_or_update cdl-saarland rv ${BRANCH_RV}
+    cd "${CUR}"
+
     # build llvm
-    if [ ! -e "${CUR}/llvm_install/share/llvm/cmake" ]; then
-        cd llvm_build
-        cmake ../llvm ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX:PATH="${CUR}/llvm_install" \
-            -DLLVM_ENABLE_RTTI:BOOL=ON -DLLVM_INCLUDE_TESTS:BOOL=OFF -DLLVM_TARGETS_TO_BUILD="AArch64;AMDGPU;ARM;NVPTX;X86"
-        ${MAKE} install
-        cd "${CUR}"
-    fi
+    cd llvm_build
+    cmake ../llvm ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX:PATH="${CUR}/llvm_install" \
+        -DLLVM_ENABLE_RTTI:BOOL=ON -DLLVM_INCLUDE_TESTS:BOOL=OFF -DLLVM_TARGETS_TO_BUILD="AArch64;AMDGPU;ARM;NVPTX;X86"
+    ${MAKE} install
+    cd "${CUR}"
 
     LLVM_VARS=-DLLVM_DIR:PATH="${CUR}/llvm_install/lib/cmake/llvm"
 else

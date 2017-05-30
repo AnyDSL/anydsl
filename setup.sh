@@ -50,10 +50,7 @@ function clone_or_update {
     if [ ! -e "$2" ]; then
         echo ">>> clone $1/$2"
         echo "git clone --recursive `remote $1/$2.git`"
-        git clone --recursive `remote $1/$2.git`
-        cd $2
-        git checkout $branch
-        cd ..
+        git clone --recursive `remote $1/$2.git` --branch $branch
     else
         cd $2
         echo ">>> pull $1/$2 $(git_branch)"

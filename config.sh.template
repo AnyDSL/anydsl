@@ -17,7 +17,7 @@
 
 # set the default branches for each repository
 : ${BRANCH_RV:=release_40}
-: ${BRANCH_RUNTIME:=master}
+: ${BRANCH_RUNTIME:=llvm_40}
 : ${BRANCH_THORIN:=llvm_40}
 : ${BRANCH_IMPALA:=llvm_40}
 : ${BRANCH_STINCILLA:=master}

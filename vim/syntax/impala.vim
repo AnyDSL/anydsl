@@ -7,9 +7,9 @@ if exists("b:current_syntax")
     finish
 endif
 
-syn keyword     impalaConditional   if else
+syn keyword     impalaConditional   if else match
 syn keyword     impalaException     return break continue
-syn keyword     impalaLoop          while for with
+syn keyword     impalaRepeat        while for with in
 syn keyword     impalaStorageClass  let extern mut static
 syn keyword     impalaStructure     struct trait impl
 syn keyword     impalaTypedef       type
@@ -23,13 +23,14 @@ syn region      impalaBlockComment  start='/\*'  end='\*/'
 syn region      impalaString        start=+"+    end=+"+
 syn match       impalaPartialEval   '\v[@$]'
 syn match       impalaAddressOf     '\v[&]'
+syn match       impalaIdentifier    '\v\w*\s*\:'
 syn match       impalaArrow         '->' conceal cchar=→
 
 let b:current_syntax = "impala"
 
 hi def link impalaConditional   Conditional
 hi def link impalaException     Exception
-hi def link impalaLoop          Loop
+hi def link impalaRepeat        Repeat
 hi def link impalaStorageClass  StorageClass
 hi def link impalaStructure     Structure
 hi def link impalaTypedef       Keyword
@@ -43,5 +44,6 @@ hi def link impalaLineComment   Comment
 hi def link impalaBlockComment  Comment
 hi def link impalaString        String
 hi def link impalaTodo          Todo
+hi def link impalaIdentifier    Identifier
 
 hi impalaArrow gui=bold

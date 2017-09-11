@@ -64,6 +64,7 @@ if [ "${LLVM-}" == true ] ; then
     fi
 
     # rv
+    cd "${CUR}"
     cd llvm/tools
     clone_or_update cdl-saarland rv ${BRANCH_RV}
     cd "${CUR}"

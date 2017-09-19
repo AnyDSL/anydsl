@@ -43,7 +43,7 @@ if(NOT LLVM_DIR AND LLVM_FIND_REQUIRED)
     endif()
 
     # check for pre-build llvm
-    find_path(LLVM_DIR LLVMConfig.cmake PATHS ${CONTRIB_DIR}/llvm PATH_SUFFIXES share/llvm/cmake)
+    find_path(LLVM_DIR LLVMConfig.cmake PATHS ${CONTRIB_DIR}/llvm PATH_SUFFIXES lib/cmake/llvm share/llvm/cmake)
 
     if(NOT LLVM_DIR)
         set(CLANG_URL "http://llvm.org/releases/${LLVM_FIND_VERSION}/cfe-${LLVM_FIND_VERSION}.src.tar.xz")

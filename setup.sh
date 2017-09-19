@@ -62,7 +62,7 @@ if [ "${LLVM-}" == true ] ; then
         rm cfe-4.0.1.src.tar.xz
         mv cfe-4.0.1.src clang
         # apply LLVM 4.0 patch
-        patch llvm/lib/Transforms/InstCombine/InstCombineSelect.cpp < patch_llvm40.txt
+        patch llvm/lib/Transforms/InstCombine/InstCombineSelect.cpp < ${CUR}/patch_llvm40.txt
     fi
 
     # rv

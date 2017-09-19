@@ -138,7 +138,17 @@ if(EXISTS ${LLVM_BUILD_DIR} AND NOT TARGET LLVM)
         message(WARNING "Please build the pre-configured LLVM at ${LLVM_BUILD_DIR}")
     endif()
 
-    find_path(LLVM_DIR LLVMConfig.cmake PATHS ${LLVM_BUILD_DIR} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_BINARY_DIR} PATH_SUFFIXES share/llvm/cmake contrib/llvm/share/llvm/cmake)
+    find_path(LLVM_DIR LLVMConfig.cmake
+        PATHS
+            ${LLVM_BUILD_DIR}
+            ${CMAKE_CURRENT_BINARY_DIR}
+            ${CMAKE_BINARY_DIR}
+        PATH_SUFFIXES
+            lib/cmake/llvm
+            contrib/llvm/lib/cmake/llvm
+            share/llvm/cmake
+            contrib/llvm/share/llvm/cmake
+    )
 endif ()
 
 if(EXISTS ${LLVM_DIR}/LLVMConfig.cmake)

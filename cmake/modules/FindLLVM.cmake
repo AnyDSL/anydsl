@@ -5,7 +5,7 @@
 #
 
 if(NOT LLVM_FIND_VERSION)
-    set(LLVM_FIND_VERSION 3.8.1)
+    set(LLVM_FIND_VERSION 4.0.1)
 endif()
 if(NOT LLVM_URL)
     set(LLVM_URL "http://llvm.org/releases/${LLVM_FIND_VERSION}/llvm-${LLVM_FIND_VERSION}.src.tar.xz")
@@ -23,6 +23,7 @@ find_path(LLVM_DIR LLVMConfig.cmake
         ${CONTRIB_DIR}/llvm
         ${LLVM_BUILD_DIR}
     PATH_SUFFIXES
+        lib/cmake/llvm
         share/llvm/cmake
 )
 

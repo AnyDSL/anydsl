@@ -61,6 +61,8 @@ if [ "${LLVM-}" == true ] ; then
         tar xf cfe-4.0.1.src.tar.xz
         rm cfe-4.0.1.src.tar.xz
         mv cfe-4.0.1.src clang
+        # apply LLVM 4.0 patch
+        patch llvm/lib/Transforms/InstCombine/InstCombineSelect.cpp < patch_llvm40.txt
     fi
 
     # rv
@@ -68,9 +70,6 @@ if [ "${LLVM-}" == true ] ; then
     cd llvm/tools
     clone_or_update cdl-saarland rv ${BRANCH_RV}
     cd "${CUR}"
-
-    # apply LLVM 4.0 patch
-    patch llvm/lib/Transforms/InstCombine/InstCombineSelect.cpp < patch_llvm40.txt
 
     # build llvm
     cd llvm_build

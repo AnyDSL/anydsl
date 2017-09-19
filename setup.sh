@@ -69,6 +69,9 @@ if [ "${LLVM-}" == true ] ; then
     clone_or_update cdl-saarland rv ${BRANCH_RV}
     cd "${CUR}"
 
+    # apply LLVM 4.0 patch
+    patch llvm/lib/Transforms/InstCombine/InstCombineSelect.cpp < patch_llvm40.txt
+
     # build llvm
     cd llvm_build
     cmake ../llvm ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX:PATH="${CUR}/llvm_install" \

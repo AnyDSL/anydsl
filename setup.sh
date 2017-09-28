@@ -4,12 +4,29 @@ set -eu
 COLOR_RED="\033[0;31m"
 COLOR_RESET="\033[0m"
 
-echo ">>> update meta project"
-meta_out=$(git pull)
-if [ "$meta_out" != "Already up-to-date." ]; then
-    echo "meta project has been updated - I rerun the script"
+UPSTREAM=${1:-'@{u}'}
+LOCAL=$(git rev-parse @)
+REMOTE=$(git rev-parse "$UPSTREAM")
+BASE=$(git merge-base @ "$UPSTREAM")
+
+echo ">>> update setup project"
+
+if [ $LOCAL = $REMOTE ]; then
+    echo "your branch is up-to-date"
+elif [ $LOCAL = $BASE ]; then
+    echo "your branch is behind your tracking branch"
+    echo "I pull and rerun the script "
+    git pull
     ./$0
-    exit
+    exit $? 
+elif [ $REMOTE = $BASE ]; then
+    echo "your branch is ahead of your tracking branch"
+    echo "push your changes an rerun the script "
+    exit 1
+else
+    echo "your branch and your tracking remote branch have diverged"
+    echo "resolve all conflicts before rerunning the script"
+    exit 1
 fi
 
 if [ ! -e config.sh ]; then

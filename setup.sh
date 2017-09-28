@@ -6,7 +6,7 @@ COLOR_RESET="\033[0m"
 
 echo ">>> update meta project"
 meta_out=$(git pull)
-if [ "$meta_out" != "Already up-to-date." ]; then
+if [ "$meta_out" != "Already up-to-date." ] && [ "$meta_out" != "Bereits aktuell." ]; then
     echo "meta project has been updated - I rerun the script"
     ./$0
     exit

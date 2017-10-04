@@ -13,4 +13,4 @@ You may also want to fine-tune ```config.sh```.
 In particular, if you don't have a GitHub account with a working [SSH key](https://help.github.com/articles/generating-ssh-keys), set ```: ${HTTPS:=true}```.
 This will clone all repositories via https.
 
-See [Build Instructions](https://github.com/AnyDSL/anydsl/wiki/Build-Instructions) for more information.
+See [Build Instructions](https://anydsl.github.io/Build-Instructions.html) for more information.

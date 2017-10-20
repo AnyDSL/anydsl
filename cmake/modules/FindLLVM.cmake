@@ -54,6 +54,11 @@ if(NOT LLVM_DIR AND LLVM_FIND_REQUIRED)
             decompress(${CLANG_FILE})
             file(RENAME ${CONTRIB_DIR}/cfe-${LLVM_FIND_VERSION}.src ${CONTRIB_DIR}/llvm/tools/clang)
         endif()
+        find_package(Git REQUIRED)
+        execute_process(
+            COMMAND ${GIT_EXECUTABLE} apply llvm-${LLVM_FIND_VERSION}.patch
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        )
         file(MAKE_DIRECTORY ${LLVM_BUILD_DIR})
     endif()
 endif()

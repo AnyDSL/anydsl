@@ -123,10 +123,10 @@ if(EXISTS ${LLVM_BUILD_DIR} AND NOT TARGET LLVM)
     )
 
     if(MSVC)
-        message(STATUS "Building pre-configured LLVM at ${CONTRIB_DIR}/llvm/build (${CMAKE_CONFIGURATION_TYPES})")
-        foreach(_cfg ${CMAKE_CONFIGURATION_TYPES})
-            execute_process(COMMAND ${CMAKE_COMMAND} --build ${CONTRIB_DIR}/llvm/build --config ${_cfg} -- ${AnyDSL_BUILD_FLAGS})
-        endforeach()
+        add_custom_target(LLVM
+            COMMAND ${CMAKE_COMMAND} --build ${LLVM_BUILD_DIR} --config $<CONFIG> -- ${AnyDSL_BUILD_FLAGS}
+            COMMENT "Building pre-configured LLVM at ${LLVM_BUILD_DIR}"
+            VERBATIM)
     elseif(DEFINED CMAKE_BUILD_TYPE)
         add_custom_target(LLVM ALL
             COMMAND ${CMAKE_COMMAND} --build ${LLVM_BUILD_DIR} -- ${AnyDSL_BUILD_FLAGS}

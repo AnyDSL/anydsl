@@ -14,9 +14,10 @@
 # set this to false if you don't want to build with LLVM
 # setting to false is meant to speed up debugging and not recommended for end users
 : ${LLVM:=true}
+: ${LLVM_TARGETS:="AArch64;AMDGPU;ARM;NVPTX;X86"}
 
 # set the default branches for each repository
-: ${BRANCH_RV:=release_38}
+: ${BRANCH_RV:=master}
 : ${BRANCH_RUNTIME:=master}
 : ${BRANCH_THORIN:=master}
 : ${BRANCH_IMPALA:=master}

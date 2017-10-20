@@ -1,15 +1,32 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -eu
 
 COLOR_RED="\033[0;31m"
 COLOR_RESET="\033[0m"
 
-echo ">>> update meta project"
-meta_out=$(git pull)
-if [ "$meta_out" != "Already up-to-date." ]; then
-    echo "meta project has been updated - I rerun the script"
+UPSTREAM=${1:-'@{u}'}
+LOCAL=$(git rev-parse @)
+REMOTE=$(git rev-parse "$UPSTREAM")
+BASE=$(git merge-base @ "$UPSTREAM")
+
+echo ">>> update setup project"
+
+if [ $LOCAL = $REMOTE ]; then
+    echo "your branch is up-to-date"
+elif [ $LOCAL = $BASE ]; then
+    echo "your branch is behind your tracking branch"
+    echo "I pull and rerun the script "
+    git pull
     ./$0
-    exit
+    exit $? 
+elif [ $REMOTE = $BASE ]; then
+    echo "your branch is ahead of your tracking branch"
+    echo "push your changes an rerun the script "
+    exit 1
+else
+    echo "your branch and your tracking remote branch have diverged"
+    echo "resolve all conflicts before rerunning the script"
+    exit 1
 fi
 
 if [ ! -e config.sh ]; then
@@ -52,42 +69,47 @@ if [ "${LLVM-}" == true ] ; then
     mkdir -p llvm_build/
 
     if [ ! -e  "${CUR}/llvm" ]; then
-        wget http://llvm.org/releases/3.8.1/llvm-3.8.1.src.tar.xz
-        tar xf llvm-3.8.1.src.tar.xz
-        rm llvm-3.8.1.src.tar.xz
-        mv llvm-3.8.1.src llvm
+        wget http://releases.llvm.org/4.0.1/llvm-4.0.1.src.tar.xz
+        tar xf llvm-4.0.1.src.tar.xz
+        rm llvm-4.0.1.src.tar.xz
+        mv llvm-4.0.1.src llvm
         cd llvm/tools
-        wget http://llvm.org/releases/3.8.1/cfe-3.8.1.src.tar.xz
-        tar xf cfe-3.8.1.src.tar.xz
-        rm cfe-3.8.1.src.tar.xz
-        mv cfe-3.8.1.src clang
-        cd "${CUR}"
+        wget http://releases.llvm.org/4.0.1/cfe-4.0.1.src.tar.xz
+        tar xf cfe-4.0.1.src.tar.xz
+        rm cfe-4.0.1.src.tar.xz
+        mv cfe-4.0.1.src clang
+        # apply LLVM 4.0 patch
+        patch llvm/lib/Transforms/InstCombine/InstCombineSelect.cpp < ${CUR}/patch_llvm40.txt
     fi
 
+    # rv
+    cd "${CUR}"
+    cd llvm/tools
+    clone_or_update cdl-saarland rv ${BRANCH_RV}
+    cd "${CUR}"
+
     # build llvm
-    if [ ! -e "${CUR}/llvm_install/share/llvm/cmake" ]; then
-        cd llvm_build
-        cmake ../llvm ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX:PATH="${CUR}/llvm_install" \
-            -DLLVM_ENABLE_RTTI:BOOL=ON -DLLVM_INCLUDE_TESTS:BOOL=OFF -DLLVM_TARGETS_TO_BUILD="AArch64;AMDGPU;ARM;NVPTX;X86"
-        ${MAKE} install
-        cd "${CUR}"
-    fi
+    cd llvm_build
+    cmake ../llvm ${CMAKE_MAKE} -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX:PATH="${CUR}/llvm_install" \
+        -DLLVM_ENABLE_RTTI:BOOL=ON -DLLVM_INCLUDE_TESTS:BOOL=OFF -DLLVM_TARGETS_TO_BUILD="${LLVM_TARGETS}"
+    ${MAKE} install
+    cd "${CUR}"
+
+    LLVM_VARS=-DLLVM_DIR:PATH="${CUR}/llvm_install/lib/cmake/llvm"
+else
+    LLVM_VARS=-DCMAKE_DISABLE_FIND_PACKAGE_LLVM=TRUE
 fi
 
 if [ ! -e "${CUR}/half" ]; then
     svn checkout svn://svn.code.sf.net/p/half/code/trunk half
 fi
 
-# rv
-if [ "${LLVM-}" == true ] ; then
-    clone_or_update cdl-saarland rv ${BRANCH_RV}
-    cd "${CUR}/rv/build"
-    cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake"
-    ${MAKE}
-    LLVM_VARS=-DLLVM_DIR:PATH="${CUR}/llvm_install/share/llvm/cmake"\ -DRV_DIR:PATH="${CUR}/rv"
-else
-    LLVM_VARS=-DCMAKE_DISABLE_FIND_PACKAGE_LLVM=TRUE\ -DCMAKE_DISABLE_FIND_PACKAGE_RV=TRUE
-fi
+# source this file to put clang and impala in path
+cat > "${CUR}/project.sh" <<_EOF_
+export PATH="${CUR}/llvm_install/bin:${CUR}/impala/build/bin:\$PATH"
+_EOF_
+
+source "${CUR}/project.sh"
 
 # runtime
 cd "${CUR}"
@@ -109,13 +131,6 @@ clone_or_update AnyDSL impala ${BRANCH_IMPALA}
 cd "${CUR}/impala/build"
 cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DThorin_DIR:PATH="${CUR}/thorin/build/share/thorin/cmake"
 ${MAKE}
-
-# source this file to put clang and impala in path
-cat > "${CUR}/project.sh" <<_EOF_
-export PATH="${CUR}/llvm_install/bin:${CUR}/impala/build/bin:\$PATH"
-_EOF_
-
-source "${CUR}/project.sh"
 
 # configure stincilla but don't build yet
 cd "${CUR}"

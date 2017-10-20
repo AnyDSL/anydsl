@@ -1,0 +1,10 @@
+156a157,165
+>     // Prevent folding if the select matches a min/max pattern
+>     {
+>       Value *left, *right;
+>       Instruction::CastOps castOp;
+>       auto selectPattern = matchSelectPattern(&SI, left, right, &castOp);
+>       if (SelectPatternResult::isMinOrMax(selectPattern.Flavor))
+>         return nullptr;
+>     }
+> 

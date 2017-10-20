@@ -11,10 +11,8 @@ if(NOT LLVM_URL)
     set(LLVM_URL "http://llvm.org/releases/${LLVM_FIND_VERSION}/llvm-${LLVM_FIND_VERSION}.src.tar.xz")
 endif()
 
-set(LLVM_BUILD_DIR ${CONTRIB_DIR}/llvm/build)
-if(CMAKE_BUILD_TYPE)
-    set(LLVM_BUILD_DIR ${LLVM_BUILD_DIR}_${CMAKE_BUILD_TYPE})
-endif()
+get_filename_component(BUILD_DIR_NAME ${CMAKE_BINARY_DIR} NAME)
+set(LLVM_BUILD_DIR ${CONTRIB_DIR}/llvm/${BUILD_DIR_NAME})
 
 find_path(LLVM_DIR LLVMConfig.cmake
     PATHS

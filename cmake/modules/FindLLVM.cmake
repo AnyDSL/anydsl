@@ -128,7 +128,7 @@ if(EXISTS ${LLVM_BUILD_DIR} AND NOT TARGET LLVM)
             COMMENT "Building pre-configured LLVM at ${LLVM_BUILD_DIR}"
             VERBATIM)
     elseif(DEFINED CMAKE_BUILD_TYPE)
-        add_custom_target(LLVM ALL
+        add_custom_target(LLVM
             COMMAND ${CMAKE_COMMAND} --build ${LLVM_BUILD_DIR} -- ${AnyDSL_BUILD_FLAGS}
             COMMENT "Building pre-configured LLVM at ${LLVM_BUILD_DIR} (${CMAKE_BUILD_TYPE})"
             VERBATIM)

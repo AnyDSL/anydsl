@@ -1,18 +1,18 @@
 
 set print object on
 
-define tdump
+define td
   call $arg0->dump()
 end
-document tdump
+document td
   Dump a Thorin/Impala-dumpable object.
 end
 
-define ttdump
+define ttd
   call ($arg0)->type()->dump()
 end
-document tdump
-  Dump a Thorin/Impala-dumpable object.
+document ttd
+  Dump a Thorin/Impala-dumpable object's type.
 end
 
 define tos

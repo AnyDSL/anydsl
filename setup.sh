@@ -4,12 +4,13 @@ set -eu
 COLOR_RED="\033[0;31m"
 COLOR_RESET="\033[0m"
 
+echo ">>> update setup project"
+git fetch origin
+
 UPSTREAM=${1:-'@{u}'}
 LOCAL=$(git rev-parse @)
 REMOTE=$(git rev-parse "$UPSTREAM")
 BASE=$(git merge-base @ "$UPSTREAM")
-
-echo ">>> update setup project"
 
 if [ $LOCAL = $REMOTE ]; then
     echo "your branch is up-to-date"

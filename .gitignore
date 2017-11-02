@@ -9,6 +9,7 @@ llvm/
 llvm_build/
 llvm_install/
 project.sh
+rodent/
 runtime/
 rv/
 stincilla/

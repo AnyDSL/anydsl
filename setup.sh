@@ -58,8 +58,9 @@ function clone_or_update {
     else
         cd $2
         echo -e ">>> pull $1/$2 $COLOR_RED($branch)$COLOR_RESET"
-        git pull
+        git fetch origin
         git checkout $branch
+        git merge origin/$branch
         cd ..
     fi
     mkdir -p "$2"/build/

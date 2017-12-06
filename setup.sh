@@ -62,10 +62,10 @@ function clone_or_update {
         git checkout $branch
         set +e
         git symbolic-ref HEAD
-        set -e
-        if [ $? -ne 0 ]; then
+        if [ $? -eq 0 ]; then
             git pull
         fi
+        set -e
         cd ..
     fi
     mkdir -p "$2"/build/

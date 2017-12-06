@@ -19,7 +19,7 @@ elif [ $LOCAL = $BASE ]; then
     echo "I pull and rerun the script "
     git pull
     ./$0
-    exit $? 
+    exit $?
 elif [ $REMOTE = $BASE ]; then
     echo "your branch is ahead of your tracking branch"
     echo "push your changes an rerun the script "

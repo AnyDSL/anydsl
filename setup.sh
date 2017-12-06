@@ -146,6 +146,13 @@ cd "${CUR}/stincilla/build"
 cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DAnyDSL-runtime_DIR:PATH="${CUR}/runtime" -DBACKEND:STRING="cpu"
 #${MAKE}
 
+# configure traversal but don't build yet
+cd "${CUR}"
+clone_or_update AnyDSL traversal ${BRANCH_TRAVERSAL}
+cd "${CUR}/traversal/build"
+cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DAnyDSL-runtime_DIR:PATH="${CUR}/runtime"
+#${MAKE}
+
 cd "${CUR}"
 
 echo

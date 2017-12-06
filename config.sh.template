@@ -22,3 +22,4 @@
 : ${BRANCH_THORIN:=master}
 : ${BRANCH_IMPALA:=master}
 : ${BRANCH_STINCILLA:=master}
+: ${BRANCH_TRAVERSAL:=master}

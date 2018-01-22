@@ -129,7 +129,7 @@ ${MAKE}
 cd "${CUR}"
 clone_or_update AnyDSL thorin ${BRANCH_THORIN}
 cd "${CUR}/thorin/build"
-cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} ${LLVM_VARS} -DHalf_DIR:PATH="${CUR}/half/include"
+cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} ${LLVM_VARS} ${THORIN_VARS} -DHalf_DIR:PATH="${CUR}/half/include"
 ${MAKE}
 
 # impala

@@ -16,6 +16,10 @@
 : ${LLVM:=true}
 : ${LLVM_TARGETS:="AArch64;AMDGPU;ARM;NVPTX;X86"}
 
+# use this to debug thorin hash table performance
+: ${THORIN_VARS:=}
+#: ${THORIN_VARS:=-DTHORIN_PROFILE}
+
 # set the default branches for each repository
 : ${BRANCH_RV:=release_40}
 : ${BRANCH_RUNTIME:=master}

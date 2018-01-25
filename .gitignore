@@ -7,6 +7,7 @@ imbatracer/
 impala/
 llvm*
 project.sh
+rodent/
 runtime/
 rv/
 stincilla/

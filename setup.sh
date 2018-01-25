@@ -4,12 +4,13 @@ set -eu
 COLOR_RED="\033[0;31m"
 COLOR_RESET="\033[0m"
 
+echo ">>> update setup project"
+git fetch origin
+
 UPSTREAM=${1:-'@{u}'}
 LOCAL=$(git rev-parse @)
 REMOTE=$(git rev-parse "$UPSTREAM")
 BASE=$(git merge-base @ "$UPSTREAM")
-
-echo ">>> update setup project"
 
 if [ $LOCAL = $REMOTE ]; then
     echo "your branch is up-to-date"
@@ -18,7 +19,7 @@ elif [ $LOCAL = $BASE ]; then
     echo "I pull and rerun the script "
     git pull
     ./$0
-    exit $? 
+    exit $?
 elif [ $REMOTE = $BASE ]; then
     echo "your branch is ahead of your tracking branch"
     echo "push your changes an rerun the script "
@@ -57,8 +58,14 @@ function clone_or_update {
     else
         cd $2
         echo -e ">>> pull $1/$2 $COLOR_RED($branch)$COLOR_RESET"
-        git pull
+        git fetch --tags origin
         git checkout $branch
+        set +e
+        git symbolic-ref HEAD
+        if [ $? -eq 0 ]; then
+            git pull
+        fi
+        set -e
         cd ..
     fi
     mkdir -p "$2"/build/
@@ -122,7 +129,7 @@ ${MAKE}
 cd "${CUR}"
 clone_or_update AnyDSL thorin ${BRANCH_THORIN}
 cd "${CUR}/thorin/build"
-cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} ${LLVM_VARS} -DHalf_DIR:PATH="${CUR}/half/include"
+cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} ${LLVM_VARS} -DTHORIN_PROFILE=${THORIN_PROFILE} -DHalf_DIR:PATH="${CUR}/half/include"
 ${MAKE}
 
 # impala
@@ -137,6 +144,13 @@ cd "${CUR}"
 clone_or_update AnyDSL stincilla ${BRANCH_STINCILLA}
 cd "${CUR}/stincilla/build"
 cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DAnyDSL-runtime_DIR:PATH="${CUR}/runtime" -DBACKEND:STRING="cpu"
+#${MAKE}
+
+# configure traversal but don't build yet
+cd "${CUR}"
+clone_or_update AnyDSL traversal ${BRANCH_TRAVERSAL}
+cd "${CUR}/traversal/build"
+cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DAnyDSL-runtime_DIR:PATH="${CUR}/runtime"
 #${MAKE}
 
 cd "${CUR}"

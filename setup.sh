@@ -85,8 +85,6 @@ if [ "${LLVM-}" == true ] ; then
         tar xf cfe-5.0.1.src.tar.xz
         rm cfe-5.0.1.src.tar.xz
         mv cfe-5.0.1.src clang
-        # apply LLVM 5.0 patch
-        patch llvm/lib/Transforms/InstCombine/InstCombineSelect.cpp < ${CUR}/patch_llvm50.txt
     fi
 
     # rv

@@ -76,17 +76,15 @@ if [ "${LLVM-}" == true ] ; then
     mkdir -p llvm_build/
 
     if [ ! -e  "${CUR}/llvm" ]; then
-        wget http://releases.llvm.org/4.0.1/llvm-4.0.1.src.tar.xz
-        tar xf llvm-4.0.1.src.tar.xz
-        rm llvm-4.0.1.src.tar.xz
-        mv llvm-4.0.1.src llvm
+        wget http://releases.llvm.org/5.0.1/llvm-5.0.1.src.tar.xz
+        tar xf llvm-5.0.1.src.tar.xz
+        rm llvm-5.0.1.src.tar.xz
+        mv llvm-5.0.1.src llvm
         cd llvm/tools
-        wget http://releases.llvm.org/4.0.1/cfe-4.0.1.src.tar.xz
-        tar xf cfe-4.0.1.src.tar.xz
-        rm cfe-4.0.1.src.tar.xz
-        mv cfe-4.0.1.src clang
-        # apply LLVM 4.0 patch
-        patch llvm/lib/Transforms/InstCombine/InstCombineSelect.cpp < ${CUR}/patch_llvm40.txt
+        wget http://releases.llvm.org/5.0.1/cfe-5.0.1.src.tar.xz
+        tar xf cfe-5.0.1.src.tar.xz
+        rm cfe-5.0.1.src.tar.xz
+        mv cfe-5.0.1.src clang
     fi
 
     # rv
@@ -98,7 +96,7 @@ if [ "${LLVM-}" == true ] ; then
     # build llvm
     cd llvm_build
     cmake ../llvm ${CMAKE_MAKE} -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX:PATH="${CUR}/llvm_install" \
-        -DLLVM_ENABLE_RTTI:BOOL=ON -DLLVM_INCLUDE_TESTS:BOOL=OFF -DLLVM_TARGETS_TO_BUILD="${LLVM_TARGETS}"
+        -DLLVM_ENABLE_RTTI:BOOL=ON -DLLVM_INCLUDE_TESTS:BOOL=ON -DLLVM_TARGETS_TO_BUILD="${LLVM_TARGETS}"
     ${MAKE} install
     cd "${CUR}"
 

@@ -20,7 +20,7 @@
 : ${THORIN_PROFILE:=true}
 
 # set the default branches for each repository
-: ${BRANCH_RV:=release_40}
+: ${BRANCH_RV:=release_50}
 : ${BRANCH_RUNTIME:=master}
 : ${BRANCH_THORIN:=master}
 : ${BRANCH_IMPALA:=master}

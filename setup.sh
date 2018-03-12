@@ -120,7 +120,7 @@ source "${CUR}/project.sh"
 cd "${CUR}"
 clone_or_update AnyDSL runtime ${BRANCH_RUNTIME}
 cd "${CUR}/runtime/build"
-cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE}
+cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DRUNTIME_JIT=${RUNTIME_JIT}
 ${MAKE}
 
 # thorin

@@ -116,13 +116,6 @@ _EOF_
 
 source "${CUR}/project.sh"
 
-# runtime
-cd "${CUR}"
-clone_or_update AnyDSL runtime ${BRANCH_RUNTIME}
-cd "${CUR}/runtime/build"
-cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DRUNTIME_JIT=${RUNTIME_JIT}
-${MAKE}
-
 # thorin
 cd "${CUR}"
 clone_or_update AnyDSL thorin ${BRANCH_THORIN}
@@ -134,21 +127,28 @@ ${MAKE}
 cd "${CUR}"
 clone_or_update AnyDSL impala ${BRANCH_IMPALA}
 cd "${CUR}/impala/build"
-cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DThorin_DIR:PATH="${CUR}/thorin/build/share/thorin/cmake"
+cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DThorin_DIR:PATH="${CUR}/thorin/build/share/anydsl/cmake"
+${MAKE}
+
+# runtime
+cd "${CUR}"
+clone_or_update AnyDSL runtime ${BRANCH_RUNTIME}
+cd "${CUR}/runtime/build"
+cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DRUNTIME_JIT=${RUNTIME_JIT} -DImpala_DIR:PATH="${CUR}/impala/build/share/anydsl/cmake"
 ${MAKE}
 
 # configure stincilla but don't build yet
 cd "${CUR}"
 clone_or_update AnyDSL stincilla ${BRANCH_STINCILLA}
 cd "${CUR}/stincilla/build"
-cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DAnyDSL-runtime_DIR:PATH="${CUR}/runtime" -DBACKEND:STRING="cpu"
+cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DAnyDSL_runtime_DIR:PATH="${CUR}/runtime/build/share/anydsl/cmake" -DBACKEND:STRING="cpu"
 #${MAKE}
 
 # configure traversal but don't build yet
 cd "${CUR}"
 clone_or_update AnyDSL traversal ${BRANCH_TRAVERSAL}
 cd "${CUR}/traversal/build"
-cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DAnyDSL-runtime_DIR:PATH="${CUR}/runtime"
+cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DAnyDSL_runtime_DIR:PATH="${CUR}/runtime/build/share/anydsl/cmake"
 #${MAKE}
 
 cd "${CUR}"

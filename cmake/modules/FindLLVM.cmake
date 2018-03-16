@@ -5,7 +5,7 @@
 #
 
 if(NOT LLVM_FIND_VERSION)
-    set(LLVM_FIND_VERSION 4.0.1)
+    set(LLVM_FIND_VERSION 5.0.1)
 endif()
 if(NOT LLVM_URL)
     set(LLVM_URL "http://llvm.org/releases/${LLVM_FIND_VERSION}/llvm-${LLVM_FIND_VERSION}.src.tar.xz")
@@ -54,11 +54,6 @@ if(NOT LLVM_DIR AND LLVM_FIND_REQUIRED)
             decompress(${CLANG_FILE})
             file(RENAME ${CONTRIB_DIR}/cfe-${LLVM_FIND_VERSION}.src ${CONTRIB_DIR}/llvm/tools/clang)
         endif()
-        find_package(Git REQUIRED)
-        execute_process(
-            COMMAND ${GIT_EXECUTABLE} apply llvm-${LLVM_FIND_VERSION}.patch
-            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-        )
         file(MAKE_DIRECTORY ${LLVM_BUILD_DIR})
     endif()
 endif()
@@ -69,6 +64,9 @@ if(EXISTS ${LLVM_BUILD_DIR} AND NOT TARGET LLVM)
     set(LLVM_TARGETS_TO_BUILD "AArch64;AMDGPU;ARM;NVPTX;X86" CACHE STRING "limit targets of LLVM" FORCE)
     if(CMAKE_GENERATOR_PLATFORM)
         set(SPECIFY_PLATFORM -A ${CMAKE_GENERATOR_PLATFORM})
+    endif()
+    if(CMAKE_VS_PLATFORM_TOOLSET_HOST_ARCHITECTURE)
+        set(SPECIFY_TOOLSET_OPTION -T host=${CMAKE_VS_PLATFORM_TOOLSET_HOST_ARCHITECTURE})
     endif()
     if(CMAKE_BUILD_TYPE)
         set(SPECIFY_BUILD_TYPE -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE})

@@ -28,7 +28,7 @@ message(STATUS "Half_DIR: ${Half_DIR}")
 if(AnyDSL_LLVM_REQUIRED AND NOT CMAKE_DISABLE_FIND_PACKAGE_LLVM)
     set(LLVM_REQUIRED "REQUIRED")
 endif()
-find_package(LLVM 4.0.1 EXACT ${LLVM_REQUIRED})
+find_package(LLVM 5.0.1 EXACT ${LLVM_REQUIRED})
 message(STATUS "LLVM_DIR: ${LLVM_DIR}")
 
 include(cmake/fetch-package.cmake)

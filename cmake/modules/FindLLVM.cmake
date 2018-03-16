@@ -12,12 +12,14 @@ if(NOT LLVM_URL)
 endif()
 
 get_filename_component(BUILD_DIR_NAME ${CMAKE_BINARY_DIR} NAME)
-set(LLVM_BUILD_DIR ${CONTRIB_DIR}/llvm/${BUILD_DIR_NAME})
+set(LLVM_SOURCE_DIR ${CONTRIB_DIR}/llvm-${LLVM_FIND_VERSION})
+set(LLVM_BUILD_DIR ${LLVM_SOURCE_DIR}/${BUILD_DIR_NAME})
 
 find_path(LLVM_DIR LLVMConfig.cmake
     PATHS
         ${LLVM_DIR}
         $ENV{LLVM_DIR}
+        ${LLVM_SOURCE_DIR}
         ${CONTRIB_DIR}/llvm
         ${LLVM_BUILD_DIR}
     PATH_SUFFIXES
@@ -33,15 +35,15 @@ if(NOT LLVM_DIR AND LLVM_FIND_REQUIRED)
         message(STATUS "Downloading ${LLVM_URL}")
         file(DOWNLOAD ${LLVM_URL} ${LLVM_FILE} SHOW_PROGRESS)
     endif()
-    if(NOT EXISTS ${CONTRIB_DIR}/llvm)
+    if(NOT EXISTS ${LLVM_SOURCE_DIR})
         decompress(${LLVM_FILE})
         if(EXISTS ${CONTRIB_DIR}/llvm-${LLVM_FIND_VERSION}.src)
-            file(RENAME ${CONTRIB_DIR}/llvm-${LLVM_FIND_VERSION}.src ${CONTRIB_DIR}/llvm)
+            file(RENAME ${CONTRIB_DIR}/llvm-${LLVM_FIND_VERSION}.src ${LLVM_SOURCE_DIR})
         endif()
     endif()
 
     # check for pre-build llvm
-    find_path(LLVM_DIR LLVMConfig.cmake PATHS ${CONTRIB_DIR}/llvm PATH_SUFFIXES lib/cmake/llvm share/llvm/cmake)
+    find_path(LLVM_DIR LLVMConfig.cmake PATHS ${LLVM_SOURCE_DIR} PATH_SUFFIXES lib/cmake/llvm share/llvm/cmake)
 
     if(NOT LLVM_DIR)
         set(CLANG_URL "http://llvm.org/releases/${LLVM_FIND_VERSION}/cfe-${LLVM_FIND_VERSION}.src.tar.xz")
@@ -50,9 +52,9 @@ if(NOT LLVM_DIR AND LLVM_FIND_REQUIRED)
             message(STATUS "Downloading ${CLANG_URL}")
             file(DOWNLOAD ${CLANG_URL} ${CLANG_FILE} SHOW_PROGRESS)
         endif()
-        if(NOT EXISTS ${CONTRIB_DIR}/llvm/tools/clang)
+        if(NOT EXISTS ${LLVM_SOURCE_DIR}/tools/clang)
             decompress(${CLANG_FILE})
-            file(RENAME ${CONTRIB_DIR}/cfe-${LLVM_FIND_VERSION}.src ${CONTRIB_DIR}/llvm/tools/clang)
+            file(RENAME ${CONTRIB_DIR}/cfe-${LLVM_FIND_VERSION}.src ${LLVM_SOURCE_DIR}/tools/clang)
         endif()
         file(MAKE_DIRECTORY ${LLVM_BUILD_DIR})
     endif()
@@ -117,7 +119,7 @@ if(EXISTS ${LLVM_BUILD_DIR} AND NOT TARGET LLVM)
         -DLLVM_TOOL_YAML2OBJ_BUILD:BOOL=OFF
     )
     execute_process(
-        COMMAND ${CMAKE_COMMAND} .. -G ${CMAKE_GENERATOR} ${SPECIFY_PLATFORM} ${SPECIFY_BUILD_TYPE}
+        COMMAND ${CMAKE_COMMAND} ${LLVM_SOURCE_DIR} -G ${CMAKE_GENERATOR} ${SPECIFY_PLATFORM} ${SPECIFY_TOOLSET_OPTION} ${SPECIFY_BUILD_TYPE}
             -DLLVM_INCLUDE_TESTS:BOOL=OFF
             "-DLLVM_TARGETS_TO_BUILD=${LLVM_TARGETS_TO_BUILD}"
             -DLLVM_ENABLE_RTTI:BOOL=ON

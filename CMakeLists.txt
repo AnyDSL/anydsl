@@ -45,14 +45,14 @@ if(TARGET LLVM)
     add_dependencies(thorin LLVM)
 endif()
 
-# AnyDSL_runtime
-fetch_anydsl_package(AnyDSL_runtime_DIR runtime AnyDSL_runtime https://github.com/AnyDSL/runtime)
-message(STATUS "AnyDSL_runtime_DIR: ${AnyDSL_runtime_DIR}")
-
 # AnyDSL_impala
 fetch_anydsl_package(AnyDSL_impala_DIR impala impala https://github.com/AnyDSL/impala)
 message(STATUS "AnyDSL_impala_DIR: ${AnyDSL_impala_DIR}")
 set(Impala_DIR ${AnyDSL_impala_DIR})
+
+# AnyDSL_runtime
+fetch_anydsl_package(AnyDSL_runtime_DIR runtime AnyDSL_runtime https://github.com/AnyDSL/runtime)
+message(STATUS "AnyDSL_runtime_DIR: ${AnyDSL_runtime_DIR}")
 
 if (CTest_CONFIG_URL)
     file(DOWNLOAD ${CTest_CONFIG_URL} ${CMAKE_CURRENT_SOURCE_DIR}/CTestConfig.cmake)

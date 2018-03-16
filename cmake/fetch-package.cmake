@@ -15,6 +15,7 @@ function(fetch_anydsl_package _pkg_path _pkg_name _pkg_fullname _pkg_url)
             ${ARGN}
         PATH_SUFFIXES
             share/${_pkg_fullname}/cmake
+            share/anydsl/cmake
     )
     if(NOT ${_pkg_path} AND NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${_pkg_name})
         find_package(Git REQUIRED)
@@ -24,7 +25,7 @@ function(fetch_anydsl_package _pkg_path _pkg_name _pkg_fullname _pkg_url)
     find_path(${_pkg_path}
         NAMES ${_pkg_fullname}-config.cmake ${_pkg_fullname_lower}-config.cmake
         PATHS ${${_pkg_path}} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_BINARY_DIR} ${ARGN}
-        PATH_SUFFIXES share/${_pkg_fullname}/cmake
+        PATH_SUFFIXES share/${_pkg_fullname}/cmake share/anydsl/cmake
         DOC "path to package ${_pkg_fullname}")
 endfunction()
 

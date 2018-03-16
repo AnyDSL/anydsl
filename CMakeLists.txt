@@ -40,9 +40,7 @@ include(cmake/fetch-package.cmake)
 # AnyDSL_thorin
 fetch_anydsl_package(AnyDSL_thorin_DIR thorin thorin https://github.com/AnyDSL/thorin)
 message(STATUS "AnyDSL_thorin_DIR: ${AnyDSL_thorin_DIR}")
-# preset of deprecated variables
 set(Thorin_DIR ${AnyDSL_thorin_DIR})
-set(THORIN_DIR ${AnyDSL_thorin_DIR})
 if(TARGET LLVM)
     add_dependencies(thorin LLVM)
 endif()
@@ -54,9 +52,7 @@ message(STATUS "AnyDSL_runtime_DIR: ${AnyDSL_runtime_DIR}")
 # AnyDSL_impala
 fetch_anydsl_package(AnyDSL_impala_DIR impala impala https://github.com/AnyDSL/impala)
 message(STATUS "AnyDSL_impala_DIR: ${AnyDSL_impala_DIR}")
-# preset of deprecated variables
 set(Impala_DIR ${AnyDSL_impala_DIR})
-set(IMPALA_DIR ${AnyDSL_impala_DIR})
 
 if (CTest_CONFIG_URL)
     file(DOWNLOAD ${CTest_CONFIG_URL} ${CMAKE_CURRENT_SOURCE_DIR}/CTestConfig.cmake)

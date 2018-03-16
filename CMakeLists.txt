@@ -4,7 +4,7 @@ project(AnyDSL)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules)
 
-include(common.cmake)
+include(cmake/common.cmake)
 
 get_filename_component(CONTRIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/contrib ABSOLUTE)
 set(AnyDSL_DEFAULT_BRANCH master CACHE STRING "the default branch of thorin, impala, etc.")

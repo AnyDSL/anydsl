@@ -56,6 +56,9 @@ set(Impala_DIR ${AnyDSL_impala_DIR})
 fetch_anydsl_package(AnyDSL_runtime_DIR runtime AnyDSL_runtime ${AnyDSL_REMOTE_URL}/runtime)
 message(STATUS "AnyDSL_runtime_DIR: ${AnyDSL_runtime_DIR}")
 
+add_custom_target(pull COMMENT ">>> pull all AnyDSL packages")
+add_dependencies(pull pull-thorin pull-impala pull-runtime)
+
 if (CTest_CONFIG_URL)
     file(DOWNLOAD ${CTest_CONFIG_URL} ${CMAKE_CURRENT_SOURCE_DIR}/CTestConfig.cmake)
 endif()

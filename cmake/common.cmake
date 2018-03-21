@@ -4,7 +4,7 @@ function(decompress _filename)
 	get_filename_component(_dir ${_filename} DIRECTORY)
 	get_filename_component(_file ${_filename} NAME)
     execute_process(
-        COMMAND ${CMAKE_COMMAND} -E tar xvf ${_file}
+        COMMAND ${CMAKE_COMMAND} -E tar xf ${_file}
         WORKING_DIRECTORY ${_dir})
 endfunction()
 

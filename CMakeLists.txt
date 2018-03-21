@@ -30,14 +30,11 @@ message(STATUS "Half_DIR: ${Half_DIR}")
 if(AnyDSL_LLVM_REQUIRED AND NOT CMAKE_DISABLE_FIND_PACKAGE_LLVM)
     set(LLVM_REQUIRED "REQUIRED")
 endif()
+set(RV_BRANCH release_50 CACHE STRING "LLVM is build with this branch of RV")
 find_package(LLVM 5.0.1 EXACT ${LLVM_REQUIRED})
 message(STATUS "LLVM_DIR: ${LLVM_DIR}")
 
 include(cmake/fetch-package.cmake)
-
-# cdl-saarland/rv
-# fetch_anydsl_package(RV_DIR rv rv https://github.com/cdl-saarland/rv ${CMAKE_CURRENT_SOURCE_DIR}/rv)
-# message(STATUS "RV_DIR: ${RV_DIR}")
 
 # AnyDSL_thorin
 fetch_anydsl_package(AnyDSL_thorin_DIR thorin thorin ${AnyDSL_REMOTE_URL}/thorin)

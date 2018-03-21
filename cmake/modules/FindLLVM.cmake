@@ -30,7 +30,7 @@ find_path(LLVM_DIR LLVMConfig.cmake
 # download and extract LLVM and CLANG
 if(NOT LLVM_DIR AND LLVM_FIND_REQUIRED)
     file(MAKE_DIRECTORY ${CONTRIB_DIR})
-    set(LLVM_FILE ${CONTRIB_DIR}/llvm.tar.xz)
+    set(LLVM_FILE ${CONTRIB_DIR}/llvm-${LLVM_FIND_VERSION}.tar.xz)
     if(NOT EXISTS ${LLVM_FILE})
         message(STATUS "Downloading ${LLVM_URL}")
         file(DOWNLOAD ${LLVM_URL} ${LLVM_FILE} SHOW_PROGRESS)

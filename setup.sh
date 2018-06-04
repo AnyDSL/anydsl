@@ -111,8 +111,8 @@ fi
 
 # source this file to put clang and impala in path
 cat > "${CUR}/project.sh" <<_EOF_
-export PATH="${CUR}/llvm_install/bin:${CUR}/impala/build/bin:\$PATH"
-export LD_LIBRARY_PATH="${CUR}/llvm_install/lib:\$LD_LIBRARY_PATH"
+export PATH="${CUR}/llvm_install/bin:${CUR}/impala/build/bin:\${PATH:-}"
+export LD_LIBRARY_PATH="${CUR}/llvm_install/lib:\${LD_LIBRARY_PATH:-}"
 _EOF_
 
 source "${CUR}/project.sh"

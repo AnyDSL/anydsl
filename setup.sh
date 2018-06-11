@@ -22,7 +22,7 @@ elif [ $LOCAL = $BASE ]; then
     exit $?
 elif [ $REMOTE = $BASE ]; then
     echo "your branch is ahead of your tracking branch"
-    echo "push your changes an rerun the script "
+    echo "push your changes and rerun the script "
     exit 1
 else
     echo "your branch and your tracking remote branch have diverged"

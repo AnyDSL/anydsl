@@ -80,7 +80,9 @@ if [ "${LLVM-}" == true ] ; then
         tar xf llvm-5.0.1.src.tar.xz
         rm llvm-5.0.1.src.tar.xz
         mv llvm-5.0.1.src llvm
-        cd llvm/tools
+        cd llvm
+        patch -p1 -i ../gcc8-llvm.patch
+        cd tools
         wget http://releases.llvm.org/5.0.1/cfe-5.0.1.src.tar.xz
         tar xf cfe-5.0.1.src.tar.xz
         rm cfe-5.0.1.src.tar.xz

@@ -75,17 +75,21 @@ if [ "${LLVM-}" == true ] ; then
     mkdir -p llvm_build/
 
     if [ ! -e  "${CUR}/llvm" ]; then
-        wget http://releases.llvm.org/5.0.1/llvm-5.0.1.src.tar.xz
-        tar xf llvm-5.0.1.src.tar.xz
-        rm llvm-5.0.1.src.tar.xz
-        mv llvm-5.0.1.src llvm
+        wget http://releases.llvm.org/5.0.2/llvm-5.0.2.src.tar.xz
+        tar xf llvm-5.0.2.src.tar.xz
+        rm llvm-5.0.2.src.tar.xz
+        mv llvm-5.0.2.src llvm
         cd llvm
         patch -p1 -i ../gcc8-llvm.patch
         cd tools
-        wget http://releases.llvm.org/5.0.1/cfe-5.0.1.src.tar.xz
-        tar xf cfe-5.0.1.src.tar.xz
-        rm cfe-5.0.1.src.tar.xz
-        mv cfe-5.0.1.src clang
+        wget http://releases.llvm.org/5.0.2/cfe-5.0.2.src.tar.xz
+        wget http://releases.llvm.org/5.0.2/lld-5.0.2.src.tar.xz
+        tar xf cfe-5.0.2.src.tar.xz
+        tar xf lld-5.0.2.src.tar.xz
+        rm cfe-5.0.2.src.tar.xz
+        rm lld-5.0.2.src.tar.xz
+        mv cfe-5.0.2.src clang
+        mv lld-5.0.2.src lld
     fi
 
     # rv

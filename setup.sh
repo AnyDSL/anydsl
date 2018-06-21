@@ -90,6 +90,8 @@ if [ "${LLVM-}" == true ] ; then
         rm lld-5.0.2.src.tar.xz
         mv cfe-5.0.2.src clang
         mv lld-5.0.2.src lld
+        cd lld
+        patch -p1 -i ../../../gcc8-lld.patch
     fi
 
     # rv

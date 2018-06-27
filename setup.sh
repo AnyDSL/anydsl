@@ -75,35 +75,33 @@ if [ "${LLVM-}" == true ] ; then
     mkdir -p llvm_build/
 
     if [ ! -e  "${CUR}/llvm" ]; then
-        wget http://releases.llvm.org/5.0.2/llvm-5.0.2.src.tar.xz
-        tar xf llvm-5.0.2.src.tar.xz
-        rm llvm-5.0.2.src.tar.xz
-        mv llvm-5.0.2.src llvm
-        cd llvm
-        patch -p1 -i ../gcc8-llvm.patch
-        cd tools
-        wget http://releases.llvm.org/5.0.2/cfe-5.0.2.src.tar.xz
-        wget http://releases.llvm.org/5.0.2/lld-5.0.2.src.tar.xz
-        tar xf cfe-5.0.2.src.tar.xz
-        tar xf lld-5.0.2.src.tar.xz
-        rm cfe-5.0.2.src.tar.xz
-        rm lld-5.0.2.src.tar.xz
-        mv cfe-5.0.2.src clang
-        mv lld-5.0.2.src lld
-        cd lld
-        patch -p1 -i ../../../gcc8-lld.patch
+        wget http://releases.llvm.org/6.0.0/llvm-6.0.0.src.tar.xz
+        tar xf llvm-6.0.0.src.tar.xz
+        rm llvm-6.0.0.src.tar.xz
+        mv llvm-6.0.0.src llvm
+        cd llvm/tools
+        wget http://releases.llvm.org/6.0.0/cfe-6.0.0.src.tar.xz
+        wget http://releases.llvm.org/6.0.0/lld-6.0.0.src.tar.xz
+        tar xf cfe-6.0.0.src.tar.xz
+        tar xf lld-6.0.0.src.tar.xz
+        rm cfe-6.0.0.src.tar.xz
+        rm lld-6.0.0.src.tar.xz
+        mv cfe-6.0.0.src clang
+        mv lld-6.0.0.src lld
     fi
 
     # rv
     cd "${CUR}"
     cd llvm/tools
     clone_or_update cdl-saarland rv ${BRANCH_RV}
+    cd rv
+    git submodule update --init
     cd "${CUR}"
 
     # build llvm
     cd llvm_build
     cmake ../llvm ${CMAKE_MAKE} -DBUILD_SHARED_LIBS:BOOL=ON -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX:PATH="${CUR}/llvm_install" \
-        -DLLVM_ENABLE_RTTI:BOOL=ON -DLLVM_INCLUDE_TESTS:BOOL=ON -DLLVM_TARGETS_TO_BUILD="${LLVM_TARGETS}"
+        -DLLVM_ENABLE_RTTI:BOOL=ON -DLLVM_ENABLE_CXX1Y:BOOL=ON -DLLVM_INCLUDE_TESTS:BOOL=ON -DLLVM_TARGETS_TO_BUILD="${LLVM_TARGETS}"
     ${MAKE} install
     cd "${CUR}"
 

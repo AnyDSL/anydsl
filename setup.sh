@@ -75,19 +75,19 @@ if [ "${LLVM-}" == true ] ; then
     mkdir -p llvm_build/
 
     if [ ! -e  "${CUR}/llvm" ]; then
-        wget http://releases.llvm.org/6.0.0/llvm-6.0.0.src.tar.xz
-        tar xf llvm-6.0.0.src.tar.xz
-        rm llvm-6.0.0.src.tar.xz
-        mv llvm-6.0.0.src llvm
+        wget http://releases.llvm.org/6.0.1/llvm-6.0.1.src.tar.xz
+        tar xf llvm-6.0.1.src.tar.xz
+        rm llvm-6.0.1.src.tar.xz
+        mv llvm-6.0.1.src llvm
         cd llvm/tools
-        wget http://releases.llvm.org/6.0.0/cfe-6.0.0.src.tar.xz
-        wget http://releases.llvm.org/6.0.0/lld-6.0.0.src.tar.xz
-        tar xf cfe-6.0.0.src.tar.xz
-        tar xf lld-6.0.0.src.tar.xz
-        rm cfe-6.0.0.src.tar.xz
-        rm lld-6.0.0.src.tar.xz
-        mv cfe-6.0.0.src clang
-        mv lld-6.0.0.src lld
+        wget http://releases.llvm.org/6.0.1/cfe-6.0.1.src.tar.xz
+        wget http://releases.llvm.org/6.0.1/lld-6.0.1.src.tar.xz
+        tar xf cfe-6.0.1.src.tar.xz
+        tar xf lld-6.0.1.src.tar.xz
+        rm cfe-6.0.1.src.tar.xz
+        rm lld-6.0.1.src.tar.xz
+        mv cfe-6.0.1.src clang
+        mv lld-6.0.1.src lld
     fi
 
     # rv

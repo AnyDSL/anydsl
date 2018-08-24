@@ -103,7 +103,7 @@ if [ "${LLVM-}" == true ] ; then
     # build llvm
     cd llvm_build
     cmake ../llvm ${CMAKE_MAKE} -DBUILD_SHARED_LIBS:BOOL=ON -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX:PATH="${CUR}/llvm_install" \
-        -DLLVM_ENABLE_RTTI:BOOL=ON -DLLVM_INCLUDE_TESTS:BOOL=ON -DLLVM_TARGETS_TO_BUILD="${LLVM_TARGETS}"
+        -DLLVM_ENABLE_RTTI:BOOL=ON -DLLVM_INCLUDE_TESTS:BOOL=ON -DLLVM_TARGETS_TO_BUILD:STRING="${LLVM_TARGETS}"
     ${MAKE} install
     cd "${CUR}"
 
@@ -128,7 +128,7 @@ source "${CUR}/project.sh"
 cd "${CUR}"
 clone_or_update AnyDSL thorin ${BRANCH_THORIN}
 cd "${CUR}/thorin/build"
-cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} ${LLVM_VARS} -DTHORIN_PROFILE=${THORIN_PROFILE} -DHalf_DIR:PATH="${CUR}/half/include"
+cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} ${LLVM_VARS} -DTHORIN_PROFILE:BOOL=${THORIN_PROFILE} -DHalf_DIR:PATH="${CUR}/half/include"
 ${MAKE}
 
 # impala
@@ -142,7 +142,7 @@ ${MAKE}
 cd "${CUR}"
 clone_or_update AnyDSL runtime ${BRANCH_RUNTIME}
 cd "${CUR}/runtime/build"
-cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DRUNTIME_JIT=${RUNTIME_JIT} -DImpala_DIR:PATH="${CUR}/impala/build/share/anydsl/cmake"
+cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DRUNTIME_JIT:BOOL=${RUNTIME_JIT} -DImpala_DIR:PATH="${CUR}/impala/build/share/anydsl/cmake"
 ${MAKE}
 
 # configure stincilla but don't build yet

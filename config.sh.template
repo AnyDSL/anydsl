@@ -21,7 +21,7 @@
 : ${RUNTIME_JIT:=false}
 
 # set the default branches for each repository
-: ${BRANCH_RV:=release_60}
+: ${BRANCH_RV:=release_70}
 : ${BRANCH_RUNTIME:=master}
 : ${BRANCH_THORIN:=master}
 : ${BRANCH_IMPALA:=master}

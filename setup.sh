@@ -151,11 +151,13 @@ cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DAnyDSL_runtime_
 #${MAKE}
 
 # configure traversal but don't build yet
-cd "${CUR}"
-clone_or_update AnyDSL traversal ${BRANCH_TRAVERSAL}
-cd "${CUR}/traversal/build"
-cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DAnyDSL_runtime_DIR:PATH="${CUR}/runtime/build/share/anydsl/cmake"
-#${MAKE}
+if [ "$CLONE_TRAVERSAL" = true ]; then
+    cd "${CUR}"
+    clone_or_update AnyDSL traversal ${BRANCH_TRAVERSAL}
+    cd "${CUR}/traversal/build"
+    cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DAnyDSL_runtime_DIR:PATH="${CUR}/runtime/build/share/anydsl/cmake"
+    #${MAKE}
+fi
 
 cd "${CUR}"
 

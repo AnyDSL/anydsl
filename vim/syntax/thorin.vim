@@ -16,9 +16,10 @@ syn keyword thorinKeyword   eq ne gt ge lt le
 syn keyword thorinKeyword   add sub mul div rem
 syn keyword thorinKeyword   and or xor shl shr
 syn keyword thorinKeyword   bottom alloc load store enter leave map select global slot cast bitcast definite_array indefinite_array tuple struct_agg vector extract insert lea run hlt end_run end_hlt asm
-syn keyword thorinKeyword   extern
+syn keyword thorinKeyword   param
+syn keyword thorinKeyword   extern device
 " Special treatment for fn as type constructor and br as intrinsic function
-syn keyword thorinKeyword   br fn
+syn keyword thorinKeyword   br match
 
 " Numbers:
 syn match   thorinNumber    '\<\d\+\>'
@@ -28,7 +29,7 @@ syn keyword thorinType      ps8 ps16 ps32 ps64 pu8 pu16 pu32 pu64
 syn keyword thorinType      qs8 qs16 qs32 qs64 qu8 qu16 qu32 qu64
 syn keyword thorinType      pf32 pf64 qf32 qf64
 syn keyword thorinType      bool mem
-
+syn keyword thorinType      cn
 
 let b:current_syntax = "thorin"
 

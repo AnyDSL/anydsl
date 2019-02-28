@@ -75,19 +75,19 @@ if [ "${LLVM-}" == true ] ; then
     mkdir -p llvm_build/
 
     if [ ! -e  "${CUR}/llvm" ]; then
-        wget http://releases.llvm.org/7.0.1/llvm-7.0.1.src.tar.xz
-        tar xf llvm-7.0.1.src.tar.xz
-        rm llvm-7.0.1.src.tar.xz
-        mv llvm-7.0.1.src llvm
+        git clone https://github.com/RadeonOpenCompute/llvm.git
+        cd llvm
+        git reset --hard 6e349ce
+        cd -
         cd llvm/tools
-        wget http://releases.llvm.org/7.0.1/cfe-7.0.1.src.tar.xz
-        wget http://releases.llvm.org/7.0.1/lld-7.0.1.src.tar.xz
-        tar xf cfe-7.0.1.src.tar.xz
-        tar xf lld-7.0.1.src.tar.xz
-        rm cfe-7.0.1.src.tar.xz
-        rm lld-7.0.1.src.tar.xz
-        mv cfe-7.0.1.src clang
-        mv lld-7.0.1.src lld
+        git clone https://github.com/RadeonOpenCompute/hcc-clang-upgrade.git clang
+        cd clang
+        git reset --hard 683c680
+        cd -
+        git clone https://github.com/RadeonOpenCompute/lld.git
+        cd lld
+        git reset --hard 57d0222
+        cd -
     fi
 
     # rv

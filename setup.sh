@@ -77,16 +77,16 @@ if [ "${LLVM-}" == true ] ; then
     if [ ! -e  "${CUR}/llvm" ]; then
         git clone https://github.com/RadeonOpenCompute/llvm.git
         cd llvm
-        git reset --hard 6e349ce
+        git checkout roc-2.2.0
         cd -
         cd llvm/tools
-        git clone https://github.com/RadeonOpenCompute/hcc-clang-upgrade.git clang
+        git clone https://github.com/RadeonOpenCompute/clang.git
         cd clang
-        git reset --hard 683c680
+        git checkout roc-2.2.0
         cd -
         git clone https://github.com/RadeonOpenCompute/lld.git
         cd lld
-        git reset --hard 57d0222
+        git checkout roc-2.2.0
         cd -
     fi
 

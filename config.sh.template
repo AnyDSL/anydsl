@@ -22,9 +22,9 @@
 : ${CLONE_TRAVERSAL:=false}
 
 # set the default branches for each repository
-: ${BRANCH_RV:=release_70}
+: ${BRANCH_RV:=master}
 : ${BRANCH_RUNTIME:=master}
-: ${BRANCH_THORIN:=master}
+: ${BRANCH_THORIN:=llvm_90}
 : ${BRANCH_IMPALA:=master}
 : ${BRANCH_STINCILLA:=master}
 : ${BRANCH_TRAVERSAL:=master}

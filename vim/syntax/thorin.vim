@@ -28,7 +28,7 @@ syn match   thorinNumber    '\<\d\+\>'
 syn keyword thorinType      ps8 ps16 ps32 ps64 pu8 pu16 pu32 pu64
 syn keyword thorinType      qs8 qs16 qs32 qs64 qu8 qu16 qu32 qu64
 syn keyword thorinType      pf32 pf64 qf32 qf64
-syn keyword thorinType      bool mem
+syn keyword thorinType      bool mem frame
 syn keyword thorinType      cn
 
 let b:current_syntax = "thorin"

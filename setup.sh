@@ -75,19 +75,20 @@ if [ "${LLVM-}" == true ] ; then
     mkdir -p llvm_build/
 
     if [ ! -e  "${CUR}/llvm" ]; then
-        wget http://releases.llvm.org/8.0.0/llvm-8.0.0.src.tar.xz
-        tar xf llvm-8.0.0.src.tar.xz
-        rm llvm-8.0.0.src.tar.xz
-        mv llvm-8.0.0.src llvm
+        LLVM_VERSION=8.0.0
+        wget http://releases.llvm.org/${LLVM_VERSION}/llvm-${LLVM_VERSION}.src.tar.xz
+        tar xf llvm-${LLVM_VERSION}.src.tar.xz
+        rm llvm-${LLVM_VERSION}.src.tar.xz
+        mv llvm-${LLVM_VERSION}.src llvm
         cd llvm/tools
-        wget http://releases.llvm.org/8.0.0/cfe-8.0.0.src.tar.xz
-        wget http://releases.llvm.org/8.0.0/lld-8.0.0.src.tar.xz
-        tar xf cfe-8.0.0.src.tar.xz
-        tar xf lld-8.0.0.src.tar.xz
-        rm cfe-8.0.0.src.tar.xz
-        rm lld-8.0.0.src.tar.xz
-        mv cfe-8.0.0.src clang
-        mv lld-8.0.0.src lld
+        wget http://releases.llvm.org/${LLVM_VERSION}/cfe-${LLVM_VERSION}.src.tar.xz
+        wget http://releases.llvm.org/${LLVM_VERSION}/lld-${LLVM_VERSION}.src.tar.xz
+        tar xf cfe-${LLVM_VERSION}.src.tar.xz
+        tar xf lld-${LLVM_VERSION}.src.tar.xz
+        rm cfe-${LLVM_VERSION}.src.tar.xz
+        rm lld-${LLVM_VERSION}.src.tar.xz
+        mv cfe-${LLVM_VERSION}.src clang
+        mv lld-${LLVM_VERSION}.src lld
     fi
 
     # rv

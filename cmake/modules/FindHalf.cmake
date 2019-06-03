@@ -16,16 +16,16 @@ find_path(Half_DIR half.hpp
     PATHS
         ${Half_DIR}
         $ENV{Half_DIR}
-        ${CONTRIB_DIR}/half
+        ${AnyDSL_CONTRIB_DIR}/half
     PATH_SUFFIXES
         include
     DOC "C++ library for half precision floating point arithmetics."
 )
 if(NOT Half_DIR AND Half_FIND_REQUIRED)
     find_package(Git REQUIRED)
-    file(MAKE_DIRECTORY ${CONTRIB_DIR})
-    execute_process(COMMAND ${GIT_EXECUTABLE} svn clone ${Half_URL} ${CONTRIB_DIR}/half)
-    find_path(Half_DIR half.hpp PATHS ${CONTRIB_DIR}/half PATH_SUFFIXES include)
+    file(MAKE_DIRECTORY ${AnyDSL_CONTRIB_DIR})
+    execute_process(COMMAND ${GIT_EXECUTABLE} svn clone ${Half_URL} ${AnyDSL_CONTRIB_DIR}/half)
+    find_path(Half_DIR half.hpp PATHS ${AnyDSL_CONTRIB_DIR}/half PATH_SUFFIXES include)
 endif()
 
 find_path(Half_INCLUDE_DIR half.hpp PATHS ${Half_DIR} PATH_SUFFIXES include)

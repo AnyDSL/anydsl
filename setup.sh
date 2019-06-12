@@ -151,11 +151,11 @@ cd "${CUR}/stincilla/build"
 cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DAnyDSL_runtime_DIR:PATH="${CUR}/runtime/build/share/anydsl/cmake" -DBACKEND:STRING="cpu"
 #${MAKE}
 
-# configure traversal but don't build yet
-if [ "$CLONE_TRAVERSAL" = true ]; then
+# configure rodent but don't build yet
+if [ "$CLONE_RODENT" = true ]; then
     cd "${CUR}"
-    clone_or_update AnyDSL traversal ${BRANCH_TRAVERSAL}
-    cd "${CUR}/traversal/build"
+    clone_or_update AnyDSL rodent ${BRANCH_RODENT}
+    cd "${CUR}/rodent/build"
     cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DAnyDSL_runtime_DIR:PATH="${CUR}/runtime/build/share/anydsl/cmake"
     #${MAKE}
 fi

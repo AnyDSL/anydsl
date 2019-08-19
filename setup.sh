@@ -77,17 +77,16 @@ if [ "${LLVM-}" == true ] ; then
     if [ ! -e  "${CUR}/llvm" ]; then
         git clone https://github.com/RadeonOpenCompute/llvm.git
         cd llvm
-        git checkout roc-ocl-2.6.0
-        patch -p1 < ../llvm_amdgpu.patch
+        git checkout roc-ocl-2.7.0
         cd -
         cd llvm/tools
         git clone https://github.com/RadeonOpenCompute/clang.git
         cd clang
-        git checkout roc-2.6.0
+        git checkout roc-2.7.0
         cd -
         git clone https://github.com/RadeonOpenCompute/lld.git
         cd lld
-        git checkout roc-ocl-2.6.0
+        git checkout roc-ocl-2.7.0
         cd -
     fi
 

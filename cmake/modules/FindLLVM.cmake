@@ -4,18 +4,7 @@
 #  LLVM_DIR           - path to LLVMConfig.cmake
 #
 
-if(NOT LLVM_FIND_VERSION)
-    message(FATAL_ERROR "Please specify the required LLVM version")
-endif()
-if(NOT LLVM_URL)
-    set(LLVM_URL "http://llvm.org/releases/${LLVM_FIND_VERSION}/llvm-${LLVM_FIND_VERSION}.src.tar.xz")
-endif()
-
-get_filename_component(BUILD_DIR_NAME ${CMAKE_BINARY_DIR} NAME)
-set(LLVM_SOURCE_DIR ${AnyDSL_CONTRIB_DIR}/llvm-${LLVM_FIND_VERSION})
-set(LLVM_BUILD_DIR ${LLVM_SOURCE_DIR}/${BUILD_DIR_NAME})
-
-find_path(LLVM_DIR LLVMConfig.cmake
+find_package(LLVM ${LLVM_FIND_VERSION} CONFIG
     PATHS
         ${LLVM_DIR}
         $ENV{LLVM_DIR}
@@ -27,9 +16,20 @@ find_path(LLVM_DIR LLVMConfig.cmake
         share/llvm/cmake
 )
 
+if(NOT LLVM_FOUND)
+
 # download and extract LLVM and CLANG
 if(NOT LLVM_DIR AND LLVM_FIND_REQUIRED)
+    if(NOT LLVM_URL_PREFIX)
+        set(LLVM_URL_PREFIX "http://releases.llvm.org/${LLVM_FIND_VERSION}" CACHE STRING "where to download llvm")
+    endif()
+
+    get_filename_component(BUILD_DIR_NAME ${CMAKE_BINARY_DIR} NAME)
+    set(LLVM_SOURCE_DIR ${AnyDSL_CONTRIB_DIR}/llvm-${LLVM_FIND_VERSION})
+    set(LLVM_BUILD_DIR ${LLVM_SOURCE_DIR}/${BUILD_DIR_NAME})
+
     file(MAKE_DIRECTORY ${AnyDSL_CONTRIB_DIR})
+    set(LLVM_URL "${LLVM_URL_PREFIX}/llvm-${LLVM_FIND_VERSION}.src.tar.xz")
     set(LLVM_FILE ${AnyDSL_CONTRIB_DIR}/llvm-${LLVM_FIND_VERSION}.tar.xz)
     if(NOT EXISTS ${LLVM_FILE})
         message(STATUS "Downloading ${LLVM_URL}")
@@ -51,7 +51,7 @@ if(NOT LLVM_DIR AND LLVM_FIND_REQUIRED)
     find_path(LLVM_DIR LLVMConfig.cmake PATHS ${LLVM_SOURCE_DIR} PATH_SUFFIXES lib/cmake/llvm share/llvm/cmake)
 
     if(NOT LLVM_DIR)
-        set(CLANG_URL "http://llvm.org/releases/${LLVM_FIND_VERSION}/cfe-${LLVM_FIND_VERSION}.src.tar.xz")
+        set(CLANG_URL "${LLVM_URL_PREFIX}/cfe-${LLVM_FIND_VERSION}.src.tar.xz")
         set(CLANG_FILE ${AnyDSL_CONTRIB_DIR}/cfe-${LLVM_FIND_VERSION}.tar.xz)
         if(NOT EXISTS ${CLANG_FILE})
             message(STATUS "Downloading ${CLANG_URL}")
@@ -68,14 +68,19 @@ if(NOT LLVM_DIR AND LLVM_FIND_REQUIRED)
         endif()
 
         if(AnyDSL_RV_BRANCH)
-            set(RV_URL "https://github.com/cdl-saarland/rv/archive/${AnyDSL_RV_BRANCH}.zip")
-            set(RV_FILE ${AnyDSL_CONTRIB_DIR}/rv-${AnyDSL_RV_BRANCH}.zip)
+            set(RV_URL "https://github.com/cdl-saarland/rv/archive/${AnyDSL_RV_BRANCH}.tar.gz")
+            set(RV_FILE ${AnyDSL_CONTRIB_DIR}/rv-${AnyDSL_RV_BRANCH}.tar.xz)
             if(NOT EXISTS ${RV_FILE})
-                message(STATUS "Downloading ${RV_FILE}")
+                message(STATUS "Downloading ${RV_URL}")
                 file(DOWNLOAD ${RV_URL} ${RV_FILE})
             endif()
             if(NOT EXISTS ${LLVM_SOURCE_DIR}/tools/rv)
-                decompress(${RV_FILE})
+                message(STATUS "Extracting ${RV_FILE}")
+                get_filename_component(_dir ${RV_FILE} DIRECTORY)
+                get_filename_component(_file ${RV_FILE} NAME)
+                execute_process(
+                    COMMAND ${CMAKE_COMMAND} -E tar xf ${_file}
+                    WORKING_DIRECTORY ${_dir})
                 file(RENAME ${AnyDSL_CONTRIB_DIR}/rv-${AnyDSL_RV_BRANCH} ${LLVM_SOURCE_DIR}/tools/rv)
             endif()
         endif()
@@ -86,7 +91,7 @@ endif()
 
 # always configure and build LLVM at AnyDSL's cmake configure time
 # this is fast if it previously happened and allows to resume LLVM builds
-if(EXISTS ${LLVM_BUILD_DIR} AND NOT TARGET LLVM)
+if(EXISTS ${LLVM_BUILD_DIR} AND NOT TARGET LLVM-Build)
     set(LLVM_TARGETS_TO_BUILD "AArch64;AMDGPU;ARM;NVPTX;X86" CACHE STRING "limit targets of LLVM" FORCE)
     if(CMAKE_GENERATOR_PLATFORM)
         set(SPECIFY_PLATFORM -A ${CMAKE_GENERATOR_PLATFORM})
@@ -110,12 +115,12 @@ if(EXISTS ${LLVM_BUILD_DIR} AND NOT TARGET LLVM)
     )
 
     if(MSVC)
-        add_custom_target(LLVM
+        add_custom_target(LLVM-Build
             COMMAND ${CMAKE_COMMAND} --build ${LLVM_BUILD_DIR} --config $<CONFIG> -- ${AnyDSL_BUILD_FLAGS}
             COMMENT "Building pre-configured LLVM at ${LLVM_BUILD_DIR}"
             VERBATIM)
     elseif(DEFINED CMAKE_BUILD_TYPE)
-        add_custom_target(LLVM
+        add_custom_target(LLVM-Build
             COMMAND ${CMAKE_COMMAND} --build ${LLVM_BUILD_DIR} -- ${AnyDSL_BUILD_FLAGS}
             COMMENT "Building pre-configured LLVM at ${LLVM_BUILD_DIR} (${CMAKE_BUILD_TYPE})"
             VERBATIM)
@@ -140,3 +145,4 @@ if(EXISTS ${LLVM_DIR}/LLVMConfig.cmake)
     include(${LLVM_DIR}/LLVMConfig.cmake)
 endif()
 
+endif(NOT LLVM_FOUND)

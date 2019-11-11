@@ -75,14 +75,14 @@ if [ "${LLVM-}" == true ] ; then
     mkdir -p llvm_build/
 
     if [ ! -e  "${CUR}/llvm" ]; then
-        LLVM_VERSION=8.0.0
-        wget http://releases.llvm.org/${LLVM_VERSION}/llvm-${LLVM_VERSION}.src.tar.xz
+        LLVM_VERSION=8.0.1
+        wget https://releases.llvm.org/${LLVM_VERSION}/llvm-${LLVM_VERSION}.src.tar.xz
         tar xf llvm-${LLVM_VERSION}.src.tar.xz
         rm llvm-${LLVM_VERSION}.src.tar.xz
         mv llvm-${LLVM_VERSION}.src llvm
         cd llvm/tools
-        wget http://releases.llvm.org/${LLVM_VERSION}/cfe-${LLVM_VERSION}.src.tar.xz
-        wget http://releases.llvm.org/${LLVM_VERSION}/lld-${LLVM_VERSION}.src.tar.xz
+        wget https://releases.llvm.org/${LLVM_VERSION}/cfe-${LLVM_VERSION}.src.tar.xz
+        wget https://releases.llvm.org/${LLVM_VERSION}/lld-${LLVM_VERSION}.src.tar.xz
         tar xf cfe-${LLVM_VERSION}.src.tar.xz
         tar xf lld-${LLVM_VERSION}.src.tar.xz
         rm cfe-${LLVM_VERSION}.src.tar.xz

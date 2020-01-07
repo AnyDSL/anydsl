@@ -100,8 +100,12 @@ if [ "${LLVM-}" == true ] ; then
 
     # build llvm
     cd llvm_build
-    cmake ../llvm ${CMAKE_MAKE} -DBUILD_SHARED_LIBS:BOOL=ON -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX:PATH="${CUR}/llvm_install" \
-        -DLLVM_ENABLE_RTTI:BOOL=ON -DLLVM_ENABLE_CXX1Y:BOOL=ON -DLLVM_INCLUDE_TESTS:BOOL=ON -DLLVM_TARGETS_TO_BUILD:STRING="${LLVM_TARGETS}"
+    DEFAULT_SYSROOT=
+    if [[ ${OSTYPE} == "darwin"* ]] ; then
+        DEFAULT_SYSROOT=`xcrun --sdk macosx --show-sdk-path`
+    fi
+    cmake ../llvm ${CMAKE_MAKE} -DLLVM_BUILD_LLVM_DYLIB:BOOL=ON -DLLVM_LINK_LLVM_DYLIB:BOOL=ON -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX:PATH="${CUR}/llvm_install" \
+        -DLLVM_ENABLE_RTTI:BOOL=ON -DLLVM_ENABLE_CXX1Y:BOOL=ON -DLLVM_INCLUDE_TESTS:BOOL=ON -DLLVM_TARGETS_TO_BUILD:STRING="${LLVM_TARGETS}" -DDEFAULT_SYSROOT:PATH="${DEFAULT_SYSROOT}"
     ${MAKE} install
     cd "${CUR}"
 
@@ -150,11 +154,11 @@ cd "${CUR}/stincilla/build"
 cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DAnyDSL_runtime_DIR:PATH="${CUR}/runtime/build/share/anydsl/cmake" -DBACKEND:STRING="cpu"
 #${MAKE}
 
-# configure traversal but don't build yet
-if [ "$CLONE_TRAVERSAL" = true ]; then
+# configure rodent but don't build yet
+if [ "$CLONE_RODENT" = true ]; then
     cd "${CUR}"
-    clone_or_update AnyDSL traversal ${BRANCH_TRAVERSAL}
-    cd "${CUR}/traversal/build"
+    clone_or_update AnyDSL rodent ${BRANCH_RODENT}
+    cd "${CUR}/rodent/build"
     cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DAnyDSL_runtime_DIR:PATH="${CUR}/runtime/build/share/anydsl/cmake"
     #${MAKE}
 fi

@@ -19,7 +19,7 @@
 # use this to debug thorin hash table performance
 : ${THORIN_PROFILE:=false}
 : ${RUNTIME_JIT:=false}
-: ${CLONE_TRAVERSAL:=false}
+: ${CLONE_RODENT:=false}
 
 # set the default branches for each repository
 : ${BRANCH_RV:=f6b5ec7}
@@ -27,4 +27,4 @@
 : ${BRANCH_THORIN:=llvm_100}
 : ${BRANCH_IMPALA:=master}
 : ${BRANCH_STINCILLA:=master}
-: ${BRANCH_TRAVERSAL:=master}
+: ${BRANCH_RODENT:=master}

@@ -22,7 +22,8 @@
 : ${CLONE_RODENT:=false}
 
 # set the default branches for each repository
-: ${BRANCH_RV:=f6b5ec7}
+: ${BRANCH_RV:=master}
+: ${BRANCH_LLVM:=roc-ocl-3.0.0}
 : ${BRANCH_RUNTIME:=llvm_90}
 : ${BRANCH_THORIN:=llvm_100}
 : ${BRANCH_IMPALA:=master}

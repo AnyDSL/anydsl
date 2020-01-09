@@ -74,25 +74,11 @@ function clone_or_update {
 if [ "${LLVM-}" == true ] ; then
     mkdir -p llvm_build/
 
-    if [ ! -e  "${CUR}/llvm" ]; then
-        git clone https://github.com/RadeonOpenCompute/llvm.git
-        cd llvm
-        git checkout roc-ocl-2.10.0
-        cd -
-        cd llvm/tools
-        git clone https://github.com/RadeonOpenCompute/clang.git
-        cd clang
-        git checkout roc-2.10.0
-        cd -
-        git clone https://github.com/RadeonOpenCompute/lld.git
-        cd lld
-        git checkout roc-ocl-2.10.0
-        cd -
-    fi
+    clone_or_update RadeonOpenCompute llvm-project ${BRANCH_LLVM}
 
     # rv
     cd "${CUR}"
-    cd llvm/tools
+    cd llvm-project
     clone_or_update cdl-saarland rv ${BRANCH_RV}
     cd rv
     git submodule update --init
@@ -104,8 +90,9 @@ if [ "${LLVM-}" == true ] ; then
     if [[ ${OSTYPE} == "darwin"* ]] ; then
         DEFAULT_SYSROOT=`xcrun --sdk macosx --show-sdk-path`
     fi
-    cmake ../llvm ${CMAKE_MAKE} -DLLVM_BUILD_LLVM_DYLIB:BOOL=ON -DLLVM_LINK_LLVM_DYLIB:BOOL=ON -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX:PATH="${CUR}/llvm_install" \
-        -DLLVM_ENABLE_RTTI:BOOL=ON -DLLVM_ENABLE_CXX1Y:BOOL=ON -DLLVM_INCLUDE_TESTS:BOOL=ON -DLLVM_TARGETS_TO_BUILD:STRING="${LLVM_TARGETS}" -DDEFAULT_SYSROOT:PATH="${DEFAULT_SYSROOT}"
+    cmake ../llvm-project/llvm ${CMAKE_MAKE} -DLLVM_BUILD_LLVM_DYLIB:BOOL=ON -DLLVM_LINK_LLVM_DYLIB:BOOL=ON -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX:PATH="${CUR}/llvm_install" \
+        -DLLVM_EXTERNAL_PROJECTS="rv" -DLLVM_EXTERNAL_RV_SOURCE_DIR=${CUR}/llvm-project/rv \
+        -DLLVM_ENABLE_RTTI:BOOL=ON -DLLVM_ENABLE_PROJECTS="clang;lld" -DLLVM_INCLUDE_TESTS:BOOL=ON -DLLVM_TARGETS_TO_BUILD:STRING="${LLVM_TARGETS}" -DDEFAULT_SYSROOT:PATH="${DEFAULT_SYSROOT}"
     ${MAKE} install
     cd "${CUR}"
 

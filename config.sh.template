@@ -24,7 +24,7 @@
 # set the default branches for each repository
 : ${BRANCH_RV:=master}
 : ${BRANCH_LLVM:=roc-ocl-3.0.0}
-: ${BRANCH_RUNTIME:=llvm_90}
+: ${BRANCH_RUNTIME:=llvm_100}
 : ${BRANCH_THORIN:=llvm_100}
 : ${BRANCH_IMPALA:=master}
 : ${BRANCH_STINCILLA:=master}

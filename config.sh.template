@@ -11,6 +11,10 @@
 # set this to true if you don't have a github account
 : ${HTTPS:=true}
 
+# set this to true if you want to download and build the required version of CMake
+: ${CMAKE:=false}
+: ${BRANCH_CMAKE:=v3.11.4}
+
 # set this to false if you don't want to build with LLVM
 # setting to false is meant to speed up debugging and not recommended for end users
 : ${LLVM:=true}

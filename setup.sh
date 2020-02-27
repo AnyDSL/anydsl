@@ -70,6 +70,21 @@ function clone_or_update {
     mkdir -p "$2"/build/
 }
 
+# build custom CMake
+if [ "${CMAKE-}" == true ] ; then
+    mkdir -p cmake_build
+
+    clone_or_update Kitware CMake ${BRANCH_CMAKE}
+
+    cd cmake_build
+    cmake ../CMake -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH="${CUR}/cmake_install"
+    ${MAKE} install
+    cd "${CUR}"
+
+    export PATH="${CUR}/cmake_install/bin:${PATH}"
+    echo $PATH
+fi
+
 # fetch sources
 if [ "${LLVM-}" == true ] ; then
     mkdir -p llvm_build/
@@ -110,6 +125,9 @@ cat > "${CUR}/project.sh" <<_EOF_
 export PATH="${CUR}/llvm_install/bin:${CUR}/impala/build/bin:\${PATH:-}"
 export LD_LIBRARY_PATH="${CUR}/llvm_install/lib:\${LD_LIBRARY_PATH:-}"
 _EOF_
+if [ "${CMAKE-}" == true ] ; then
+    echo "export PATH=\"${CUR}/cmake_install/bin:\${PATH:-}\"" >> ${CUR}/project.sh
+fi
 
 source "${CUR}/project.sh"
 

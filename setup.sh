@@ -95,7 +95,9 @@ if [ "${LLVM-}" == true ] ; then
         tar xf llvm-${LLVM_VERSION}.src.tar.xz
         rm llvm-${LLVM_VERSION}.src.tar.xz
         mv llvm-${LLVM_VERSION}.src llvm
-        cd llvm/tools
+        cd llvm
+        patch -p1 -i ../nvptx_feature_ptx60.patch
+        cd tools
         wget https://github.com/llvm/llvm-project/releases/download/llvmorg-${LLVM_VERSION}/cfe-${LLVM_VERSION}.src.tar.xz
         wget https://github.com/llvm/llvm-project/releases/download/llvmorg-${LLVM_VERSION}/lld-${LLVM_VERSION}.src.tar.xz
         tar xf cfe-${LLVM_VERSION}.src.tar.xz

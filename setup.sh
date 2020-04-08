@@ -90,6 +90,8 @@ if [ "${LLVM-}" == true ] ; then
     mkdir -p llvm_build/
 
     clone_or_update RadeonOpenCompute llvm-project ${BRANCH_LLVM}
+    cd llvm-project/llvm
+    patch -p1 -i ../../nvptx_feature_ptx60.patch
 
     # rv
     cd "${CUR}"

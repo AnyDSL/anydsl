@@ -91,6 +91,7 @@ if [ "${LLVM-}" == true ] ; then
 
     clone_or_update RadeonOpenCompute llvm-project ${BRANCH_LLVM}
     cd llvm-project/llvm
+    patch -p1 -i ../../amdgpu_icmp_fold.patch
     patch -p1 -i ../../nvptx_feature_ptx60.patch
 
     # rv

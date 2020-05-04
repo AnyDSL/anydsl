@@ -95,6 +95,7 @@ if [ "${LLVM-}" == true ] ; then
         tar xf llvm-${LLVM_VERSION}.src.tar.xz
         rm llvm-${LLVM_VERSION}.src.tar.xz
         mv llvm-${LLVM_VERSION}.src llvm
+        patch llvm/include/llvm/Demangle/MicrosoftDemangleNodes.h < gcc-10.patch
         cd llvm
         patch -p1 -i ../nvptx_feature_ptx60.patch
         cd tools

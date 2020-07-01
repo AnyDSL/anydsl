@@ -90,22 +90,21 @@ if [ "${LLVM-}" == true ] ; then
     mkdir -p llvm_build/
 
     if [ ! -e  "${CUR}/llvm" ]; then
-        LLVM_VERSION=8.0.1
+        LLVM_VERSION=10.0.0
         wget https://github.com/llvm/llvm-project/releases/download/llvmorg-${LLVM_VERSION}/llvm-${LLVM_VERSION}.src.tar.xz
         tar xf llvm-${LLVM_VERSION}.src.tar.xz
         rm llvm-${LLVM_VERSION}.src.tar.xz
         mv llvm-${LLVM_VERSION}.src llvm
-        patch llvm/include/llvm/Demangle/MicrosoftDemangleNodes.h < gcc-10.patch
         cd llvm
         patch -p1 -i ../nvptx_feature_ptx60.patch
         cd tools
-        wget https://github.com/llvm/llvm-project/releases/download/llvmorg-${LLVM_VERSION}/cfe-${LLVM_VERSION}.src.tar.xz
+        wget https://github.com/llvm/llvm-project/releases/download/llvmorg-${LLVM_VERSION}/clang-${LLVM_VERSION}.src.tar.xz
+        tar xf clang-${LLVM_VERSION}.src.tar.xz
+        rm clang-${LLVM_VERSION}.src.tar.xz
+        mv clang-${LLVM_VERSION}.src clang
         wget https://github.com/llvm/llvm-project/releases/download/llvmorg-${LLVM_VERSION}/lld-${LLVM_VERSION}.src.tar.xz
-        tar xf cfe-${LLVM_VERSION}.src.tar.xz
         tar xf lld-${LLVM_VERSION}.src.tar.xz
-        rm cfe-${LLVM_VERSION}.src.tar.xz
         rm lld-${LLVM_VERSION}.src.tar.xz
-        mv cfe-${LLVM_VERSION}.src clang
         mv lld-${LLVM_VERSION}.src lld
     fi
 
@@ -124,7 +123,7 @@ if [ "${LLVM-}" == true ] ; then
         DEFAULT_SYSROOT=`xcrun --sdk macosx --show-sdk-path`
     fi
     cmake ../llvm ${CMAKE_MAKE} -DLLVM_BUILD_LLVM_DYLIB:BOOL=ON -DLLVM_LINK_LLVM_DYLIB:BOOL=ON -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX:PATH="${CUR}/llvm_install" \
-        -DLLVM_ENABLE_RTTI:BOOL=ON -DLLVM_ENABLE_CXX1Y:BOOL=ON -DLLVM_INCLUDE_TESTS:BOOL=ON -DLLVM_TARGETS_TO_BUILD:STRING="${LLVM_TARGETS}" -DDEFAULT_SYSROOT:PATH="${DEFAULT_SYSROOT}"
+        -DLLVM_ENABLE_RTTI:BOOL=ON -DLLVM_INCLUDE_TESTS:BOOL=ON -DLLVM_TARGETS_TO_BUILD:STRING="${LLVM_TARGETS}" -DDEFAULT_SYSROOT:PATH="${DEFAULT_SYSROOT}"
     ${MAKE} install
     cd "${CUR}"
 

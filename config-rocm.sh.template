@@ -20,8 +20,8 @@
 : ${LLVM:=true}
 : ${LLVM_TARGETS:="AArch64;AMDGPU;ARM;NVPTX;X86"}
 : ${LLVM_GIT:=false}
-: ${LLVM_GIT_REPO:=llvm}
-: ${LLVM_GIT_BRANCH:=release/10.x}
+: ${LLVM_GIT_REPO:=RadeonOpenCompute}
+: ${LLVM_GIT_BRANCH:=rocm-3.5.1}
 : ${LLVM_SRC_VERSION:=10.0.0}
 
 # use this to debug thorin hash table performance

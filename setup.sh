@@ -89,28 +89,23 @@ fi
 if [ "${LLVM-}" == true ] ; then
     mkdir -p llvm_build/
 
-    if [ ! -e  "${CUR}/llvm" ]; then
-        LLVM_VERSION=10.0.0
-        wget https://github.com/llvm/llvm-project/releases/download/llvmorg-${LLVM_VERSION}/llvm-${LLVM_VERSION}.src.tar.xz
-        tar xf llvm-${LLVM_VERSION}.src.tar.xz
-        rm llvm-${LLVM_VERSION}.src.tar.xz
-        mv llvm-${LLVM_VERSION}.src llvm
-        cd llvm
-        patch -p1 -i ../nvptx_feature_ptx60.patch
-        cd tools
-        wget https://github.com/llvm/llvm-project/releases/download/llvmorg-${LLVM_VERSION}/clang-${LLVM_VERSION}.src.tar.xz
-        tar xf clang-${LLVM_VERSION}.src.tar.xz
-        rm clang-${LLVM_VERSION}.src.tar.xz
-        mv clang-${LLVM_VERSION}.src clang
-        wget https://github.com/llvm/llvm-project/releases/download/llvmorg-${LLVM_VERSION}/lld-${LLVM_VERSION}.src.tar.xz
-        tar xf lld-${LLVM_VERSION}.src.tar.xz
-        rm lld-${LLVM_VERSION}.src.tar.xz
-        mv lld-${LLVM_VERSION}.src lld
+    if [ "${LLVM_GIT-}" = true ]; then
+        clone_or_update ${LLVM_GIT_REPO} llvm-project ${LLVM_GIT_BRANCH}
+    else
+        if [ ! -e  "${CUR}/llvm-project" ]; then
+            wget https://github.com/llvm/llvm-project/releases/download/llvmorg-${LLVM_SRC_VERSION}/llvm-project-${LLVM_SRC_VERSION}.tar.xz
+            tar xf llvm-project-${LLVM_SRC_VERSION}.tar.xz
+            rm llvm-project-${LLVM_SRC_VERSION}.tar.xz
+            mv llvm-project-${LLVM_SRC_VERSION} llvm-project
+        fi
     fi
+    cd llvm-project
+    patch -p1 -i ../amdgpu_icmp_fold.patch
+    patch -p1 -i ../nvptx_feature_ptx60.patch
 
     # rv
     cd "${CUR}"
-    cd llvm/tools
+    cd llvm-project
     clone_or_update cdl-saarland rv ${BRANCH_RV}
     cd rv
     git submodule update --init
@@ -122,8 +117,9 @@ if [ "${LLVM-}" == true ] ; then
     if [[ ${OSTYPE} == "darwin"* ]] ; then
         DEFAULT_SYSROOT=`xcrun --sdk macosx --show-sdk-path`
     fi
-    cmake ../llvm ${CMAKE_MAKE} -DLLVM_BUILD_LLVM_DYLIB:BOOL=ON -DLLVM_LINK_LLVM_DYLIB:BOOL=ON -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX:PATH="${CUR}/llvm_install" \
-        -DLLVM_ENABLE_RTTI:BOOL=ON -DLLVM_INCLUDE_TESTS:BOOL=ON -DLLVM_TARGETS_TO_BUILD:STRING="${LLVM_TARGETS}" -DDEFAULT_SYSROOT:PATH="${DEFAULT_SYSROOT}"
+    cmake ../llvm-project/llvm ${CMAKE_MAKE} -DLLVM_BUILD_LLVM_DYLIB:BOOL=ON -DLLVM_LINK_LLVM_DYLIB:BOOL=ON -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX:PATH="${CUR}/llvm_install" \
+        -DLLVM_EXTERNAL_PROJECTS="rv" -DLLVM_EXTERNAL_RV_SOURCE_DIR=${CUR}/llvm-project/rv \
+        -DLLVM_ENABLE_RTTI:BOOL=ON -DLLVM_ENABLE_PROJECTS="clang;lld" -DLLVM_INCLUDE_TESTS:BOOL=ON -DLLVM_TARGETS_TO_BUILD:STRING="${LLVM_TARGETS}" -DDEFAULT_SYSROOT:PATH="${DEFAULT_SYSROOT}"
     ${MAKE} install
     cd "${CUR}"
 

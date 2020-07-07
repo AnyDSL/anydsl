@@ -100,8 +100,10 @@ if [ "${LLVM-}" == true ]; then
         fi
     fi
     cd llvm-project
-    patch -p1 -i ../amdgpu_icmp_fold.patch
-    patch -p1 -i ../nvptx_feature_ptx60.patch
+    if patch --dry-run --reverse --force -s -p1 -i ../amdgpu_icmp_fold.patch != 0; then
+        patch -p1 -i ../amdgpu_icmp_fold.patch
+        patch -p1 -i ../nvptx_feature_ptx60.patch
+    fi
 
     # rv
     cd "${CUR}"

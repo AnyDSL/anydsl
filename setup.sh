@@ -100,7 +100,7 @@ if [ "${LLVM-}" == true ]; then
         fi
     fi
     cd llvm-project
-    if patch --dry-run --reverse --force -s -p1 -i ../amdgpu_icmp_fold.patch != 0; then
+    if ! patch --dry-run --reverse --force -s -p1 -i ../amdgpu_icmp_fold.patch; then
         patch -p1 -i ../amdgpu_icmp_fold.patch
         patch -p1 -i ../nvptx_feature_ptx60.patch
     fi

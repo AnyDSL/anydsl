@@ -71,7 +71,7 @@ function clone_or_update {
 }
 
 # build custom CMake
-if [ "${CMAKE-}" == true ] ; then
+if [ "${CMAKE-}" == true ]; then
     mkdir -p cmake_build
 
     clone_or_update Kitware CMake ${BRANCH_CMAKE}
@@ -86,7 +86,7 @@ if [ "${CMAKE-}" == true ] ; then
 fi
 
 # fetch sources
-if [ "${LLVM-}" == true ] ; then
+if [ "${LLVM-}" == true ]; then
     mkdir -p llvm_build/
 
     if [ "${LLVM_GIT-}" = true ]; then
@@ -114,7 +114,7 @@ if [ "${LLVM-}" == true ] ; then
     # build llvm
     cd llvm_build
     DEFAULT_SYSROOT=
-    if [[ ${OSTYPE} == "darwin"* ]] ; then
+    if [[ ${OSTYPE} == "darwin"* ]]; then
         DEFAULT_SYSROOT=`xcrun --sdk macosx --show-sdk-path`
     fi
     cmake ../llvm-project/llvm ${CMAKE_MAKE} -DLLVM_BUILD_LLVM_DYLIB:BOOL=ON -DLLVM_LINK_LLVM_DYLIB:BOOL=ON -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX:PATH="${CUR}/llvm_install" \
@@ -137,7 +137,7 @@ cat > "${CUR}/project.sh" <<_EOF_
 export PATH="${CUR}/llvm_install/bin:${CUR}/impala/build/bin:\${PATH:-}"
 export LD_LIBRARY_PATH="${CUR}/llvm_install/lib:\${LD_LIBRARY_PATH:-}"
 _EOF_
-if [ "${CMAKE-}" == true ] ; then
+if [ "${CMAKE-}" == true ]; then
     echo "export PATH=\"${CUR}/cmake_install/bin:\${PATH:-}\"" >> ${CUR}/project.sh
 fi
 

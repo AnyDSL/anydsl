@@ -77,7 +77,7 @@ if [ "${CMAKE-}" == true ]; then
     clone_or_update Kitware CMake ${BRANCH_CMAKE}
 
     cd cmake_build
-    cmake ../CMake -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH="${CUR}/cmake_install"
+    cmake ../CMake -DBUILD_CursesDialog:BOOL=ON -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH="${CUR}/cmake_install"
     ${MAKE} install
     cd "${CUR}"
 

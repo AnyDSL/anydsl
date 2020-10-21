@@ -106,14 +106,16 @@ if [ "${LLVM-}" == true ]; then
     fi
 
     # rv
-    cd "${CUR}"
-    cd llvm-project
-    clone_or_update cdl-saarland rv ${BRANCH_RV}
-    cd rv
-    git submodule update --init
-    cd "${CUR}"
+    if [ "${RV-}" == true ]; then
+        cd "${CUR}"
+        cd llvm-project
+        clone_or_update cdl-saarland rv ${BRANCH_RV}
+        cd rv
+        git submodule update --init
+    fi
 
     # build llvm
+    cd "${CUR}"
     cd llvm_build
     DEFAULT_SYSROOT=
     if [[ ${OSTYPE} == "darwin"* ]]; then

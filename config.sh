@@ -38,6 +38,6 @@
 : ${BRANCH_RUNTIME:=master}
 : ${BRANCH_THORIN:=llvm/12.x}
 : ${BRANCH_IMPALA:=llvm/11.x}
-: ${BRANCH_STINCILLA:=master}
+: ${BRANCH_STINCILLA:=feature/npm}
 : ${BRANCH_RODENT:=master}
 : ${CLONE_RODENT:=false}

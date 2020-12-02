@@ -7,34 +7,34 @@ COLOR_RESET="\033[0m"
 echo ">>> update setup project"
 git fetch origin
 
-UPSTREAM=${1:-'@{u}'}
-LOCAL=$(git rev-parse @)
-REMOTE=$(git rev-parse "$UPSTREAM")
-BASE=$(git merge-base @ "$UPSTREAM")
+########UPSTREAM=${1:-'@{u}'}
+########LOCAL=$(git rev-parse @)
+########REMOTE=$(git rev-parse "$UPSTREAM")
+########BASE=$(git merge-base @ "$UPSTREAM")
 
-if [ $LOCAL = $REMOTE ]; then
-    echo "your branch is up-to-date"
-elif [ $LOCAL = $BASE ]; then
-    echo "your branch is behind your tracking branch"
-    echo "I pull and rerun the script "
-    git pull
-    ./$0
-    exit $?
-elif [ $REMOTE = $BASE ]; then
-    echo "your branch is ahead of your tracking branch"
-    echo "remember to push your changes but I will run the script anyway"
-else
-    echo "your branch and your tracking remote branch have diverged"
-    echo "resolve all conflicts before rerunning the script"
-    exit 1
-fi
+########if [ $LOCAL = $REMOTE ]; then
+########    echo "your branch is up-to-date"
+########elif [ $LOCAL = $BASE ]; then
+########    echo "your branch is behind your tracking branch"
+########    echo "I pull and rerun the script "
+########    git pull
+########    ./$0
+########    exit $?
+########elif [ $REMOTE = $BASE ]; then
+########    echo "your branch is ahead of your tracking branch"
+########    echo "remember to push your changes but I will run the script anyway"
+########else
+########    echo "your branch and your tracking remote branch have diverged"
+########    echo "resolve all conflicts before rerunning the script"
+########    exit 1
+########fi
 
-if [ ! -e config.sh ]; then
-    echo "first configure your build:"
-    echo "cp config.sh.template config.sh"
-    echo "edit config.sh"
-    exit -1
-fi
+########if [ ! -e config.sh ]; then
+########    echo "first configure your build:"
+########    echo "cp config.sh.template config.sh"
+########    echo "edit config.sh"
+########    exit -1
+########fi
 
 source config.sh
 
@@ -71,13 +71,13 @@ function clone_or_update {
 }
 
 # build custom CMake
-if [ "${CMAKE-}" == true ]; then
+if [ "${CMAKE-}" == true ] ; then
     mkdir -p cmake_build
 
     clone_or_update Kitware CMake ${BRANCH_CMAKE}
 
     cd cmake_build
-    cmake ../CMake -DBUILD_CursesDialog:BOOL=ON -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH="${CUR}/cmake_install"
+    cmake ../CMake -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH="${CUR}/cmake_install"
     ${MAKE} install
     cd "${CUR}"
 
@@ -86,64 +86,69 @@ if [ "${CMAKE-}" == true ]; then
 fi
 
 # fetch sources
-if [ "${LLVM-}" == true ]; then
+if [ "${LLVM-}" == true ] ; then
     mkdir -p llvm_build/
 
-    if [ "${LLVM_GIT-}" = true ]; then
-        clone_or_update ${LLVM_GIT_REPO} llvm-project ${LLVM_GIT_BRANCH}
-    else
-        if [ ! -e  "${CUR}/llvm-project" ]; then
-            wget https://github.com/llvm/llvm-project/releases/download/llvmorg-${LLVM_SRC_VERSION}/llvm-project-${LLVM_SRC_VERSION}.tar.xz
-            tar xf llvm-project-${LLVM_SRC_VERSION}.tar.xz
-            rm llvm-project-${LLVM_SRC_VERSION}.tar.xz
-            mv llvm-project-${LLVM_SRC_VERSION} llvm-project
-        fi
-    fi
-    cd llvm-project
-    if ! patch --dry-run --reverse --force -s -p1 -i ../amdgpu_icmp_fold.patch; then
-        patch -p1 -i ../amdgpu_icmp_fold.patch
+    if [ ! -e  "${CUR}/llvm" ]; then
+        LLVM_VERSION=8.0.1
+        wget https://github.com/llvm/llvm-project/releases/download/llvmorg-${LLVM_VERSION}/llvm-${LLVM_VERSION}.src.tar.xz
+        tar xf llvm-${LLVM_VERSION}.src.tar.xz
+        rm llvm-${LLVM_VERSION}.src.tar.xz
+        mv llvm-${LLVM_VERSION}.src llvm
+        patch llvm/include/llvm/Demangle/MicrosoftDemangleNodes.h < gcc-10.patch
+        cd llvm
         patch -p1 -i ../nvptx_feature_ptx60.patch
+        cd tools
+        wget https://github.com/llvm/llvm-project/releases/download/llvmorg-${LLVM_VERSION}/cfe-${LLVM_VERSION}.src.tar.xz
+        wget https://github.com/llvm/llvm-project/releases/download/llvmorg-${LLVM_VERSION}/lld-${LLVM_VERSION}.src.tar.xz
+        tar xf cfe-${LLVM_VERSION}.src.tar.xz
+        tar xf lld-${LLVM_VERSION}.src.tar.xz
+        rm cfe-${LLVM_VERSION}.src.tar.xz
+        rm lld-${LLVM_VERSION}.src.tar.xz
+        mv cfe-${LLVM_VERSION}.src clang
+        mv lld-${LLVM_VERSION}.src lld
     fi
 
     # rv
-    if [ "${RV-}" == true ]; then
-        cd "${CUR}"
-        cd llvm-project
-        clone_or_update cdl-saarland rv ${BRANCH_RV}
-        cd rv
-        git submodule update --init
-    fi
+    cd "${CUR}"
+    cd llvm/tools
+    clone_or_update cdl-saarland rv ${BRANCH_RV}
+    cd rv
+    git submodule update --init
+    cd "${CUR}"
 
     # build llvm
-    cd "${CUR}"
     cd llvm_build
     DEFAULT_SYSROOT=
-    if [[ ${OSTYPE} == "darwin"* ]]; then
+    if [[ ${OSTYPE} == "darwin"* ]] ; then
         DEFAULT_SYSROOT=`xcrun --sdk macosx --show-sdk-path`
     fi
-    cmake ../llvm-project/llvm ${CMAKE_MAKE} -DLLVM_BUILD_LLVM_DYLIB:BOOL=ON -DLLVM_LINK_LLVM_DYLIB:BOOL=ON -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX:PATH="${CUR}/llvm_install" \
-        -DLLVM_EXTERNAL_PROJECTS="rv" -DLLVM_EXTERNAL_RV_SOURCE_DIR=${CUR}/llvm-project/rv \
-        -DLLVM_ENABLE_RTTI:BOOL=ON -DLLVM_ENABLE_PROJECTS="clang;lld" -DLLVM_ENABLE_BINDINGS:BOOL=OFF -DLLVM_INCLUDE_TESTS:BOOL=ON -DLLVM_TARGETS_TO_BUILD:STRING="${LLVM_TARGETS}" -DDEFAULT_SYSROOT:PATH="${DEFAULT_SYSROOT}"
+    cmake ../llvm ${CMAKE_MAKE} -DLLVM_BUILD_LLVM_DYLIB:BOOL=ON -DLLVM_LINK_LLVM_DYLIB:BOOL=ON -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX:PATH="${CUR}/llvm_install" \
+        -DLLVM_ENABLE_RTTI:BOOL=ON -DLLVM_ENABLE_CXX1Y:BOOL=ON -DLLVM_INCLUDE_TESTS:BOOL=ON -DLLVM_TARGETS_TO_BUILD:STRING="${LLVM_TARGETS}" -DDEFAULT_SYSROOT:PATH="${DEFAULT_SYSROOT}"
     ${MAKE} install
     cd "${CUR}"
 
     LLVM_VARS=-DLLVM_DIR:PATH="${CUR}/llvm_install/lib/cmake/llvm"
 else
-    LLVM_VARS=-DCMAKE_DISABLE_FIND_PACKAGE_LLVM=TRUE
+    #LLVM_VARS=-DCMAKE_DISABLE_FIND_PACKAGE_LLVM=TRUE
+    LLVM_VARS=-DLLVM_DIR:PATH="$HOME/devspace/install/lib/cmake/llvm/"
+    LLVM=true
 fi
 
-if [ ! -e "${CUR}/half" ]; then
-    svn checkout svn://svn.code.sf.net/p/half/code/trunk half
-fi
+########if [ ! -e "${CUR}/half" ]; then
+########    svn checkout svn://svn.code.sf.net/p/half/code/trunk half
+########fi
 
 # source this file to put clang and impala in path
 cat > "${CUR}/project.sh" <<_EOF_
 export PATH="${CUR}/llvm_install/bin:${CUR}/impala/build/bin:\${PATH:-}"
 export LD_LIBRARY_PATH="${CUR}/llvm_install/lib:\${LD_LIBRARY_PATH:-}"
 _EOF_
-if [ "${CMAKE-}" == true ]; then
+if [ "${CMAKE-}" == true ] ; then
     echo "export PATH=\"${CUR}/cmake_install/bin:\${PATH:-}\"" >> ${CUR}/project.sh
 fi
+
+echo "souring ${CUR}/project.sh"
 
 source "${CUR}/project.sh"
 

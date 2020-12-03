@@ -152,7 +152,7 @@ echo "souring ${CUR}/project.sh"
 
 source "${CUR}/project.sh"
 
-COMPILER_CONFIG="-DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang"
+COMPILER_CONFIG="-C ${CUR}/presets.cmake"
 
 # thorin
 cd "${CUR}"
@@ -165,7 +165,8 @@ ${MAKE}
 cd "${CUR}"
 clone_or_update AnyDSL impala ${BRANCH_IMPALA}
 cd "${CUR}/impala/build"
-cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DThorin_DIR:PATH="${CUR}/thorin/build/share/anydsl/cmake" ${COMPILER_CONFIG}
+cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DThorin_DIR:PATH="${CUR}/thorin/build/share/anydsl/cmake"
+#  ${COMPILER_CONFIG}
 ${MAKE}
 
 # runtime

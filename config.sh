@@ -2,7 +2,13 @@
 : ${BUILD_TYPE:=Debug}
 
 : ${CMAKE_MAKE:="-G Ninja"}
+if [ $(type -P "ninja") ]; then
+# Sane distro default.
+: ${MAKE:="ninja"}
+else
+# RedHat default.
 : ${MAKE:="ninja-build"}
+fi
 
 # use this for ninja instead of make
 #: ${CMAKE_MAKE:="-G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DLLVM_PARALLEL_COMPILE_JOBS=4 -DLLVM_PARALLEL_LINK_JOBS=1"}

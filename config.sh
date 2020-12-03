@@ -1,8 +1,8 @@
 # use Debug or Release
 : ${BUILD_TYPE:=Debug}
 
-: ${CMAKE_MAKE:=""}
-: ${MAKE:="make -j4"}
+: ${CMAKE_MAKE:="-G Ninja"}
+: ${MAKE:="ninja-build"}
 
 # use this for ninja instead of make
 #: ${CMAKE_MAKE:="-G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DLLVM_PARALLEL_COMPILE_JOBS=4 -DLLVM_PARALLEL_LINK_JOBS=1"}

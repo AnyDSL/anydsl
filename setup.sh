@@ -152,7 +152,7 @@ echo "souring ${CUR}/project.sh"
 
 source "${CUR}/project.sh"
 
-COMPILER_CONFIG="-C ${CUR}/presets.cmake"
+COMPILER_CONFIG="-C ${CUR}/presets/vh.cmake"
 
 # thorin
 cd "${CUR}"
@@ -172,15 +172,19 @@ ${MAKE}
 # runtime
 cd "${CUR}"
 clone_or_update AnyDSL runtime ${BRANCH_RUNTIME}
-cd "${CUR}/runtime/build"
-cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DRUNTIME_JIT:BOOL=${RUNTIME_JIT} -DImpala_DIR:PATH="${CUR}/impala/build/share/anydsl/cmake" ${COMPILER_CONFIG}
+cd "${CUR}/runtime/build_vh"
+cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DRUNTIME_JIT:BOOL=${RUNTIME_JIT} -DImpala_DIR:PATH="${CUR}/impala/build/share/anydsl/cmake" -C ${CUR}/presets/vh.cmake
+cd "${CUR}/runtime/build_ve"
+cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DRUNTIME_JIT:BOOL=${RUNTIME_JIT} -DImpala_DIR:PATH="${CUR}/impala/build/share/anydsl/cmake" -C ${CUR}/presets/ve.cmake
 ${MAKE}
 
 # configure stincilla but don't build yet
 cd "${CUR}"
 clone_or_update AnyDSL stincilla ${BRANCH_STINCILLA}
-cd "${CUR}/stincilla/build"
-cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DAnyDSL_runtime_DIR:PATH="${CUR}/runtime/build/share/anydsl/cmake" -DBACKEND:STRING="cpu" ${COMPILER_CONFIG}
+cd "${CUR}/stincilla/build_vh"
+cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DAnyDSL_runtime_DIR:PATH="${CUR}/runtime/build_vh/share/anydsl/cmake" -DBACKEND:STRING="avx" -C ${CUR}/presets/vh.cmake
+cd "${CUR}/stincilla/build_ve"
+cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DAnyDSL_runtime_DIR:PATH="${CUR}/runtime/build_ve/share/anydsl/cmake" -DBACKEND:STRING="avx" -C ${CUR}/presets/ve.cmake
 #${MAKE}
 
 # configure rodent but don't build yet

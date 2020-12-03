@@ -19,6 +19,8 @@
 /// \file
 /// Main header file for half-precision functionality.
 
+#include <immintrin.h>
+
 #ifndef HALF_HALF_HPP
 #define HALF_HALF_HPP
 
@@ -1379,7 +1381,7 @@ namespace half_float
 		/// \return (\a x << 32) / \a y
 		inline uint32 divide64(uint32 x, uint32 y, int &s)
 		{
-		#if HALF_ENABLE_CPP11_LONG_LONG
+		#if 0 // HALF_ENABLE_CPP11_LONG_LONG
 			unsigned long long xx = static_cast<unsigned long long>(x) << 32;
 			return s = (xx%y!=0), static_cast<uint32>(xx/y);
 		#else

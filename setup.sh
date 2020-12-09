@@ -136,9 +136,9 @@ if [ ! -e "${CUR}/half" ]; then
     svn checkout svn://svn.code.sf.net/p/half/code/trunk half
 fi
 
-# source this file to put clang and impala in path
+# source this file to put artic, impala, and clang in path
 cat > "${CUR}/project.sh" <<_EOF_
-export PATH="${CUR}/llvm_install/bin:${CUR}/impala/build/bin:\${PATH:-}"
+export PATH="${CUR}/llvm_install/bin:${CUR}/artic/build/bin:${CUR}/impala/build/bin:\${PATH:-}"
 export LD_LIBRARY_PATH="${CUR}/llvm_install/lib:\${LD_LIBRARY_PATH:-}"
 _EOF_
 if [ "${CMAKE-}" == true ]; then
@@ -154,6 +154,13 @@ cd "${CUR}/thorin/build"
 cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} ${LLVM_VARS} -DTHORIN_PROFILE:BOOL=${THORIN_PROFILE} -DHalf_DIR:PATH="${CUR}/half/include"
 ${MAKE}
 
+# artic
+cd "${CUR}"
+clone_or_update AnyDSL artic ${BRANCH_ARTIC}
+cd "${CUR}/artic/build"
+cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DThorin_DIR:PATH="${CUR}/thorin/build/share/anydsl/cmake"
+${MAKE}
+
 # impala
 cd "${CUR}"
 clone_or_update AnyDSL impala ${BRANCH_IMPALA}
@@ -165,7 +172,7 @@ ${MAKE}
 cd "${CUR}"
 clone_or_update AnyDSL runtime ${BRANCH_RUNTIME}
 cd "${CUR}/runtime/build"
-cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DRUNTIME_JIT:BOOL=${RUNTIME_JIT} -DImpala_DIR:PATH="${CUR}/impala/build/share/anydsl/cmake"
+cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DRUNTIME_JIT:BOOL=${RUNTIME_JIT} -DArtic_DIR:PATH="${CUR}/artic/build/share/anydsl/cmake" -DImpala_DIR:PATH="${CUR}/impala/build/share/anydsl/cmake"
 ${MAKE}
 
 # configure stincilla but don't build yet
@@ -187,5 +194,5 @@ fi
 cd "${CUR}"
 
 echo
-echo "!!! Use the following command in order to have 'impala' and 'clang' in your path:"
+echo "!!! Use the following command in order to have 'artic', 'impala', and 'clang' in your path:"
 echo "!!! source project.sh"

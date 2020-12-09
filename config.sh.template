@@ -13,7 +13,7 @@
 
 # set this to true if you want to download and build the required version of CMake
 : ${CMAKE:=false}
-: ${BRANCH_CMAKE:=v3.11.4}
+: ${BRANCH_CMAKE:=v3.12.4}
 
 # set this to false if you don't want to build with LLVM
 # setting to false is meant to speed up debugging and not recommended for end users
@@ -34,10 +34,11 @@
 : ${RUNTIME_JIT:=true}
 
 # set the default branches for each repository
+: ${BRANCH_ARTIC:=master}
+: ${BRANCH_IMPALA:=master}
+: ${BRANCH_THORIN:=master}
 : ${BRANCH_RV:=release/10.x}
 : ${BRANCH_RUNTIME:=master}
-: ${BRANCH_THORIN:=master}
-: ${BRANCH_IMPALA:=master}
 : ${BRANCH_STINCILLA:=master}
 : ${BRANCH_RODENT:=master}
 : ${CLONE_RODENT:=false}

@@ -7,35 +7,6 @@ COLOR_RESET="\033[0m"
 echo ">>> update setup project"
 git fetch origin
 
-########UPSTREAM=${1:-'@{u}'}
-########LOCAL=$(git rev-parse @)
-########REMOTE=$(git rev-parse "$UPSTREAM")
-########BASE=$(git merge-base @ "$UPSTREAM")
-
-########if [ $LOCAL = $REMOTE ]; then
-########    echo "your branch is up-to-date"
-########elif [ $LOCAL = $BASE ]; then
-########    echo "your branch is behind your tracking branch"
-########    echo "I pull and rerun the script "
-########    git pull
-########    ./$0
-########    exit $?
-########elif [ $REMOTE = $BASE ]; then
-########    echo "your branch is ahead of your tracking branch"
-########    echo "remember to push your changes but I will run the script anyway"
-########else
-########    echo "your branch and your tracking remote branch have diverged"
-########    echo "resolve all conflicts before rerunning the script"
-########    exit 1
-########fi
-
-########if [ ! -e config.sh ]; then
-########    echo "first configure your build:"
-########    echo "cp config.sh.template config.sh"
-########    echo "edit config.sh"
-########    exit -1
-########fi
-
 source config.sh
 
 CUR=`pwd`
@@ -46,6 +17,11 @@ function remote {
     else
         echo "git@github.com:$1"
     fi
+}
+
+function make_and_cd {
+  mkdir -p $1
+  cd $1
 }
 
 function clone_or_update {
@@ -67,7 +43,6 @@ function clone_or_update {
         set -e
         cd ..
     fi
-    mkdir -p "$2"/build/
 }
 
 # build custom CMake
@@ -85,114 +60,113 @@ if [ "${CMAKE-}" == true ] ; then
     echo $PATH
 fi
 
-# fetch sources
-if [ "${LLVM-}" == true ] ; then
-    mkdir -p llvm_build/
 
-    if [ ! -e  "${CUR}/llvm" ]; then
-        LLVM_VERSION=8.0.1
-        wget https://github.com/llvm/llvm-project/releases/download/llvmorg-${LLVM_VERSION}/llvm-${LLVM_VERSION}.src.tar.xz
-        tar xf llvm-${LLVM_VERSION}.src.tar.xz
-        rm llvm-${LLVM_VERSION}.src.tar.xz
-        mv llvm-${LLVM_VERSION}.src llvm
-        patch llvm/include/llvm/Demangle/MicrosoftDemangleNodes.h < gcc-10.patch
-        cd llvm
-        patch -p1 -i ../nvptx_feature_ptx60.patch
-        cd tools
-        wget https://github.com/llvm/llvm-project/releases/download/llvmorg-${LLVM_VERSION}/cfe-${LLVM_VERSION}.src.tar.xz
-        wget https://github.com/llvm/llvm-project/releases/download/llvmorg-${LLVM_VERSION}/lld-${LLVM_VERSION}.src.tar.xz
-        tar xf cfe-${LLVM_VERSION}.src.tar.xz
-        tar xf lld-${LLVM_VERSION}.src.tar.xz
-        rm cfe-${LLVM_VERSION}.src.tar.xz
-        rm lld-${LLVM_VERSION}.src.tar.xz
-        mv cfe-${LLVM_VERSION}.src clang
-        mv lld-${LLVM_VERSION}.src lld
-    fi
-
-    # rv
-    cd "${CUR}"
-    cd llvm/tools
-    clone_or_update cdl-saarland rv ${BRANCH_RV}
-    cd rv
-    git submodule update --init
-    cd "${CUR}"
-
-    # build llvm
-    cd llvm_build
-    DEFAULT_SYSROOT=
-    if [[ ${OSTYPE} == "darwin"* ]] ; then
-        DEFAULT_SYSROOT=`xcrun --sdk macosx --show-sdk-path`
-    fi
-    cmake ../llvm ${CMAKE_MAKE} -DLLVM_BUILD_LLVM_DYLIB:BOOL=ON -DLLVM_LINK_LLVM_DYLIB:BOOL=ON -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX:PATH="${CUR}/llvm_install" \
-        -DLLVM_ENABLE_RTTI:BOOL=ON -DLLVM_ENABLE_CXX1Y:BOOL=ON -DLLVM_INCLUDE_TESTS:BOOL=ON -DLLVM_TARGETS_TO_BUILD:STRING="${LLVM_TARGETS}" -DDEFAULT_SYSROOT:PATH="${DEFAULT_SYSROOT}"
-    ${MAKE} install
-    cd "${CUR}"
-
-    LLVM_VARS=-DLLVM_DIR:PATH="${CUR}/llvm_install/lib/cmake/llvm"
-else
-    #LLVM_VARS=-DCMAKE_DISABLE_FIND_PACKAGE_LLVM=TRUE
-    LLVM_VARS=-DLLVM_DIR:PATH="$HOME/devspace/install/lib/cmake/llvm/"
-    LLVM=true
-fi
-
-########if [ ! -e "${CUR}/half" ]; then
-########    svn checkout svn://svn.code.sf.net/p/half/code/trunk half
-########fi
-
+# Bootstrap the 'project.sh' file.
 # source this file to put clang and impala in path
 cat > "${CUR}/project.sh" <<_EOF_
-export PATH="${CUR}/llvm_install/bin:${CUR}/impala/build/bin:\${PATH:-}"
-export LD_LIBRARY_PATH="${CUR}/llvm_install/lib:\${LD_LIBRARY_PATH:-}"
+export PATH="${CUR}/impala/build/bin:\${PATH:-}"
+export LD_LIBRARY_PATH="${CUR}/lib:\${LD_LIBRARY_PATH:-}"
+export LIBRARY_PATH="${CUR}/lib:\${LIBRARY_PATH:-}"
 _EOF_
+
+# Fetch & build the LLVM for SX-Aurora stack from scratch.
+if [ "${LLVM-}" == true ] ; then
+    if [ ! -e  "${CUR}/src/llvm-project" ]; then
+        echo "> The variable LLVM=true and llvm sources not found."
+        echo "> Will clone and build LLVM for SX-Aurora now.."
+	echo "> (sleep 5s - abort this script and set LLVM=false to use LLVM from your PATH instead.)"
+	sleep 5s
+
+	# Fetch and build.
+	SXURL=https://github.com/sx-aurora-dev
+	git clone ${SXURL}/llvm-dev.git -b hpce/develop
+	bash ./llvm-dev/clone.sh ${SXURL} hpce/develop
+	BUILD_TYPE=Release bash ./llvm-dev/build-and-install.sh
+
+	# Configure project.sh to active the LLVM stack with everyting else.
+	echo "source llvm-dev/enter.sh" >> project.sh
+    fi
+fi
+
+# If llvm-config not found use the llvm-dev/enter.sh script to active LLVM for SX-Aurora.
+if ! [ $(type -P "llvm-config") ]; then
+  if [ -e "${CUR}/llvm-dev" ]; then
+    echo "> Found LLVM for SX-Aurora llvm-dev/ and sourcing it."
+    source ${CUR}/llvm-dev/enter.sh
+  fi
+else
+  echo "> Found llvm-config in PATH!"
+fi
+
+# Some llvm-config has to be in our path now.
+if [ $(type -P "llvm-config") ]; then
+  LLVM_PREFIX=$(dirname $(dirname `which llvm-config`))
+  LLVM_VARS=-DLLVM_DIR:PATH="${LLVM_PREFIX}/lib/cmake/llvm/"
+  LLVM=true
+  echo "> Using LLVM installed at ${LLVM_PREFIX}"
+else
+  echo "ERROR: llvm-config was not found in your PATH, neither was there a script to enter the LLVM for SX-Aurora prefix (${CUR}/llvm-dev/enter.sh missing). Run this script with LLVM=true to fetch and build the LLVM for SX-Aurora stack or make llvm-config for SX-Aurora available in your path."
+  exit
+fi
+
 if [ "${CMAKE-}" == true ] ; then
     echo "export PATH=\"${CUR}/cmake_install/bin:\${PATH:-}\"" >> ${CUR}/project.sh
 fi
 
-echo "souring ${CUR}/project.sh"
+echo "sourcing ${CUR}/project.sh"
 
 source "${CUR}/project.sh"
 
-COMPILER_CONFIG="-C ${CUR}/presets/vh.cmake"
+cache_vh=${CUR}/presets/vh.cmake
+cache_ve=${CUR}/presets/ve.cmake
 
 # thorin
 cd "${CUR}"
 clone_or_update AnyDSL thorin ${BRANCH_THORIN}
-cd "${CUR}/thorin/build"
-cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} ${LLVM_VARS} -DTHORIN_PROFILE:BOOL=${THORIN_PROFILE} -DHalf_DIR:PATH="${CUR}/half/include" ${COMPILER_CONFIG}
+make_and_cd "${CUR}/thorin/build"
+cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} ${LLVM_VARS} -DTHORIN_PROFILE:BOOL=${THORIN_PROFILE} -DHalf_DIR:PATH="${CUR}/half/include" -C ${cache_vh}
 ${MAKE}
 
 # impala
 cd "${CUR}"
 clone_or_update AnyDSL impala ${BRANCH_IMPALA}
-cd "${CUR}/impala/build"
-cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DThorin_DIR:PATH="${CUR}/thorin/build/share/anydsl/cmake"
-#  ${COMPILER_CONFIG}
+make_and_cd "${CUR}/impala/build"
+cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DThorin_DIR:PATH="${CUR}/thorin/build/share/anydsl/cmake" -C ${cache_vh}
 ${MAKE}
 
 # runtime
 cd "${CUR}"
 clone_or_update AnyDSL runtime ${BRANCH_RUNTIME}
-cd "${CUR}/runtime/build_vh"
-cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DRUNTIME_JIT:BOOL=${RUNTIME_JIT} -DImpala_DIR:PATH="${CUR}/impala/build/share/anydsl/cmake" -C ${CUR}/presets/vh.cmake
-cd "${CUR}/runtime/build_ve"
-cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DRUNTIME_JIT:BOOL=${RUNTIME_JIT} -DImpala_DIR:PATH="${CUR}/impala/build/share/anydsl/cmake" -C ${CUR}/presets/ve.cmake
+
+# Runtime for VH
+make_and_cd "${CUR}/runtime/build_vh"
+cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DRUNTIME_JIT:BOOL=On -DImpala_DIR:PATH="${CUR}/impala/build/share/anydsl/cmake" -C  ${cache_vh}
 ${MAKE}
+
+# (Minimal) runtime for VE
+make_and_cd "${CUR}/runtime/build_ve"
+cmake .. ${CMAKE_MAKE} -DRT_ENABLE_OPENCL=Off -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DRUNTIME_JIT:BOOL=Off -DImpala_DIR:PATH="${CUR}/impala/build/share/anydsl/cmake" -C ${cache_ve}
+${MAKE}
+
+AnyDSL_rt_ve=${CUR}/runtime/build_ve/share/anydsl/cmake
+AnyDSL_rt_vh=${CUR}/runtime/build_vh/share/anydsl/cmake
 
 # configure stincilla but don't build yet
 cd "${CUR}"
 clone_or_update AnyDSL stincilla ${BRANCH_STINCILLA}
-cd "${CUR}/stincilla/build_vh"
-cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DAnyDSL_runtime_DIR:PATH="${CUR}/runtime/build_vh/share/anydsl/cmake" -DBACKEND:STRING="avx" -C ${CUR}/presets/vh.cmake
-cd "${CUR}/stincilla/build_ve"
-cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DAnyDSL_runtime_DIR:PATH="${CUR}/runtime/build_ve/share/anydsl/cmake" -DBACKEND:STRING="avx" -C ${CUR}/presets/ve.cmake
+make_and_cd "${CUR}/stincilla/build_vh"
+cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DAnyDSL_runtime_DIR:PATH="${AnyDSL_rt_vh}" -DBACKEND:STRING="avx" -C ${cache_vh}
+
+make_and_cd "${CUR}/stincilla/build_ve"
+cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DAnyDSL_runtime_DIR:PATH="${AnyDSL_rt_ve}" -DBACKEND:STRING="ve" -C ${cache_ve}
 #${MAKE}
 
-# configure rodent but don't build yet
+# configure rodent but don't build yet # TODO
 if [ "$CLONE_RODENT" = true ]; then
     cd "${CUR}"
     clone_or_update AnyDSL rodent ${BRANCH_RODENT}
     cd "${CUR}/rodent/build"
-    cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DAnyDSL_runtime_DIR:PATH="${CUR}/runtime/build/share/anydsl/cmake" ${COMPILER_CONFIG}
+    cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DAnyDSL_runtime_DIR:PATH="${AnyDSL_rt_vh}" -C ${cache_vh}
     #${MAKE}
 fi
 

@@ -19,7 +19,7 @@ fi
 
 # set this to false if you don't want to build with LLVM
 # setting to false is meant to speed up debugging and not recommended for end users
-: ${LLVM:=false} # Use system LLVM
+: ${LLVM:=true} # Use system LLVM
 # : ${LLVM_TARGETS:="AArch64;AMDGPU;ARM;NVPTX;X86;VE"}
 # : ${LLVM_GIT:=false}
 # : ${LLVM_GIT_REPO:=llvm}
@@ -37,7 +37,7 @@ fi
 
 # set the default branches for each repository
 # : ${BRANCH_RV:=release/10.x} # Use system LLVM
-: ${BRANCH_RUNTIME:=feature/cross_compile}
+: ${BRANCH_RUNTIME:=master}
 : ${BRANCH_THORIN:=llvm/12.x}
 : ${BRANCH_IMPALA:=llvm/12.x}
 : ${BRANCH_STINCILLA:=feature/cross_compile}

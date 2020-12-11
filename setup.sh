@@ -145,7 +145,7 @@ ${MAKE}
 
 # (Minimal) runtime for VE
 make_and_cd "${CUR}/runtime/build_ve"
-cmake .. ${CMAKE_MAKE} -DRT_ENABLE_OPENCL=Off -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DRUNTIME_JIT:BOOL=Off -DImpala_DIR:PATH="${CUR}/impala/build/share/anydsl/cmake" -C ${cache_ve}
+cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DRUNTIME_JIT:BOOL=Off -DImpala_DIR:PATH="${CUR}/impala/build/share/anydsl/cmake" -C ${cache_ve}
 ${MAKE}
 
 AnyDSL_rt_ve=${CUR}/runtime/build_ve/share/anydsl/cmake

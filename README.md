@@ -1,14 +1,12 @@
-# AnyDSL
-Meta project to quickly build dependencies
+# AnyDSL for SX-Aurora
 
-## Building
+Meta project to quickly build the full stack.
 
 ```bash
-git clone https://github.com/AnyDSL/anydsl.git
-cd anydsl
-cp config.sh.template config.sh
-./setup.sh
+bash setup.sh
 ```
-You may also want to fine-tune ```config.sh```.
+
+Set ```LLVM:=false``` in  ```config.sh```  to use the LLVM compiler in your path.
+There are more fine-tuning knobs in ```config.sh```.
 
 See [Build Instructions](https://anydsl.github.io/Build-Instructions.html) for more information.

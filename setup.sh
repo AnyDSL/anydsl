@@ -78,10 +78,10 @@ if [ "${LLVM-}" == true ] ; then
 	sleep 5s
 
 	# Fetch and build.
-	SXURL=https://github.com/sx-aurora-dev
+	SXURL=${SXURL:-https://github.com/sx-aurora-dev}
 	git clone ${SXURL}/llvm-dev.git -b hpce/develop
-	bash ./llvm-dev/clone.sh ${SXURL} hpce/develop
-	BUILD_TYPE=Release bash ./llvm-dev/build-and-install.sh
+	REPOS=${SXURL} BRANCH=hpce/develop BUILD_TYPE=Release make -f ./llvm-dev/Makefile clone
+	REPOS=${SXURL} BRANCH=hpce/develop BUILD_TYPE=Release make -f ./llvm-dev/Makefile install
 
 	# Configure project.sh to active the LLVM stack with everyting else.
 	echo "source llvm-dev/enter.sh" >> project.sh

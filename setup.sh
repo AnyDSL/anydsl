@@ -111,12 +111,12 @@ if [ "${LLVM-}" == true ] ; then
 
 	clone_or_update ${SXURL} llvm-dev hpce/develop
         REPOS=${SXURL} BRANCH=hpce/develop BUILD_TYPE=Release make -f ./llvm-dev/Makefile clone
-
-        # Configure project.sh to active the LLVM stack with everyting else.
-        echo "source llvm-dev/enter.sh" >> project.sh
     else
         REPOS=${SXURL} BRANCH=hpce/develop BUILD_TYPE=Release make -f ./llvm-dev/Makefile update
     fi
+
+    # Configure project.sh to active the LLVM stack with everyting else.
+    echo "source llvm-dev/enter.sh" >> project.sh
 
     # Rebuild and install.
     REPOS=${SXURL} BRANCH=hpce/develop BUILD_TYPE=Release make -f ./llvm-dev/Makefile install

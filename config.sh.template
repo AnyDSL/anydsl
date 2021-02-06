@@ -24,6 +24,9 @@
 : ${LLVM_GIT_BRANCH:=release/10.x}
 : ${LLVM_SRC_VERSION:=10.0.1}
 
+# set to false if you don't want to include automatic differentiation using Enzyme
+: ${AUTODIFF:=true}
+
 # set this to false if you don't want to build LLVM with RV support
 : ${RV:=true}
 

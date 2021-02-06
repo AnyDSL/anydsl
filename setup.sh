@@ -132,6 +132,15 @@ else
     LLVM_VARS=-DCMAKE_DISABLE_FIND_PACKAGE_LLVM=TRUE
 fi
 
+if [ "${AUTODIFF-}" == true ]; then
+  cd "${CUR}"
+  clone_or_update wsmoses Enzyme master
+  mkdir "${CUR}/enzyme/enzyme/build"
+  cd "${CUR}/enzyme/enzyme/build"
+  cmake .. ${CMAKE_MAKE} -DLLVM_DIR=${CUR}/llvm_install/lib/cmake/llvm
+  ${MAKE}
+fi
+
 if [ ! -e "${CUR}/half" ]; then
     svn checkout svn://svn.code.sf.net/p/half/code/trunk half
 fi

@@ -98,6 +98,8 @@ export LD_LIBRARY_PATH="${CUR}/lib:\${LD_LIBRARY_PATH:-}"
 export LIBRARY_PATH="${CUR}/lib:\${LIBRARY_PATH:-}"
 _EOF_
 
+SXURL=${SXURL:-https://github.com/sx-aurora-dev}
+
 # Fetch & build the LLVM for SX-Aurora stack from scratch.
 if [ "${LLVM-}" == true ] ; then
     if [ ! -e  "${CUR}/llvm-project" ]; then
@@ -107,8 +109,6 @@ if [ "${LLVM-}" == true ] ; then
 	sleep 5s
 
 	# Fetch and build.
-	SXURL=${SXURL:-https://github.com/sx-aurora-dev}
-
 	clone_or_update ${SXURL} llvm-dev hpce/develop
         REPOS=${SXURL} BRANCH=hpce/develop BUILD_TYPE=Release make -f ./llvm-dev/Makefile clone
     else

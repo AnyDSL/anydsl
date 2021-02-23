@@ -4,7 +4,7 @@ set(CMAKE_CXX_FLAGS "--target=ve-linux" CACHE STRING "")
 set(CMAKE_C_FLAGS "--target=ve-linux" CACHE STRING "")
 set(ANYDSL_TARGET_TRIPLE "ve-linux" CACHE STRING "")
 set(ANYDSL_TARGET_CPU "ve" CACHE STRING "")
-set(ANYDSL_TARGET_FEATURES "+vpu" CACHE STRING "")
+set(ANYDSL_TARGET_FEATURES "+vpu,+packed" CACHE STRING "")
 set(RT_ENABLE_JIT Off CACHE BOOL "")
 
 # Cmake is looking for these in the VH's environment when really should be

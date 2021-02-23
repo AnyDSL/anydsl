@@ -37,9 +37,9 @@ fi
 
 # set the default branches for each repository
 # : ${BRANCH_RV:=release/10.x} # Use system LLVM
-: ${BRANCH_RUNTIME:=master}
-: ${BRANCH_THORIN:=llvm/12.x}
-: ${BRANCH_IMPALA:=llvm/12.x}
+: ${BRANCH_RUNTIME:=hpce/develop}
+: ${BRANCH_THORIN:=hpce/develop}
+: ${BRANCH_IMPALA:=hpce/develop}
 : ${BRANCH_STINCILLA:=feature/cross_compile}
 : ${BRANCH_RODENT:=master}
 : ${CLONE_RODENT:=false}

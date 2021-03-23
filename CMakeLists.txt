@@ -19,15 +19,15 @@ message(STATUS "Half_DIR: ${Half_DIR}")
 
 # LLVM and clang
 if(AnyDSL_PKG_LLVM_AUTOBUILD AND NOT CMAKE_DISABLE_FIND_PACKAGE_LLVM)
-	include(cmake/llvm-package.cmake)
+    include(cmake/llvm-package.cmake)
 endif()
 find_package(LLVM QUIET)
 if(LLVM_FOUND)
-	message(STATUS "LLVM_DIR: ${LLVM_DIR}")
-	message(STATUS "LLVM_VERSION: ${LLVM_VERSION}")
-	message(STATUS "LLVM_ENABLE_RTTI: ${LLVM_ENABLE_RTTI}")
+    message(STATUS "LLVM_DIR: ${LLVM_DIR}")
+    message(STATUS "LLVM_VERSION: ${LLVM_VERSION}")
+    message(STATUS "LLVM_ENABLE_RTTI: ${LLVM_ENABLE_RTTI}")
 else()
-	message(STATUS "LLVM not found.")
+    message(STATUS "LLVM not found.")
 endif()
 
 

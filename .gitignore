@@ -5,7 +5,9 @@ fasis/
 half*
 imbatracer/
 impala/
-llvm*
+llvm-project/
+llvm_build/
+llvm_install/
 project.sh
 rodent/
 runtime/

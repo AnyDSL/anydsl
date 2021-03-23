@@ -19,10 +19,10 @@
 # setting to false is meant to speed up debugging and not recommended for end users
 : ${LLVM:=true}
 : ${LLVM_TARGETS:="AArch64;AMDGPU;ARM;NVPTX;X86"}
-: ${LLVM_GIT:=false}
-: ${LLVM_GIT_REPO:=llvm}
-: ${LLVM_GIT_BRANCH:=release/10.x}
-: ${LLVM_SRC_VERSION:=10.0.1}
+: ${LLVM_GIT:=true}
+: ${LLVM_GIT_REPO:=RadeonOpenCompute}
+: ${LLVM_GIT_BRANCH:=rocm-3.10.0}
+: ${LLVM_SRC_VERSION:=11.0.0}
 
 # set this to false if you don't want to build LLVM with RV support
 : ${RV:=true}
@@ -35,9 +35,9 @@
 
 # set the default branches for each repository
 : ${BRANCH_ARTIC:=master}
-: ${BRANCH_IMPALA:=master}
-: ${BRANCH_THORIN:=master}
-: ${BRANCH_RV:=release/10.x}
+: ${BRANCH_IMPALA:=llvm/11.x}
+: ${BRANCH_THORIN:=llvm/11.x}
+: ${BRANCH_RV:=release/11.x}
 : ${BRANCH_RUNTIME:=master}
 : ${BRANCH_STINCILLA:=master}
 : ${BRANCH_RODENT:=master}

@@ -1,7 +1,0 @@
-#!/bin/sh
-#
-# A pre-commit hook to automatically generate a table of contents on top of each *.md file.
-# you need doctoc for this hook to work:
-# https://github.com/thlorenz/doctoc
-
-doctoc --title "**Contents**" --github .

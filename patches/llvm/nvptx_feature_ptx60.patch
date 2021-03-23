@@ -1,5 +1,4 @@
-diff --git a/llvm/lib/Target/NVPTX/NVPTX.td b/llvm/lib/Target/NVPTX/NVPTX.td
-index 1d947ef1ce6..eca18e125dd 100644
+index 0000000..0000000 100644
 --- a/llvm/lib/Target/NVPTX/NVPTX.td
 +++ b/llvm/lib/Target/NVPTX/NVPTX.td
 @@ -87,16 +87,16 @@ class Proc<string Name, list<SubtargetFeature> Features>

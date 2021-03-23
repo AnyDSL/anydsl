@@ -2,7 +2,7 @@ anydsl.github.io/
 anydsl.wiki/
 config.sh
 fasis/
-half/
+half*
 imbatracer/
 impala/
 llvm-project/
@@ -15,3 +15,6 @@ rv/
 stincilla/
 thorin/
 traversal/
+build*
+contrib/
+CTestConfig.cmake

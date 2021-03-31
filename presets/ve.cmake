@@ -3,7 +3,7 @@ set(CMAKE_C_COMPILER clang CACHE STRING "")
 set(CMAKE_CXX_FLAGS "--target=ve-linux" CACHE STRING "")
 set(CMAKE_C_FLAGS "--target=ve-linux" CACHE STRING "")
 set(ANYDSL_TARGET_TRIPLE "ve-linux" CACHE STRING "")
-set(ANYDSL_TARGET_CPU "ve" CACHE STRING "")
+set(ANYDSL_TARGET_CPU "generic" CACHE STRING "")
 set(ANYDSL_TARGET_FEATURES "+vpu,+packed" CACHE STRING "")
 set(RT_ENABLE_JIT Off CACHE BOOL "")
 

@@ -5,6 +5,10 @@ set(AnyDSL_PKG_RV_TAG "origin/release/10.x" CACHE STRING "LLVM is build with thi
 set(AnyDSL_PKG_LLVM_URL "https://github.com/llvm/llvm-project/releases/download/llvmorg-${AnyDSL_PKG_LLVM_VERSION}/llvm-project-${AnyDSL_PKG_LLVM_VERSION}.tar.xz" CACHE STRING "where to download LLVM")
 set(AnyDSL_PKG_RV_URL "https://github.com/cdl-saarland/rv" CACHE STRING "where to clone RV")
 
+if(${CMAKE_VERSION} VERSION_GREATER_EQUAL 3.20)
+    message(WARNING "We experienced issues on some platforms using latest versions of CMake to build LLVM.")
+endif()
+
 include(FetchContent)
 
 FetchContent_Declare(RV

@@ -56,6 +56,12 @@ set(Artic_DIR ${AnyDSL_artic_DIR})
 # AnyDSL_runtime
 fetch_anydsl_package(AnyDSL_runtime_DIR runtime AnyDSL_runtime ${AnyDSL_REMOTE_URL}/runtime)
 message(STATUS "AnyDSL_runtime_DIR: ${AnyDSL_runtime_DIR}")
+# this triggers the build of clang that is required for the anydsl_runtime_wrap() macro of the runtime
+# TODO: actually clang shall be build for impala/artic as they require further processing of their output
+if(TARGET clang)
+    add_dependencies(runtime clang)
+endif()
+
 
 add_custom_target(pull COMMENT ">>> pull all AnyDSL packages")
 add_dependencies(pull pull-thorin pull-impala pull-artic pull-runtime)

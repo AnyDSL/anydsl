@@ -7,6 +7,9 @@ set(ANYDSL_TARGET_CPU "generic" CACHE STRING "")
 set(ANYDSL_TARGET_FEATURES "+vpu,+packed" CACHE STRING "")
 set(RT_ENABLE_JIT Off CACHE BOOL "")
 
+# FIXME: libinit problem with shared libraries in llvm-ve
+set(AnyDSL_runtime_BUILD_SHARED CACHE BOOL Off)
+
 # Cmake is looking for these in the VH's environment when really should be
 # looking for VE packages. LLVM and OpenCL is spurious hits in particluar.
 # set(CMAKE_DISABLE_FIND_PACKAGE_LLVM True CACHE BOOL "")

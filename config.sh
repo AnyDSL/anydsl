@@ -40,6 +40,6 @@ fi
 : ${BRANCH_RUNTIME:=hpce/develop}
 : ${BRANCH_THORIN:=hpce/develop}
 : ${BRANCH_IMPALA:=hpce/develop}
-: ${BRANCH_STINCILLA:=feature/cross_compile}
+: ${BRANCH_STINCILLA:=hpce/develop}
 : ${BRANCH_RODENT:=master}
 : ${CLONE_RODENT:=false}

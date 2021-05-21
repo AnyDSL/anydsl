@@ -1,12 +1,12 @@
-diff --git a/llvm/lib/Transforms/InstCombine/InstCombineCalls.cpp b/llvm/lib/Transforms/InstCombine/InstCombineCalls.cpp
-index 91471956991..6d0aeef99e0 100644
---- a/llvm/lib/Transforms/InstCombine/InstCombineCalls.cpp
-+++ b/llvm/lib/Transforms/InstCombine/InstCombineCalls.cpp
-@@ -3816,9 +3816,16 @@ Instruction *InstCombiner::visitCallInst(CallInst &CI) {
+diff --git a/llvm/lib/Target/AMDGPU/AMDGPUInstCombineIntrinsic.cpp b/llvm/lib/Target/AMDGPU/AMDGPUInstCombineIntrinsic.cpp
+index 06aa0055e4bb..12dad6566f43 100644
+--- a/llvm/lib/Target/AMDGPU/AMDGPUInstCombineIntrinsic.cpp
++++ b/llvm/lib/Target/AMDGPU/AMDGPUInstCombineIntrinsic.cpp
+@@ -580,9 +580,16 @@ GCNTTIImpl::instCombineIntrinsic(InstCombiner &IC, IntrinsicInst &II) const {
          // register (which contains the bitmask of live threads). So a
          // comparison that always returns true is the same as a read of the
          // EXEC register.
-+        Type *RetTy = II->getFunctionType()->getReturnType();
++        Type *RetTy = II.getFunctionType()->getReturnType();
 +        const char *RegName = "exec";
 +        if (RetTy->isIntegerTy(32))
 +          RegName = "exec_lo";
@@ -14,9 +14,9 @@ index 91471956991..6d0aeef99e0 100644
 +          break;
 +
          Function *NewF = Intrinsic::getDeclaration(
-             II->getModule(), Intrinsic::read_register, II->getType());
--        Metadata *MDArgs[] = {MDString::get(II->getContext(), "exec")};
-+        Metadata *MDArgs[] = {MDString::get(II->getContext(), RegName)};
-         MDNode *MD = MDNode::get(II->getContext(), MDArgs);
-         Value *Args[] = {MetadataAsValue::get(II->getContext(), MD)};
-         CallInst *NewCall = Builder.CreateCall(NewF, Args);
+             II.getModule(), Intrinsic::read_register, II.getType());
+-        Metadata *MDArgs[] = {MDString::get(II.getContext(), "exec")};
++        Metadata *MDArgs[] = {MDString::get(II.getContext(), RegName)};
+         MDNode *MD = MDNode::get(II.getContext(), MDArgs);
+         Value *Args[] = {MetadataAsValue::get(II.getContext(), MD)};
+         CallInst *NewCall = IC.Builder.CreateCall(NewF, Args);

@@ -93,10 +93,10 @@ if [ "${LLVM-}" == true ]; then
         clone_or_update ${LLVM_GIT_REPO} llvm-project ${LLVM_GIT_BRANCH}
     else
         if [ ! -e  "${CUR}/llvm-project" ]; then
-            wget https://github.com/llvm/llvm-project/releases/download/llvmorg-${LLVM_SRC_VERSION}/llvm-project-${LLVM_SRC_VERSION}.tar.xz
-            tar xf llvm-project-${LLVM_SRC_VERSION}.tar.xz
-            rm llvm-project-${LLVM_SRC_VERSION}.tar.xz
-            mv llvm-project-${LLVM_SRC_VERSION} llvm-project
+            wget https://github.com/llvm/llvm-project/releases/download/llvmorg-${LLVM_SRC_VERSION}/llvm-project-${LLVM_SRC_VERSION}.src.tar.xz
+            tar xf llvm-project-${LLVM_SRC_VERSION}.src.tar.xz
+            rm llvm-project-${LLVM_SRC_VERSION}.src.tar.xz
+            mv llvm-project-${LLVM_SRC_VERSION}.src llvm-project
         fi
     fi
     cd llvm-project

@@ -13,7 +13,7 @@
 
 # set this to true if you want to download and build the required version of CMake
 : ${CMAKE:=false}
-: ${BRANCH_CMAKE:=v3.12.4}
+: ${BRANCH_CMAKE:=v3.13.4}
 
 # set this to false if you don't want to build with LLVM
 # setting to false is meant to speed up debugging and not recommended for end users

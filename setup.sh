@@ -131,7 +131,7 @@ if [ "${LLVM-}" == true ]; then
     LLD_VARS=-DLLD_DIR:PATH="${CUR}/llvm_install/lib/cmake/lld"
 else
     LLVM_VARS=-DCMAKE_DISABLE_FIND_PACKAGE_LLVM=TRUE
-    LLD_VARS=-DCMAKE_DISABLE_FIND_PACKAGE_LLVM=LLD
+    LLD_VARS=-DCMAKE_DISABLE_FIND_PACKAGE_LLD=TRUE
 fi
 
 if [ ! -e "${CUR}/half" ]; then

@@ -1,9 +1,7 @@
 anydsl.github.io/
-anydsl.wiki/
+artic/
 config.sh
-fasis/
 half/
-imbatracer/
 impala/
 llvm-project/
 llvm_build/
@@ -11,7 +9,5 @@ llvm_install/
 project.sh
 rodent/
 runtime/
-rv/
 stincilla/
 thorin/
-traversal/

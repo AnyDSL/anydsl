@@ -1,0 +1,13 @@
+diff --git a/cmake/anydsl_runtime-config.cmake.in b/cmake/anydsl_runtime-config.cmake.in
+index 1762bdc..ab46451 100644
+--- a/cmake/anydsl_runtime-config.cmake.in
++++ b/cmake/anydsl_runtime-config.cmake.in
+@@ -267,7 +267,7 @@ function(anydsl_runtime_wrap outfiles)
+         set(_basename ${PARGS_NAME})
+     endif()
+ 
+-    set(_basepath ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${_basename})
++    set(_basepath ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/${_basename})
+     set(_llfile ${_basepath}.ll)
+     set(_cfile ${_basepath}.c)
+     set(_objfile ${_basepath}.o)

@@ -1,8 +1,8 @@
 
-set(AnyDSL_PKG_LLVM_VERSION "10.0.1" CACHE STRING "LLVM version of AnyDSL")
-set(AnyDSL_PKG_RV_TAG "origin/release/10.x" CACHE STRING "LLVM is build with this git tag of RV")
+set(AnyDSL_PKG_LLVM_VERSION "12.0.1" CACHE STRING "LLVM version of AnyDSL")
+set(AnyDSL_PKG_RV_TAG "origin/release/12.x" CACHE STRING "LLVM is build with this git tag of RV")
 
-set(AnyDSL_PKG_LLVM_URL "https://github.com/llvm/llvm-project/releases/download/llvmorg-${AnyDSL_PKG_LLVM_VERSION}/llvm-project-${AnyDSL_PKG_LLVM_VERSION}.tar.xz" CACHE STRING "where to download LLVM")
+set(AnyDSL_PKG_LLVM_URL "https://github.com/llvm/llvm-project/releases/download/llvmorg-${AnyDSL_PKG_LLVM_VERSION}/llvm-project-${AnyDSL_PKG_LLVM_VERSION}.src.tar.xz" CACHE STRING "where to download LLVM")
 set(AnyDSL_PKG_RV_URL "https://github.com/cdl-saarland/rv" CACHE STRING "where to clone RV")
 
 if(${CMAKE_VERSION} VERSION_GREATER_EQUAL 3.20)

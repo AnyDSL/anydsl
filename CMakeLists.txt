@@ -2,20 +2,23 @@ cmake_minimum_required(VERSION 3.17 FATAL_ERROR)
 
 project(AnyDSL)
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules)
-
-get_filename_component(AnyDSL_CONTRIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/contrib ABSOLUTE)
 set(AnyDSL_REMOTE_URL "https://github.com/AnyDSL" CACHE STRING "url used by git to checkout AnyDSL packages")
 set(AnyDSL_DEFAULT_BRANCH master CACHE STRING "the default branch of thorin, impala, etc.")
-set(AnyDSL_PKG_LLVM_AUTOBUILD OFF CACHE BOOL "forces the availability of LLVM to build AnyDSL packages")
-
-message(STATUS "AnyDSL contrib directory: ${AnyDSL_CONTRIB_DIR}")
 message(STATUS "AnyDSL remote url: ${AnyDSL_REMOTE_URL}")
 message(STATUS "AnyDSL default branch: ${AnyDSL_DEFAULT_BRANCH}")
 
+set(AnyDSL_PKG_Half_AUTOBUILD OFF CACHE BOOL "forces the availability of Half to build AnyDSL packages")
+set(AnyDSL_PKG_LLVM_AUTOBUILD OFF CACHE BOOL "forces the availability of LLVM to build AnyDSL packages")
+
 # Half
-find_package(Half 2.1.0 REQUIRED)
-message(STATUS "Half_DIR: ${Half_DIR}")
+if(AnyDSL_PKG_Half_AUTOBUILD AND NOT CMAKE_DISABLE_FIND_PACKAGE_Half)
+    include(cmake/half-package.cmake)
+endif()
+if(Half_DIR)
+    message(STATUS "Half_DIR: ${Half_DIR}")
+else()
+    message(STATUS "Half not found.")
+endif()
 
 # LLVM and clang
 if(AnyDSL_PKG_LLVM_AUTOBUILD AND NOT CMAKE_DISABLE_FIND_PACKAGE_LLVM)

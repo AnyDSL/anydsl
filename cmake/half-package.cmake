@@ -11,7 +11,10 @@ FetchContent_Declare(Half
 )
 
 message(STATUS "Make Half available ...")
-FetchContent_MakeAvailable(Half)
+FetchContent_GetProperties(Half)
+if(NOT half_POPULATED)
+    FetchContent_Populate(Half)
+endif()
 
 find_path(Half_DIR half.hpp
     PATHS
@@ -22,4 +25,3 @@ find_path(Half_DIR half.hpp
         include/half
     DOC "C++ library for half precision floating point arithmetics."
 )
-

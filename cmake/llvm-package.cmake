@@ -14,7 +14,7 @@ include(FetchContent)
 FetchContent_Declare(RV
     GIT_REPOSITORY ${AnyDSL_PKG_RV_URL}
     GIT_TAG ${AnyDSL_PKG_RV_TAG}
-    GIT_SUBMODULES_RECURSE TRUE
+    GIT_SUBMODULES vecmath/sleef
 )
 message(STATUS "Make RV available ...")
 FetchContent_GetProperties(RV)

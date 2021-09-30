@@ -174,7 +174,7 @@ ${MAKE}
 cd "${CUR}"
 clone_or_update AnyDSL runtime ${BRANCH_RUNTIME}
 cd "${CUR}/runtime/build"
-cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} ${LLD_VARS} -DRUNTIME_JIT:BOOL=${RUNTIME_JIT} -DArtic_DIR:PATH="${CUR}/artic/build/share/anydsl/cmake" -DImpala_DIR:PATH="${CUR}/impala/build/share/anydsl/cmake"
+cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} ${LLD_VARS} -DRUNTIME_JIT:BOOL=${RUNTIME_JIT} -DDEBUG_OUTPUT:BOOL=${RUNTIME_DEBUG_OUTPUT} -DArtic_DIR:PATH="${CUR}/artic/build/share/anydsl/cmake" -DImpala_DIR:PATH="${CUR}/impala/build/share/anydsl/cmake"
 ${MAKE}
 
 # configure stincilla but don't build yet

@@ -22,7 +22,7 @@
 : ${LLVM_GIT:=true}
 : ${LLVM_GIT_REPO:=RadeonOpenCompute}
 : ${LLVM_GIT_BRANCH:=rocm-4.2.0}
-: ${LLVM_SRC_VERSION:=12.0.0}
+: ${LLVM_SRC_VERSION:=12.0.1}
 
 # set this to false if you don't want to build LLVM with RV support
 : ${RV:=true}

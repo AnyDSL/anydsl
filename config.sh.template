@@ -22,7 +22,7 @@
 : ${LLVM_GIT:=false}
 : ${LLVM_GIT_REPO:=llvm}
 : ${LLVM_GIT_BRANCH:=release/12.x}
-: ${LLVM_SRC_VERSION:=12.0.0}
+: ${LLVM_SRC_VERSION:=12.0.1}
 
 # set this to false if you don't want to build LLVM with RV support
 : ${RV:=true}

@@ -1,5 +1,5 @@
 diff --git a/llvm/lib/Target/NVPTX/NVPTX.td b/llvm/lib/Target/NVPTX/NVPTX.td
-index 2b39e9f412f7..7af927aba64e 100644
+index 2b39e9f412f7..0ae30ea3edc8 100644
 --- a/llvm/lib/Target/NVPTX/NVPTX.td
 +++ b/llvm/lib/Target/NVPTX/NVPTX.td
 @@ -57,6 +57,8 @@ def SM75 : SubtargetFeature<"sm_75", "SmVersion", "75",
@@ -28,7 +28,31 @@ index 2b39e9f412f7..7af927aba64e 100644
  
  //===----------------------------------------------------------------------===//
  // NVPTX supported processors.
-@@ -107,6 +119,7 @@ def : Proc<"sm_70", [SM70, PTX60]>;
+@@ -93,20 +105,21 @@ class Proc<string Name, list<SubtargetFeature> Features>
+ 
+ def : Proc<"sm_20", [SM20]>;
+ def : Proc<"sm_21", [SM21]>;
+-def : Proc<"sm_30", [SM30]>;
+-def : Proc<"sm_32", [SM32, PTX40]>;
+-def : Proc<"sm_35", [SM35]>;
+-def : Proc<"sm_37", [SM37, PTX41]>;
+-def : Proc<"sm_50", [SM50, PTX40]>;
+-def : Proc<"sm_52", [SM52, PTX41]>;
+-def : Proc<"sm_53", [SM53, PTX42]>;
+-def : Proc<"sm_60", [SM60, PTX50]>;
+-def : Proc<"sm_61", [SM61, PTX50]>;
+-def : Proc<"sm_62", [SM62, PTX50]>;
++def : Proc<"sm_30", [SM30, PTX60]>;
++def : Proc<"sm_32", [SM32, PTX60]>;
++def : Proc<"sm_35", [SM35, PTX60]>;
++def : Proc<"sm_37", [SM37, PTX60]>;
++def : Proc<"sm_50", [SM50, PTX60]>;
++def : Proc<"sm_52", [SM52, PTX60]>;
++def : Proc<"sm_53", [SM53, PTX60]>;
++def : Proc<"sm_60", [SM60, PTX60]>;
++def : Proc<"sm_61", [SM61, PTX60]>;
++def : Proc<"sm_62", [SM62, PTX60]>;
+ def : Proc<"sm_70", [SM70, PTX60]>;
  def : Proc<"sm_72", [SM72, PTX61]>;
  def : Proc<"sm_75", [SM75, PTX63]>;
  def : Proc<"sm_80", [SM80, PTX70]>;

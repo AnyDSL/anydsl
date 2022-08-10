@@ -40,7 +40,7 @@
 : ${BRANCH_ARTIC:=master}
 : ${BRANCH_IMPALA:=master}
 : ${BRANCH_THORIN:=llvm_13}
-: ${BRANCH_RV:=master}
+: ${BRANCH_RV:=release/13.x}
 : ${BRANCH_RUNTIME:=master}
 : ${BRANCH_STINCILLA:=master}
 : ${BRANCH_RODENT:=master}

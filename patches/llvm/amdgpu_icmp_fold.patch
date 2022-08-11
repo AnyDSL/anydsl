@@ -1,8 +1,8 @@
 diff --git a/llvm/lib/Target/AMDGPU/AMDGPUInstCombineIntrinsic.cpp b/llvm/lib/Target/AMDGPU/AMDGPUInstCombineIntrinsic.cpp
-index 06aa0055e4bb..12dad6566f43 100644
+index 4f1d700bcd84..1920edc4e078 100644
 --- a/llvm/lib/Target/AMDGPU/AMDGPUInstCombineIntrinsic.cpp
 +++ b/llvm/lib/Target/AMDGPU/AMDGPUInstCombineIntrinsic.cpp
-@@ -580,9 +580,16 @@ GCNTTIImpl::instCombineIntrinsic(InstCombiner &IC, IntrinsicInst &II) const {
+@@ -702,9 +702,16 @@ GCNTTIImpl::instCombineIntrinsic(InstCombiner &IC, IntrinsicInst &II) const {
          // register (which contains the bitmask of live threads). So a
          // comparison that always returns true is the same as a read of the
          // EXEC register.

@@ -39,9 +39,9 @@
 # set the default branches for each repository
 : ${BRANCH_ARTIC:=master}
 : ${BRANCH_IMPALA:=master}
-: ${BRANCH_THORIN:=llvm_14}
+: ${BRANCH_THORIN:=master}
 : ${BRANCH_RV:=release/14.x}
-: ${BRANCH_RUNTIME:=llvm_14}
+: ${BRANCH_RUNTIME:=master}
 : ${BRANCH_STINCILLA:=master}
 : ${BRANCH_RODENT:=master}
 : ${CLONE_RODENT:=false}

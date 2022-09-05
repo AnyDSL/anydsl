@@ -42,6 +42,6 @@
 : ${BRANCH_THORIN:=master}
 : ${BRANCH_RV:=release/14.x}
 : ${BRANCH_RUNTIME:=master}
-: ${BRANCH_STINCILLA:=master}
+: ${BRANCH_STINCILLA:=main}
 : ${BRANCH_RODENT:=master}
 : ${CLONE_RODENT:=false}

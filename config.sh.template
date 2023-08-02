@@ -21,8 +21,8 @@
 : ${LLVM_TARGETS:="AArch64;AMDGPU;ARM;NVPTX;X86"}
 : ${LLVM_GIT:=false}
 : ${LLVM_GIT_REPO:=llvm}
-: ${LLVM_GIT_BRANCH:=release/14.x}
-: ${LLVM_SRC_VERSION:=14.0.6}
+: ${LLVM_GIT_BRANCH:=release/16.x}
+: ${LLVM_SRC_VERSION:=16.0.6}
 
 # set this to false if you don't want to build LLVM with RV support
 : ${RV:=true}
@@ -38,10 +38,10 @@
 
 # set the default branches for each repository
 : ${BRANCH_ARTIC:=master}
-: ${BRANCH_IMPALA:=master}
-: ${BRANCH_THORIN:=master}
-: ${BRANCH_RV:=release/14.x}
-: ${BRANCH_RUNTIME:=master}
+: ${BRANCH_IMPALA:=llvm_15}
+: ${BRANCH_THORIN:=llvm_16}
+: ${BRANCH_RV:=release/16.x}
+: ${BRANCH_RUNTIME:=llvm_16}
 : ${BRANCH_STINCILLA:=main}
 : ${BRANCH_RODENT:=master}
 : ${CLONE_RODENT:=false}

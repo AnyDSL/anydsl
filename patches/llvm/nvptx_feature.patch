@@ -1,14 +1,14 @@
 diff --git a/llvm/lib/Target/NVPTX/NVPTX.td b/llvm/lib/Target/NVPTX/NVPTX.td
-index 7af927aba64e..0ae30ea3edc8 100644
+index 4d4203c50376..7b50ae552227 100644
 --- a/llvm/lib/Target/NVPTX/NVPTX.td
 +++ b/llvm/lib/Target/NVPTX/NVPTX.td
-@@ -105,16 +105,16 @@ class Proc<string Name, list<SubtargetFeature> Features>
+@@ -117,16 +117,16 @@ class Proc<string Name, list<SubtargetFeature> Features>
  
- def : Proc<"sm_20", [SM20]>;
- def : Proc<"sm_21", [SM21]>;
+ def : Proc<"sm_20", [SM20, PTX32]>;
+ def : Proc<"sm_21", [SM21, PTX32]>;
 -def : Proc<"sm_30", [SM30]>;
 -def : Proc<"sm_32", [SM32, PTX40]>;
--def : Proc<"sm_35", [SM35]>;
+-def : Proc<"sm_35", [SM35, PTX32]>;
 -def : Proc<"sm_37", [SM37, PTX41]>;
 -def : Proc<"sm_50", [SM50, PTX40]>;
 -def : Proc<"sm_52", [SM52, PTX41]>;

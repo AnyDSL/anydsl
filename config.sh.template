@@ -38,10 +38,10 @@
 
 # set the default branches for each repository
 : ${BRANCH_ARTIC:=master}
-: ${BRANCH_IMPALA:=llvm_15}
-: ${BRANCH_THORIN:=llvm_16}
+: ${BRANCH_IMPALA:=master}
+: ${BRANCH_THORIN:=master}
 : ${BRANCH_RV:=release/16.x}
-: ${BRANCH_RUNTIME:=llvm_16}
+: ${BRANCH_RUNTIME:=master}
 : ${BRANCH_STINCILLA:=main}
 : ${BRANCH_RODENT:=master}
 : ${CLONE_RODENT:=false}

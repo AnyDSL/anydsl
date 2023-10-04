@@ -1,6 +1,6 @@
 
-set(AnyDSL_PKG_LLVM_VERSION "14.0.6" CACHE STRING "LLVM version of AnyDSL")
-set(AnyDSL_PKG_RV_TAG "origin/release/14.x" CACHE STRING "LLVM is build with this git tag of RV")
+set(AnyDSL_PKG_LLVM_VERSION "16.0.6" CACHE STRING "LLVM version of AnyDSL")
+set(AnyDSL_PKG_RV_TAG "origin/release/16.x" CACHE STRING "LLVM is build with this git tag of RV")
 
 set(AnyDSL_PKG_LLVM_URL "https://github.com/llvm/llvm-project/releases/download/llvmorg-${AnyDSL_PKG_LLVM_VERSION}/llvm-project-${AnyDSL_PKG_LLVM_VERSION}.src.tar.xz" CACHE STRING "where to download LLVM")
 set(AnyDSL_PKG_RV_URL "https://github.com/cdl-saarland/rv" CACHE STRING "where to clone RV")
@@ -17,7 +17,6 @@ FetchContent_GetProperties(RV)
 if(NOT rv_POPULATED)
     FetchContent_Populate(RV)
 endif()
-
 
 FetchContent_Declare(LLVM
     URL  ${AnyDSL_PKG_LLVM_URL}
@@ -57,3 +56,5 @@ find_path(Clang_DIR ClangConfig.cmake
         lib/cmake/clang
         share/clang/cmake
 )
+
+set(LLVM_DIR ${llvm_BINARY_DIR}/lib/cmake/llvm)

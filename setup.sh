@@ -93,16 +93,16 @@ if [ "${LLVM-}" == true ]; then
         clone_or_update ${LLVM_GIT_REPO} llvm-project ${LLVM_GIT_BRANCH}
     else
         if [ ! -e  "${CUR}/llvm-project" ]; then
-            wget https://github.com/llvm/llvm-project/releases/download/llvmorg-${LLVM_SRC_VERSION}/llvm-project-${LLVM_SRC_VERSION}.tar.xz
-            tar xf llvm-project-${LLVM_SRC_VERSION}.tar.xz
-            rm llvm-project-${LLVM_SRC_VERSION}.tar.xz
-            mv llvm-project-${LLVM_SRC_VERSION} llvm-project
+            wget https://github.com/llvm/llvm-project/releases/download/llvmorg-${LLVM_SRC_VERSION}/llvm-project-${LLVM_SRC_VERSION}.src.tar.xz
+            tar xf llvm-project-${LLVM_SRC_VERSION}.src.tar.xz
+            rm llvm-project-${LLVM_SRC_VERSION}.src.tar.xz
+            mv llvm-project-${LLVM_SRC_VERSION}.src llvm-project
         fi
     fi
     cd llvm-project
-    if ! patch --dry-run --reverse --force -s -p1 -i ../amdgpu_icmp_fold.patch; then
-        patch -p1 -i ../amdgpu_icmp_fold.patch
-        patch -p1 -i ../nvptx_feature_ptx60.patch
+    if ! patch --dry-run --reverse --force -s -p1 -i ../patches/llvm/amdgpu_icmp_fold.patch; then
+        patch -p1 -i ../patches/llvm/amdgpu_icmp_fold.patch
+        patch -p1 -i ../patches/llvm/nvptx_feature.patch
     fi
 
     # rv
@@ -118,18 +118,20 @@ if [ "${LLVM-}" == true ]; then
     cd "${CUR}"
     cd llvm_build
     DEFAULT_SYSROOT=
+    RV_REBUILD_GENBC=OFF
     if [[ ${OSTYPE} == "darwin"* ]]; then
         DEFAULT_SYSROOT=`xcrun --sdk macosx --show-sdk-path`
+        RV_REBUILD_GENBC=ON
     fi
     cmake ../llvm-project/llvm ${CMAKE_MAKE} -DLLVM_BUILD_LLVM_DYLIB:BOOL=ON -DLLVM_LINK_LLVM_DYLIB:BOOL=ON -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX:PATH="${CUR}/llvm_install" \
-        -DLLVM_EXTERNAL_PROJECTS="rv" -DLLVM_EXTERNAL_RV_SOURCE_DIR=${CUR}/llvm-project/rv \
-        -DLLVM_ENABLE_RTTI:BOOL=ON -DLLVM_ENABLE_PROJECTS="clang;lld" -DLLVM_ENABLE_BINDINGS:BOOL=OFF -DLLVM_INCLUDE_TESTS:BOOL=ON -DLLVM_TARGETS_TO_BUILD:STRING="${LLVM_TARGETS}" -DDEFAULT_SYSROOT:PATH="${DEFAULT_SYSROOT}"
+        -DLLVM_EXTERNAL_PROJECTS:STRING="rv" -DLLVM_EXTERNAL_RV_SOURCE_DIR:PATH=${CUR}/llvm-project/rv -DRV_REBUILD_GENBC:BOOL=${RV_REBUILD_GENBC} \
+        -DLLVM_ENABLE_RTTI:BOOL=ON -DLLVM_ENABLE_PROJECTS:STRING="clang;lld" -DLLVM_ENABLE_BINDINGS:BOOL=OFF -DLLVM_INCLUDE_TESTS:BOOL=ON -DLLVM_TARGETS_TO_BUILD:STRING="${LLVM_TARGETS}" -DDEFAULT_SYSROOT:PATH="${DEFAULT_SYSROOT}"
     ${MAKE} install
     cd "${CUR}"
 
     LLVM_VARS=-DLLVM_DIR:PATH="${CUR}/llvm_install/lib/cmake/llvm"
 else
-    LLVM_VARS=-DCMAKE_DISABLE_FIND_PACKAGE_LLVM=TRUE
+    LLVM_VARS=-DCMAKE_DISABLE_FIND_PACKAGE_LLVM:BOOL=TRUE
 fi
 
 if [ ! -e "${CUR}/half" ]; then
@@ -172,7 +174,7 @@ ${MAKE}
 cd "${CUR}"
 clone_or_update AnyDSL runtime ${BRANCH_RUNTIME}
 cd "${CUR}/runtime/build"
-cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DRUNTIME_JIT:BOOL=${RUNTIME_JIT} -DArtic_DIR:PATH="${CUR}/artic/build/share/anydsl/cmake" -DImpala_DIR:PATH="${CUR}/impala/build/share/anydsl/cmake"
+cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DRUNTIME_JIT:BOOL=${RUNTIME_JIT} -DDEBUG_OUTPUT:BOOL=${RUNTIME_DEBUG_OUTPUT} -DArtic_DIR:PATH="${CUR}/artic/build/share/anydsl/cmake" -DImpala_DIR:PATH="${CUR}/impala/build/share/anydsl/cmake"
 ${MAKE}
 
 # configure stincilla but don't build yet

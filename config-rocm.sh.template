@@ -13,7 +13,7 @@
 
 # set this to true if you want to download and build the required version of CMake
 : ${CMAKE:=false}
-: ${BRANCH_CMAKE:=v3.12.4}
+: ${BRANCH_CMAKE:=v3.13.4}
 
 # set this to false if you don't want to build with LLVM
 # setting to false is meant to speed up debugging and not recommended for end users
@@ -21,8 +21,8 @@
 : ${LLVM_TARGETS:="AArch64;AMDGPU;ARM;NVPTX;X86"}
 : ${LLVM_GIT:=true}
 : ${LLVM_GIT_REPO:=RadeonOpenCompute}
-: ${LLVM_GIT_BRANCH:=rocm-3.10.0}
-: ${LLVM_SRC_VERSION:=11.0.0}
+: ${LLVM_GIT_BRANCH:=rocm-5.2.3}
+: ${LLVM_SRC_VERSION:=12.0.1}
 
 # set this to false if you don't want to build LLVM with RV support
 : ${RV:=true}
@@ -33,12 +33,15 @@
 # set this to false if you don't build with LLVM
 : ${RUNTIME_JIT:=true}
 
+# set this to false to hide runtime debug output
+: ${RUNTIME_DEBUG_OUTPUT:=true}
+
 # set the default branches for each repository
 : ${BRANCH_ARTIC:=master}
-: ${BRANCH_IMPALA:=llvm/11.x}
-: ${BRANCH_THORIN:=llvm/11.x}
-: ${BRANCH_RV:=release/11.x}
+: ${BRANCH_IMPALA:=master}
+: ${BRANCH_THORIN:=master}
+: ${BRANCH_RV:=release/14.x}
 : ${BRANCH_RUNTIME:=master}
-: ${BRANCH_STINCILLA:=master}
+: ${BRANCH_STINCILLA:=main}
 : ${BRANCH_RODENT:=master}
 : ${CLONE_RODENT:=false}

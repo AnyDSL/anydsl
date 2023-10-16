@@ -1,11 +1,11 @@
 # use Debug or Release
 : ${BUILD_TYPE:=Debug}
 
-: ${CMAKE_MAKE:=""}
+: ${CMAKE_MAKE:="-DAnyDSL_PKG_LLVM_URL=https://github.com/RadeonOpenCompute/ROCm/archive/refs/tags/rocm-5.2.3.tar.gz"}
 : ${MAKE:="make -j4"}
 
 # use this for ninja instead of make
-#: ${CMAKE_MAKE:="-G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DLLVM_PARALLEL_COMPILE_JOBS=4 -DLLVM_PARALLEL_LINK_JOBS=1"}
+#: ${CMAKE_MAKE:="-G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DLLVM_PARALLEL_COMPILE_JOBS=4 -DLLVM_PARALLEL_LINK_JOBS=1 -DAnyDSL_PKG_LLVM_URL=https://github.com/RadeonOpenCompute/ROCm/archive/refs/tags/rocm-5.2.3.tar.gz"}
 #: ${MAKE:="ninja"}
 
 # set this to true if you don't have a github account
@@ -13,19 +13,18 @@
 
 # set this to true if you want to download and build the required version of CMake
 : ${CMAKE:=false}
-: ${BRANCH_CMAKE:=v3.13.4}
+: ${BRANCH_CMAKE:=v3.27.7}
 
 # set this to false if you don't want to build with LLVM
 # setting to false is meant to speed up debugging and not recommended for end users
 : ${LLVM:=true}
+: ${LLVM_AUTOBUILD:=true}
 : ${LLVM_TARGETS:="AArch64;AMDGPU;ARM;NVPTX;X86"}
-: ${LLVM_GIT:=true}
-: ${LLVM_GIT_REPO:=RadeonOpenCompute}
-: ${LLVM_GIT_BRANCH:=rocm-5.2.3}
-: ${LLVM_SRC_VERSION:=12.0.1}
+: ${LLVM_VERSION:=12.0.1}
+: ${RV_TAG:=origin/release/12.x}
 
-# set this to false if you don't want to build LLVM with RV support
-: ${RV:=true}
+# Set this to use an external llvm installation.
+#: ${LLVM_EXTERN:=""}
 
 # use this to debug thorin hash table performance
 : ${THORIN_PROFILE:=false}
@@ -40,8 +39,12 @@
 : ${BRANCH_ARTIC:=master}
 : ${BRANCH_IMPALA:=master}
 : ${BRANCH_THORIN:=master}
-: ${BRANCH_RV:=release/14.x}
 : ${BRANCH_RUNTIME:=master}
+
 : ${BRANCH_STINCILLA:=main}
-: ${BRANCH_RODENT:=master}
+: ${CLONE_STINCILLA:=false}
+: ${BUILD_STINCILLA:=false}
+
+: ${BRANCH_RODENT:=artic}
 : ${CLONE_RODENT:=false}
+: ${BUILD_RODENT:=false}

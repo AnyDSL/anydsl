@@ -1,0 +1,30 @@
+#compdef artic
+
+_arguments \
+  '(- *)'{-h,--help}"[Displays a help message]" \
+  "--version[Displays a version number]" \
+  "--no-color[Disables colors in error messages]" \
+  "--enable-all-warnings[Enables all warnings]" \
+  "--warnings-as-errors[Treat warnings as errors]" \
+  "--max-errors[Sets the maximum number of error messages (unlimited by default)]:arg" \
+  "--print-ast[Prints the AST after parsing and type-checking]" \
+  "--show-implicit-casts[Shows implicit casts as comments when printing the AST]" \
+  "--emit-thorin[Prints the Thorin IR after code generation]" \
+  "--emit-json[Emits Thorin IR to json file]" \
+  "--emit-c-interface[Emits C interface for exported functions and imported types]" \
+  "--log-level[Changes the log level in Thorin, defaults to error]:lvl:(debug verbose info warn error)" \
+  "--tab-width[Sets the width of the TAB character in error messages or when printing the AST (in spaces, defaults to 2)]:arg" \
+  "--emit-c[Emits C code in the output file]" \
+  "--emit-llvm[Emits LLVM IR in the output file]" \
+  "--debug[Enable debug information in the output file]" \
+  "--plugin[Load additional code transformations as plugins]::_files -/" \
+  "-o[Output module name]::_files -/" \
+  '*: :_files'
+
+# Local Variables:
+# mode: Shell-Script
+# sh-indentation: 2
+# indent-tabs-mode: nil
+# sh-basic-offset: 2
+# End:
+# vim: ft=zsh sw=2 ts=2 et

@@ -1,7 +1,6 @@
-anydsl.github.io/
 artic/
 config.sh
-half/
+half*
 impala/
 llvm-project/
 llvm_build/
@@ -11,3 +10,6 @@ rodent/
 runtime/
 stincilla/
 thorin/
+build*
+contrib/
+CTestConfig.cmake

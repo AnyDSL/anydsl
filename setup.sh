@@ -118,6 +118,15 @@ export CMAKE_PREFIX_PATH="${LLVM_EXTERN}/lib/cmake/llvm:\${CMAKE_PREFIX_PATH:-}"
 _EOF_
 fi
 
+if [ "${LLVM_AUTOBUILD:-}" == "ON" ] || [ "${LLVM_AUTOBUILD:-}" == "true" ]; then
+cat >> "${CUR}/project.sh" <<_EOF_
+export PATH="${CUR}/build/_deps/llvm-build/bin:\${PATH:-}"
+export LD_LIBRARY_PATH="${CUR}/build/_deps/llvm-build/lib:\${LD_LIBRARY_PATH:-}"
+export LIBRARY_PATH="${CUR}/build/_deps/llvm-build/lib:\${LIBRARY_PATH:-}"
+export CMAKE_PREFIX_PATH="${CUR}/build/_deps/llvm-build/lib/cmake/llvm:\${CMAKE_PREFIX_PATH:-}"
+_EOF_
+fi
+
 if [ "${CMAKE-}" == true ]; then
 cat >> "${CUR}/project.sh" <<_EOF_
 export PATH="${CUR}/cmake_install/bin:\${PATH:-}"

@@ -80,6 +80,18 @@ if [ "${CMAKE-}" == true ]; then
     echo $PATH
 fi
 
+if [ "${LLVM_PREBUILD-}" == true ]; then
+    if [ ! -d llvm_install ]; then
+        wget https://github.com/llvm/llvm-project/releases/download/llvmorg-16.0.4/clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04.tar.xz
+        tar -xf clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04.tar.xz
+        mv clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04 llvm_install
+        cd llvm_install
+        cd "${CUR}"
+    else
+        echo "remember to download LLVM if a newer build is available."
+    fi
+    LLVM_EXTERN="${CUR}/llvm_install"
+fi
 if [ "${LLVM_EXTERN:-}" != "" ] && [ -d ${LLVM_EXTERN:-} ]; then
     LLVM_AUTOBUILD=OFF
 elif [ "${LLVM_AUTOBUILD:-}" == "" ]; then
@@ -146,6 +158,7 @@ cmake \
     -DBUILD_TESTING:BOOL=OFF \
     -DAnyDSL_PKG_Half_AUTOBUILD:BOOL=ON \
     -DAnyDSL_PKG_LLVM_AUTOBUILD:BOOL=${LLVM_AUTOBUILD} \
+    -DAnyDSL_PKG_RV_AUTOBUILD:BOOL=${LLVM_PREBUILD} \
     -DAnyDSL_thorin_BRANCH:STRING=${BRANCH_THORIN} \
     -DAnyDSL_artic_BRANCH:STRING=${BRANCH_ARTIC} \
     -DAnyDSL_impala_BRANCH:STRING=${BRANCH_IMPALA} \

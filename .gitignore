@@ -13,3 +13,4 @@ thorin/
 build*
 contrib/
 CTestConfig.cmake
+clang+llvm-*.tar.xz

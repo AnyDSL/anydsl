@@ -19,9 +19,11 @@
 # setting to false is meant to speed up debugging and not recommended for end users
 : ${LLVM:=true}
 : ${LLVM_AUTOBUILD:=true}
+: ${LLVM_PREBUILD:=true}
 : ${LLVM_TARGETS:="AArch64;AMDGPU;ARM;NVPTX;X86"}
 : ${LLVM_VERSION:=12.0.1}
 : ${RV_TAG:=origin/release/12.x}
+: ${RV_MODULE_BUILD:=OFF}
 
 # Set this to use an external llvm installation.
 #: ${LLVM_EXTERN:=""}

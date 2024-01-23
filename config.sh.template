@@ -20,7 +20,7 @@
 : ${LLVM:=true}
 : ${LLVM_TARGETS:="AArch64;AMDGPU;ARM;NVPTX;X86"}
 : ${LLVM_GIT:=false}
-: ${LLVM_GIT_REPO:=llvm}
+: ${LLVM_GITHUB_ORG:=llvm}
 : ${LLVM_GIT_BRANCH:=release/16.x}
 : ${LLVM_SRC_VERSION:=16.0.6}
 

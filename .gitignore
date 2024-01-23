@@ -11,3 +11,5 @@ rodent/
 runtime/
 stincilla/
 thorin/
+pal/
+rocm-device-libs/

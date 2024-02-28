@@ -49,13 +49,18 @@ function remote {
 }
 
 function clone_or_update {
+    # $1: github organisation
+    # $2: github repo name
+    # $3: [optional] branch/tag -> defaults to "master"
+    # $4: [optional] directory name into which to checkout the repo -> defaults to $2
     branch=${3:-master}
-    if [ ! -e "$2" ]; then
+    checkoutpath=${4:-$2}
+    if [ ! -e "$checkoutpath" ]; then
         echo ">>> clone $1/$2 $COLOR_RED($branch)$COLOR_RESET"
-        echo -e "git clone --recursive `remote $1/$2.git` --branch $branch"
-        git clone --recursive `remote $1/$2.git` --branch $branch
+        echo -e "git clone --recursive `remote $1/$2.git` --branch $branch $checkoutpath"
+        git clone --recursive `remote $1/$2.git` --branch $branch $checkoutpath
     else
-        cd $2
+        cd $checkoutpath
         echo -e ">>> pull $1/$2 $COLOR_RED($branch)$COLOR_RESET"
         git fetch --tags origin
         git checkout $branch
@@ -67,7 +72,7 @@ function clone_or_update {
         set -e
         cd ..
     fi
-    mkdir -p "$2"/build/
+    mkdir -p "$checkoutpath"/build/
 }
 
 # build custom CMake
@@ -90,9 +95,9 @@ if [ "${LLVM-}" == true ]; then
     mkdir -p llvm_build/
 
     if [ "${LLVM_GIT-}" = true ]; then
-        clone_or_update ${LLVM_GIT_REPO} llvm-project ${LLVM_GIT_BRANCH}
+        clone_or_update ${LLVM_GITHUB_ORG} llvm-project ${LLVM_GIT_BRANCH}
     else
-        if [ ! -e  "${CUR}/llvm-project" ]; then
+        if [ ! -e "${CUR}/llvm-project" ]; then
             wget https://github.com/llvm/llvm-project/releases/download/llvmorg-${LLVM_SRC_VERSION}/llvm-project-${LLVM_SRC_VERSION}.src.tar.xz
             tar xf llvm-project-${LLVM_SRC_VERSION}.src.tar.xz
             rm llvm-project-${LLVM_SRC_VERSION}.src.tar.xz
@@ -149,6 +154,51 @@ fi
 
 source "${CUR}/project.sh"
 
+# PAL
+if [ "${BUILD_PAL-}" == true ]; then
+    cd "${CUR}"
+    PAL_DIR="${CUR}/pal"
+    # only clone PAL once (and don't update) because we're tied to a particular commit
+    if [ ! -e "${PAL_DIR}" ]; then
+        clone_or_update GPUOpen-Drivers pal dev
+        # PAL depends on specific dependencies to be set up
+        cd "${CUR}/pal/src/util/imported"
+        clone_or_update GPUOpen-Drivers MetroHash amd-master pal_metrohash
+        clone_or_update GPUOpen-Drivers CWPack    amd-master pal_cwpack
+        cd "${CUR}/pal"
+        git checkout ${PAL_COMMIT}
+        # make sure PAL fits into AnyDSL's CMake setup
+        git apply "${CUR}/patches/pal/cmake-setup.patch"
+    fi
+    cd "${CUR}/pal/build"
+    cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DCMAKE_POSITION_INDEPENDENT_CODE="ON" \
+        -DPAL_CLIENT_INTERFACE_MAJOR_VERSION=777 -DPAL_CLIENT:STRING="Vulkan" -DPAL_BUILD_GFX:STRING="ON" \
+        -DPAL_BUILD_NULL_DEVICE:STRING="ON" -DPAL_BUILD_OSS:STRING="ON" -DPAL_BUILD_GFX9:STRING="ON" \
+        -DPAL_DEVELOPER_BUILD:STRING="ON" -DPAL_BUILD_NAVI12:STRING="ON" -DPAL_BUILD_NAVI14:STRING="ON" \
+        -DPAL_BUILD_NAVI21:STRING="ON" -DPAL_BUILD_NAVI22:STRING="ON" -DPAL_BUILD_NAVI23:STRING="ON" \
+        -DPAL_BUILD_NAVI24:STRING="ON" -DPAL_BUILD_NAVI31:STRING="ON" -DPAL_BUILD_NAVI32:STRING="ON" \
+        -DPAL_BUILD_NAVI33:STRING="ON"
+    ${MAKE}
+
+    # ROCm device libs
+    cd "${CUR}"
+    clone_or_update ${LLVM_GITHUB_ORG} ROCm-Device-Libs ${LLVM_GIT_BRANCH} rocm-device-libs
+    cd "${CUR}/rocm-device-libs"
+    if ! patch --dry-run --reverse --force -s -p1 -i ${CUR}/patches/rocm-device-libs/target-triple.patch; then
+        git apply ${CUR}/patches/rocm-device-libs/target-triple.patch
+    fi
+    cd "${CUR}/rocm-device-libs/build"
+    cmake .. -DCMAKE_PREFIX_PATH:PATH=${CUR}/llvm_build -DAMDGPU_TARGET_TRIPLE:STRING="amdgcn-amd-amdpal" -DCLANG_OPTIONS_APPEND:STRING="-mcpu=${ROCm_GPU_GENERATION}"
+    ${MAKE}
+    # change calling convention to amdgpu_gfx for calls to ocml
+    cd "${CUR}/rocm-device-libs/build/amdgcn/bitcode"
+    llvm-dis ocml.bc -o ocml.ll
+    python3 "${CUR}/scripts/rocm-device-libs-cc-patcher.py"
+    PAL_VARS=-Dpal_DIR:PATH="${CUR}/pal/build"
+else
+    PAL_VARS=
+fi
+
 # thorin
 cd "${CUR}"
 clone_or_update AnyDSL thorin ${BRANCH_THORIN}
@@ -174,7 +224,7 @@ ${MAKE}
 cd "${CUR}"
 clone_or_update AnyDSL runtime ${BRANCH_RUNTIME}
 cd "${CUR}/runtime/build"
-cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DRUNTIME_JIT:BOOL=${RUNTIME_JIT} -DDEBUG_OUTPUT:BOOL=${RUNTIME_DEBUG_OUTPUT} -DArtic_DIR:PATH="${CUR}/artic/build/share/anydsl/cmake" -DImpala_DIR:PATH="${CUR}/impala/build/share/anydsl/cmake"
+cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DRUNTIME_JIT:BOOL=${RUNTIME_JIT} -DDEBUG_OUTPUT:BOOL=${RUNTIME_DEBUG_OUTPUT} -DArtic_DIR:PATH="${CUR}/artic/build/share/anydsl/cmake" -DImpala_DIR:PATH="${CUR}/impala/build/share/anydsl/cmake" ${PAL_VARS}
 ${MAKE}
 
 # configure stincilla but don't build yet

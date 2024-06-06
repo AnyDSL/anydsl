@@ -22,7 +22,7 @@
 : ${LLVM_AUTOBUILD:=false}
 : ${LLVM_TARGETS:="AArch64;AMDGPU;ARM;NVPTX;X86"}
 : ${LLVM_VERSION:=16.0.4}
-: ${RV_TAG:=origin/release/16.x}
+: ${RV_TAG:=origin/AnyDSL_pruned}
 : ${RV_MODULE_BUILD:=ON}
 
 # Set this to use an external llvm installation.

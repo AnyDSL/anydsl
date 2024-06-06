@@ -135,9 +135,6 @@ _EOF_
 fi
 
 cat >> "${CUR}/project.sh" <<_EOF_
-if [ "\${TBBROOT:-}" = "" ] && [ -f /opt/intel/oneapi/setvars.sh ]; then
-    source /opt/intel/oneapi/setvars.sh
-fi
 if [ "\${ZSH_VERSION:-}" != "" ]; then
     export fpath=(${CUR}/zsh \${fpath:-})
     compinit

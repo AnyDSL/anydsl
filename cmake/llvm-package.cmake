@@ -1,22 +1,8 @@
-
 set(AnyDSL_PKG_LLVM_VERSION "16.0.6" CACHE STRING "LLVM version of AnyDSL")
-set(AnyDSL_PKG_RV_TAG "origin/release/16.x" CACHE STRING "LLVM is build with this git tag of RV")
 
 set(AnyDSL_PKG_LLVM_URL "https://github.com/llvm/llvm-project/releases/download/llvmorg-${AnyDSL_PKG_LLVM_VERSION}/llvm-project-${AnyDSL_PKG_LLVM_VERSION}.src.tar.xz" CACHE STRING "where to download LLVM")
-set(AnyDSL_PKG_RV_URL "https://github.com/cdl-saarland/rv" CACHE STRING "where to clone RV")
 
 include(FetchContent)
-
-FetchContent_Declare(RV
-    GIT_REPOSITORY ${AnyDSL_PKG_RV_URL}
-    GIT_TAG ${AnyDSL_PKG_RV_TAG}
-    GIT_SUBMODULES vecmath/sleef
-)
-message(STATUS "Make RV available ...")
-FetchContent_GetProperties(RV)
-if(NOT rv_POPULATED)
-    FetchContent_Populate(RV)
-endif()
 
 FetchContent_Declare(LLVM
     URL  ${AnyDSL_PKG_LLVM_URL}
@@ -24,8 +10,6 @@ FetchContent_Declare(LLVM
 )
 set(LLVM_TARGETS_TO_BUILD "AArch64;AMDGPU;ARM;NVPTX;X86" CACHE STRING "limit targets of LLVM")
 set(LLVM_ENABLE_PROJECTS "clang;lld" CACHE STRING "enable projects of LLVM")
-set(LLVM_EXTERNAL_PROJECTS "rv" CACHE STRING "external projects of LLVM")
-set(LLVM_EXTERNAL_RV_SOURCE_DIR ${rv_SOURCE_DIR})
 set(LLVM_INCLUDE_TESTS OFF)
 set(LLVM_ENABLE_RTTI ON)
 

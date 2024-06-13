@@ -17,3 +17,16 @@ endif()
 
 message(STATUS "rv_SOURCE_DIR: ${rv_SOURCE_DIR}")
 add_subdirectory(${rv_SOURCE_DIR} ${rv_BINARY_DIR})
+
+find_path(RV_DIR rv-config.cmake
+    PATHS
+        ${rv_BINARY_DIR}
+        ${CMAKE_CURRENT_BINARY_DIR}
+        ${CMAKE_BINARY_DIR}
+    PATH_SUFFIXES
+        share/anydsl/cmake
+)
+
+#set(RV_DIR ${rv_BINARY_DIR}/share/anydsl/cmake)
+
+message(STATUS "rv found in ${RV_DIR}")

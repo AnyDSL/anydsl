@@ -82,11 +82,7 @@ fi
 
 if [ "${LLVM_PREBUILD-}" == true ]; then
     if [ ! -d llvm_install ]; then
-        wget https://github.com/llvm/llvm-project/releases/download/llvmorg-16.0.4/clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04.tar.xz
-        tar -xf clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04.tar.xz
-        mv clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04 llvm_install
-        cd llvm_install
-        cd "${CUR}"
+        ./scripts/download_llvm.sh --version ${LLVM_VERSION}
     else
         echo "remember to download LLVM if a newer build is available."
     fi
@@ -172,7 +168,6 @@ cmake \
     -DAnyDSL_runtime_BRANCH:STRING=${BRANCH_RUNTIME} \
     -DAnyDSL_PKG_LLVM_VERSION:STRING=${LLVM_VERSION} \
     -DLLVM_TARGETS_TO_BUILD:STRING=${LLVM_TARGETS} \
-    -DLLVM_LINK_LLVM_DYLIB:BOOL=ON \
     -DAnyDSL_PKG_RV_TAG:STRING=${RV_TAG} \
     ${BUILD_APPLICATIONS} \
     ${CUR}

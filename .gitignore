@@ -1,6 +1,7 @@
+anydsl.github.io/
 artic/
 config.sh
-half*
+half/
 impala/
 llvm-project/
 llvm_build/
@@ -12,5 +13,7 @@ stincilla/
 thorin/
 build*
 contrib/
+pal/
+rocm-device-libs/
 CTestConfig.cmake
 clang+llvm-*.tar.xz

@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 65dcf6a8..229b4777 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -69,3 +69,5 @@ nongen_source_groups(${PAL_SOURCE_DIR}
+         palCompilerDeps
+         palUtil
+ )
++
++export(TARGETS metrohash;cwpack;ddSettings;dd_event_registry;devdriver;ddApi;ddCommon;ddYaml;ddCore;mpack;rapidjson;dd_libyaml;SettingsRpcClient;ddSettingsRpcService;ddRpcClient;SettingsRpcService;ddRpcShared;ddSocket;ddRpcServer;ddNet;tiny_printf;addrlib;amdrdf;vam;UberTraceService;DriverUtilsService;pal_uuid;pal_lz4;zstd;palUtil;palCompilerDeps;pal NAMESPACE pal:: FILE ${CMAKE_BINARY_DIR}/pal-config.cmake)
+\ No newline at end of file
+diff --git a/src/core/hw/gfxip/gfx9/chip/CMakeLists.txt b/src/core/hw/gfxip/gfx9/chip/CMakeLists.txt
+index c7dacbcc..9f49a064 100644
+--- a/src/core/hw/gfxip/gfx9/chip/CMakeLists.txt
++++ b/src/core/hw/gfxip/gfx9/chip/CMakeLists.txt
+@@ -39,3 +39,5 @@ target_sources(pal PRIVATE
+     gfx9_plus_merged_typedef.h
+     gfx10_sq_ko_reg.h
+ )
++
++target_include_directories(pal PUBLIC .)
+\ No newline at end of file

@@ -1,0 +1,33 @@
+diff --git a/irif/src/base-image-intrinsics.ll b/irif/src/base-image-intrinsics.ll
+index 353f243..d74cfb1 100644
+--- a/irif/src/base-image-intrinsics.ll
++++ b/irif/src/base-image-intrinsics.ll
+@@ -1,5 +1,5 @@
+ target datalayout = "e-p:64:64-p1:64:64-p2:32:32-p3:32:32-p4:64:64-p5:32:32-p6:32:32-i64:64-v16:16-v24:32-v32:32-v48:64-v96:128-v192:256-v256:256-v512:512-v1024:1024-v2048:2048-n32:64-S32-A5-G1-ni:7"
+-target triple = "amdgcn-amd-amdhsa"
++target triple = "amdgcn-amd-amdpal"
+ 
+ ; Function Attrs: nofree norecurse nosync nounwind willreturn memory(read)
+ define protected <4 x float> @__llvm_amdgcn_image_load_1d_v4f32_i32(i32 %arg1, <8 x i32> %arg2) local_unnamed_addr #0 {
+diff --git a/irif/src/extended-image-intrinsics.ll b/irif/src/extended-image-intrinsics.ll
+index 9eb2bbc..71fef3d 100644
+--- a/irif/src/extended-image-intrinsics.ll
++++ b/irif/src/extended-image-intrinsics.ll
+@@ -1,5 +1,5 @@
+ target datalayout = "e-p:64:64-p1:64:64-p2:32:32-p3:32:32-p4:64:64-p5:32:32-p6:32:32-i64:64-v16:16-v24:32-v32:32-v48:64-v96:128-v192:256-v256:256-v512:512-v1024:1024-v2048:2048-n32:64-S32-A5-G1-ni:7"
+-target triple = "amdgcn-amd-amdhsa"
++target triple = "amdgcn-amd-amdpal"
+ 
+ ; Function Attrs: nofree norecurse nosync nounwind willreturn memory(read)
+ define protected <4 x float> @__llvm_amdgcn_image_sample_lz_1d_v4f32_f32(float %arg1, <8 x i32> %arg2, <4 x i32> %arg3) local_unnamed_addr #0 {
+diff --git a/ockl/src/wgscratch.ll b/ockl/src/wgscratch.ll
+index a9a3ee1..953c089 100644
+--- a/ockl/src/wgscratch.ll
++++ b/ockl/src/wgscratch.ll
+@@ -1,5 +1,5 @@
+ target datalayout = "e-p:64:64-p1:64:64-p2:32:32-p3:32:32-p4:64:64-p5:32:32-p6:32:32-i64:64-v16:16-v24:32-v32:32-v48:64-v96:128-v192:256-v256:256-v512:512-v1024:1024-v2048:2048-n32:64-S32-A5-G1-ni:7"
+-target triple = "amdgcn-amd-amdhsa"
++target triple = "amdgcn-amd-amdpal"
+ 
+ ; 1024 work-items means up to 32 work groups
+ @__scratch_lds = linkonce_odr hidden addrspace(3) global [32 x i64] undef, align 8

@@ -1,4 +1,4 @@
-set(AnyDSL_PKG_RV_TAG "origin/AnyDSL_pruned" CACHE STRING "LLVM is build with this git tag of RV")
+set(AnyDSL_PKG_RV_TAG "origin/master" CACHE STRING "LLVM is build with this git tag of RV")
 
 set(AnyDSL_PKG_RV_URL "https://github.com/cdl-saarland/rv" CACHE STRING "where to clone RV")
 

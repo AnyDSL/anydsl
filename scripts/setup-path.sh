@@ -17,7 +17,7 @@ fi
 
 if [ "${ZSH_VERSION:-}" != "" ]; then
     echo "Detected zsh, setting up completion scripts"
-    export fpath=(/home/matthias/Documents/DFKI/anydsl-setup/setup-cmake/zsh ${fpath:-})
+    export fpath=(${PWD}/zsh ${fpath:-})
     compinit
 fi
 

@@ -40,7 +40,7 @@
 : ${BRANCH_ARTIC:=master}
 : ${BRANCH_IMPALA:=master}
 : ${BRANCH_THORIN:=master}
-: ${BRANCH_RV:=release/16.x}
+: ${BRANCH_RV:=master}
 : ${BRANCH_RUNTIME:=master}
 : ${BRANCH_STINCILLA:=main}
 : ${BRANCH_RODENT:=master}

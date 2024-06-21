@@ -93,6 +93,7 @@ fi
 # fetch sources
 if [ "${LLVM-}" == true ]; then
     mkdir -p llvm_build/
+    mkdir -p rv_build/
 
     if [ "${LLVM_GIT-}" = true ]; then
         clone_or_update ${LLVM_GITHUB_ORG} llvm-project ${LLVM_GIT_BRANCH}
@@ -105,8 +106,7 @@ if [ "${LLVM-}" == true ]; then
         fi
     fi
     cd llvm-project
-    if ! patch --dry-run --reverse --force -s -p1 -i ../patches/llvm/amdgpu_icmp_fold.patch; then
-        patch -p1 -i ../patches/llvm/amdgpu_icmp_fold.patch
+    if ! patch --dry-run --reverse --force -s -p1 -i ../patches/llvm/nvptx_feature.patch; then
         patch -p1 -i ../patches/llvm/nvptx_feature.patch
     fi
 
@@ -129,14 +129,24 @@ if [ "${LLVM-}" == true ]; then
         RV_REBUILD_GENBC=ON
     fi
     cmake ../llvm-project/llvm ${CMAKE_MAKE} -DLLVM_BUILD_LLVM_DYLIB:BOOL=ON -DLLVM_LINK_LLVM_DYLIB:BOOL=ON -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX:PATH="${CUR}/llvm_install" \
-        -DLLVM_EXTERNAL_PROJECTS:STRING="rv" -DLLVM_EXTERNAL_RV_SOURCE_DIR:PATH=${CUR}/llvm-project/rv -DRV_REBUILD_GENBC:BOOL=${RV_REBUILD_GENBC} \
         -DLLVM_ENABLE_RTTI:BOOL=ON -DLLVM_ENABLE_PROJECTS:STRING="clang;lld" -DLLVM_ENABLE_BINDINGS:BOOL=OFF -DLLVM_INCLUDE_TESTS:BOOL=ON -DLLVM_TARGETS_TO_BUILD:STRING="${LLVM_TARGETS}" -DDEFAULT_SYSROOT:PATH="${DEFAULT_SYSROOT}"
     ${MAKE} install
     cd "${CUR}"
 
     LLVM_VARS=-DLLVM_DIR:PATH="${CUR}/llvm_install/lib/cmake/llvm"
+
+    if [ "${RV-}" == true ]; then
+        cd rv_build
+        cmake ../llvm-project/rv ${CMAKE_MAKE} ${LLVM_VARS} -DBUILD_SHARED_LIBS:BOOL=ON -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DRV_REBUILD_GENBC:BOOL=${RV_REBUILD_GENBC} -DCMAKE_INSTALL_PREFIX="${CUR}/llvm_install"
+        ${MAKE}
+        RV_VARS=-DRV_DIR:PATH="${CUR}/rv_build/share/anydsl/cmake"
+        cd "${CUR}"
+    else
+        RV_VARS=-DCMAKE_DISABLE_FIND_PACKAGE_RV:BOOL=TRUE
+    fi
 else
     LLVM_VARS=-DCMAKE_DISABLE_FIND_PACKAGE_LLVM:BOOL=TRUE
+    RV_VARS=-DCMAKE_DISABLE_FIND_PACKAGE_RV:BOOL=TRUE
 fi
 
 if [ ! -e "${CUR}/half" ]; then
@@ -203,7 +213,7 @@ fi
 cd "${CUR}"
 clone_or_update AnyDSL thorin ${BRANCH_THORIN}
 cd "${CUR}/thorin/build"
-cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} ${LLVM_VARS} -DTHORIN_PROFILE:BOOL=${THORIN_PROFILE} -DHalf_DIR:PATH="${CUR}/half/include"
+cmake .. ${CMAKE_MAKE} -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} ${LLVM_VARS} ${RV_VARS} -DTHORIN_PROFILE:BOOL=${THORIN_PROFILE} -DHalf_DIR:PATH="${CUR}/half/include"
 ${MAKE}
 
 # artic

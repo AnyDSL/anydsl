@@ -7,7 +7,8 @@ include(FetchContent)
 
 
 FetchContent_Declare(Half
-    SVN_REPOSITORY  ${AnyDSL_PKG_Half_URL}
+    URL https://sourceforge.net/projects/half/files/latest/download
+    DOWNLOAD_NAME half.zip
 )
 
 message(STATUS "Make Half available ...")

@@ -12,9 +12,7 @@ set(AnyDSL_PKG_LLVM_AUTOBUILD OFF CACHE BOOL "forces the availability of LLVM to
 set(AnyDSL_PKG_RV_AUTOBUILD   OFF CACHE BOOL "forces the availability of RV to build AnyDSL packages")
 
 # Half
-if(AnyDSL_PKG_Half_AUTOBUILD AND NOT CMAKE_DISABLE_FIND_PACKAGE_Half)
-    include(cmake/half-package.cmake)
-endif()
+include(cmake/half-package.cmake)
 if(Half_DIR)
     message(STATUS "Half_DIR: ${Half_DIR}")
 else()
@@ -22,12 +20,9 @@ else()
 endif()
 
 # LLVM and clang
-if(AnyDSL_PKG_LLVM_AUTOBUILD AND NOT CMAKE_DISABLE_FIND_PACKAGE_LLVM)
-    include(cmake/llvm-package.cmake)
-endif()
-if(AnyDSL_PKG_RV_AUTOBUILD)
-    include(cmake/rv-package.cmake)
-endif()
+include(cmake/llvm-package.cmake)
+include(cmake/rv-package.cmake)
+
 find_package(LLVM QUIET)
 if(LLVM_FOUND)
     message(STATUS "LLVM_DIR: ${LLVM_DIR}")

@@ -83,7 +83,8 @@ if [ "${CMAKE-}" == true ]; then
 
     cd cmake_build
     cmake ../CMake -DBUILD_CursesDialog:BOOL=ON -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH="${CUR}/cmake_install"
-    ${MAKE} install
+    ${MAKE}
+    ${MAKE_INSTALL}
     cd "${CUR}"
 
     export PATH="${CUR}/cmake_install/bin:${PATH}"
@@ -130,7 +131,8 @@ if [ "${LLVM-}" == true ]; then
     fi
     cmake ../llvm-project/llvm ${CMAKE_MAKE} -DLLVM_BUILD_LLVM_DYLIB:BOOL=ON -DLLVM_LINK_LLVM_DYLIB:BOOL=ON -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX:PATH="${CUR}/llvm_install" \
         -DLLVM_ENABLE_RTTI:BOOL=ON -DLLVM_ENABLE_PROJECTS:STRING="clang;lld" -DLLVM_ENABLE_BINDINGS:BOOL=OFF -DLLVM_INCLUDE_TESTS:BOOL=ON -DLLVM_TARGETS_TO_BUILD:STRING="${LLVM_TARGETS}" -DDEFAULT_SYSROOT:PATH="${DEFAULT_SYSROOT}"
-    ${MAKE} install
+    ${MAKE}
+    ${MAKE_INSTALL}
     cd "${CUR}"
 
     LLVM_VARS=-DLLVM_DIR:PATH="${CUR}/llvm_install/lib/cmake/llvm"

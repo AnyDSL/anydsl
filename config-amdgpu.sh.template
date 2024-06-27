@@ -3,10 +3,12 @@
 
 : ${CMAKE_MAKE:=""}
 : ${MAKE:="make -j4"}
+: ${MAKE_INSTALL:="make install"}
 
 # use this for ninja instead of make
 #: ${CMAKE_MAKE:="-G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DLLVM_PARALLEL_COMPILE_JOBS=4 -DLLVM_PARALLEL_LINK_JOBS=1"}
 #: ${MAKE:="ninja"}
+#: ${MAKE_INSTALL:="ninja install"}
 
 # set this to true if you don't have a github account
 : ${HTTPS:=true}

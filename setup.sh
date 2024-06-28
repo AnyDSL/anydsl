@@ -150,7 +150,12 @@ else
 fi
 
 if [ ! -e "${CUR}/half" ]; then
-    svn checkout svn://svn.code.sf.net/p/half/code/trunk half
+    mkdir half
+    cd half
+    wget https://sourceforge.net/projects/half/files/latest/download -O half.zip
+    unzip half.zip
+    rm half.zip
+    cd ${CUR}
 fi
 
 # source this file to put artic, impala, and clang in path

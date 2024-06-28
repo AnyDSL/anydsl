@@ -40,6 +40,9 @@ source config.sh
 
 CUR=`pwd`
 
+MAKE="cmake --build . --config ${BUILD_TYPE}"
+MAKE_INSTALL="cmake --install . --config ${BUILD_TYPE}"
+
 function remote {
     if $HTTPS; then
         echo "https://github.com/$1"

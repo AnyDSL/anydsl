@@ -1,0 +1,29 @@
+kind: pipeline
+type: docker
+name: testing
+
+steps:
+  - name: submodules
+    image: alpine/git
+    commands:
+      - git submodule update --init --recursive
+
+  - name: load-llvm
+    image: ubuntu
+    commands:
+      - apt update -qq && apt install -y git g++ cmake ninja-build wget xz-utils libzstd-dev zlib1g-dev libncurses-dev libxml2-dev unzip python3
+      - scripts/download_llvm.sh
+
+  - name: build-toolchain
+    image: ubuntu
+    commands:
+      - apt update -qq && apt install -y git g++ cmake ninja-build wget xz-utils libzstd-dev zlib1g-dev libncurses-dev libxml2-dev unzip python3
+      - cp config-drone.sh.template config.sh
+      - ./setup.sh
+
+  - name: test-artic
+    image: ubuntu
+    commands:
+      - apt update -qq && apt install -y git g++ cmake ninja-build wget xz-utils libzstd-dev zlib1g-dev libncurses-dev libxml2-dev unzip python3
+      - cd artic/build/
+      - ctest --output-on-failure

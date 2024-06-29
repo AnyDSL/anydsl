@@ -1,0 +1,49 @@
+# use Debug or Release
+: ${BUILD_TYPE:=Debug}
+
+#: ${CMAKE_MAKE:=""}
+#: ${MAKE:="make -j4"}
+
+# use this for ninja instead of make
+: ${CMAKE_MAKE:="-GNinja -DBUILD_TESTING=ON -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON"}
+: ${MAKE:="cmake --build ."}
+
+# set this to true if you don't have a github account
+: ${HTTPS:=true}
+
+# set this to true if you want to download and build the required version of CMake
+: ${CMAKE:=false}
+: ${BRANCH_CMAKE:=v3.13.4}
+
+# set this to false if you don't want to build with LLVM
+# setting to false is meant to speed up debugging and not recommended for end users
+: ${LLVM_EXTERN:=/drone/src/llvm_install}
+
+: ${LLVM:=false}
+: ${LLVM_TARGETS:="AArch64;AMDGPU;ARM;NVPTX;X86"}
+: ${LLVM_GIT:=false}
+: ${LLVM_GITHUB_ORG:=llvm}
+: ${LLVM_GIT_BRANCH:=master}
+: ${LLVM_SRC_VERSION:=16.0.6}
+
+# set this to false if you don't want to build LLVM with RV support
+: ${RV:=true}
+
+# use this to debug thorin hash table performance
+: ${THORIN_PROFILE:=false}
+
+# set this to false if you don't build with LLVM
+: ${RUNTIME_JIT:=true}
+
+# set this to false to hide runtime debug output
+: ${RUNTIME_DEBUG_OUTPUT:=true}
+
+# set the default branches for each repository
+: ${BRANCH_ARTIC:=master}
+: ${BRANCH_IMPALA:=master}
+: ${BRANCH_THORIN:=master}
+: ${BRANCH_RV:=master}
+: ${BRANCH_RUNTIME:=master}
+: ${BRANCH_STINCILLA:=main}
+: ${BRANCH_RODENT:=master}
+: ${CLONE_RODENT:=false}

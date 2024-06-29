@@ -5,7 +5,7 @@ half/
 impala/
 llvm-project/
 llvm_build/
-rv_build/
+rv/
 llvm_install/
 project.sh
 rodent/

@@ -4,31 +4,6 @@ set -eu
 COLOR_RED="\033[0;31m"
 COLOR_RESET="\033[0m"
 
-echo ">>> update setup project"
-git fetch origin
-
-UPSTREAM=${1:-'@{u}'}
-LOCAL=$(git rev-parse @)
-REMOTE=$(git rev-parse "$UPSTREAM")
-BASE=$(git merge-base @ "$UPSTREAM")
-
-if [ $LOCAL = $REMOTE ]; then
-    echo "your branch is up-to-date"
-elif [ $LOCAL = $BASE ]; then
-    echo "your branch is behind your tracking branch"
-    echo "I pull and rerun the script "
-    git pull
-    ./$0
-    exit $?
-elif [ $REMOTE = $BASE ]; then
-    echo "your branch is ahead of your tracking branch"
-    echo "remember to push your changes but I will run the script anyway"
-else
-    echo "your branch and your tracking remote branch have diverged"
-    echo "resolve all conflicts before rerunning the script"
-    exit 1
-fi
-
 if [ ! -e config.sh ]; then
     echo "first configure your build:"
     echo "cp config.sh.template config.sh"
@@ -138,8 +113,25 @@ if [ "${LLVM-}" == true ]; then
     if [ "${RV-}" == true ]; then
         cd rv_build
         cmake ../llvm-project/rv ${CMAKE_MAKE} ${LLVM_VARS} -DBUILD_SHARED_LIBS:BOOL=ON -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DRV_REBUILD_GENBC:BOOL=${RV_REBUILD_GENBC} -DCMAKE_INSTALL_PREFIX="${CUR}/llvm_install"
+        ${MAKE} install
+        RV_VARS=-DRV_DIR:PATH="${CUR}/llvm_install/share/anydsl/cmake"
+        cd "${CUR}"
+    else
+        RV_VARS=-DCMAKE_DISABLE_FIND_PACKAGE_RV:BOOL=TRUE
+    fi
+elif [ ${LLVM_EXTERN} != "" ] && [ -d "${LLVM_EXTERN}" ]; then
+    LLVM_VARS="-DLLVM_DIR:PATH=${LLVM_EXTERN}/lib/cmake/llvm"
+
+    if [ "${RV-}" == true ]; then
+        RV_REBUILD_GENBC=OFF
+        cd "${CUR}"
+        clone_or_update cdl-saarland rv ${BRANCH_RV}
+        cd rv
+        git submodule update --init
+        cd ${CUR}/rv/build
+        cmake .. ${CMAKE_MAKE} ${LLVM_VARS} -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DRV_REBUILD_GENBC:BOOL=${RV_REBUILD_GENBC} -DCMAKE_INSTALL_PREFIX="${CUR}/rv/install"
         ${MAKE}
-        RV_VARS=-DRV_DIR:PATH="${CUR}/rv_build/share/anydsl/cmake"
+        RV_VARS=-DRV_DIR:PATH="${CUR}/rv/install/share/anydsl/cmake"
         cd "${CUR}"
     else
         RV_VARS=-DCMAKE_DISABLE_FIND_PACKAGE_RV:BOOL=TRUE
@@ -150,7 +142,12 @@ else
 fi
 
 if [ ! -e "${CUR}/half" ]; then
-    svn checkout svn://svn.code.sf.net/p/half/code/trunk half
+    mkdir half
+    cd half
+    wget https://sourceforge.net/projects/half/files/latest/download -O half.zip
+    unzip half.zip
+    rm half.zip
+    cd ${CUR}
 fi
 
 # source this file to put artic, impala, and clang in path

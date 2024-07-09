@@ -1,5 +1,6 @@
 # use Debug or Release
 : ${BUILD_TYPE:=Debug}
+: ${BUILD_JOBS:="8"}
 
 : ${CMAKE_MAKE:=""}
 

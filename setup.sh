@@ -40,7 +40,12 @@ source config.sh
 
 CUR=`pwd`
 
-MAKE="cmake --build . --config ${BUILD_TYPE}"
+if [ ! -v BUILD_JOBS ]; then
+    echo "Please specify BUILD_JOBS in the config.sh file"
+    exit -1
+fi
+
+MAKE="cmake --build . --config ${BUILD_TYPE} -j ${BUILD_JOBS}"
 MAKE_INSTALL="cmake --install . --config ${BUILD_TYPE}"
 
 function remote {

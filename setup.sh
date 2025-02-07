@@ -137,7 +137,7 @@ if [ "${LLVM-}" == true ]; then
 
     if [ "${RV-}" == true ]; then
         cd rv_build
-        cmake ../llvm-project/rv ${CMAKE_MAKE} ${LLVM_VARS} -DBUILD_SHARED_LIBS:BOOL=ON -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DRV_REBUILD_GENBC:BOOL=${RV_REBUILD_GENBC} -DCMAKE_INSTALL_PREFIX="${CUR}/llvm_install"
+        cmake ../llvm-project/rv ${CMAKE_MAKE} ${LLVM_VARS} -DBUILD_SHARED_LIBS:BOOL=ON -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE} -DRV_REBUILD_GENBC:BOOL=${RV_REBUILD_GENBC} -DCMAKE_INSTALL_PREFIX="${CUR}/llvm_install" -DDEFAULT_SYSROOT:PATH="${DEFAULT_SYSROOT}"
         ${MAKE}
         RV_VARS=-DRV_DIR:PATH="${CUR}/rv_build/share/anydsl/cmake"
         cd "${CUR}"

@@ -21,8 +21,8 @@
 : ${LLVM_TARGETS:="AArch64;AMDGPU;ARM;NVPTX;X86"}
 : ${LLVM_GIT:=false}
 : ${LLVM_GITHUB_ORG:=llvm}
-: ${LLVM_GIT_BRANCH:=release/18.x}
-: ${LLVM_SRC_VERSION:=18.1.8}
+: ${LLVM_GIT_BRANCH:=release/20.x}
+: ${LLVM_SRC_VERSION:=20.1.5}
 
 # set this to false if you don't want to build LLVM with RV support
 : ${RV:=true}

@@ -1,0 +1,720 @@
+diff --git a/include/spirv/unified1/spirv.bf b/include/spirv/unified1/spirv.bf
+index d0cbdcc..a6201b3 100644
+--- a/include/spirv/unified1/spirv.bf
++++ b/include/spirv/unified1/spirv.bf
+@@ -953,6 +953,8 @@ namespace Spv
+             MakePointerVisibleKHR = 4,
+             NonPrivatePointer = 5,
+             NonPrivatePointerKHR = 5,
++            MagicPointer = 6,
++            MagicPointerINTEL = 6,
+             AliasScopeINTELMask = 16,
+             NoAliasINTELMask = 17,
+             Max = 0x7fffffff,
+@@ -970,6 +972,8 @@ namespace Spv
+             MakePointerVisibleKHR = 0x00000010,
+             NonPrivatePointer = 0x00000020,
+             NonPrivatePointerKHR = 0x00000020,
++            MagicPointer = 0x00000040,
++            MagicPointerINTEL = 0x00000040,
+             AliasScopeINTELMask = 0x00010000,
+             NoAliasINTELMask = 0x00020000,
+         }
+@@ -1299,6 +1303,7 @@ namespace Spv
+             AtomicFloat16AddEXT = 6095,
+             DebugInfoModuleINTEL = 6114,
+             BFloat16ConversionINTEL = 6115,
++            JointMatrixINTEL = 6118,
+             SplitBarrierINTEL = 6141,
+             ArithmeticFenceEXT = 6144,
+             FPGAClusterAttributesV2INTEL = 6150,
+@@ -1451,6 +1456,8 @@ namespace Spv
+             MatrixCSignedComponentsKHR = 2,
+             MatrixResultSignedComponentsKHR = 3,
+             SaturatingAccumulationKHR = 4,
++            MagicComponents = 6,
++            MagicComponentsINTEL = 6,
+             Max = 0x7fffffff,
+         }
+ 
+@@ -1462,6 +1469,8 @@ namespace Spv
+             MatrixCSignedComponentsKHR = 0x00000004,
+             MatrixResultSignedComponentsKHR = 0x00000008,
+             SaturatingAccumulationKHR = 0x00000010,
++            MagicComponents = 0x00000040,
++            MagicComponentsINTEL = 0x00000040,
+         }
+ 
+         [AllowDuplicates, CRepr] public enum CooperativeMatrixLayout
+@@ -2469,6 +2478,10 @@ namespace Spv
+             OpCompositeConstructContinuedINTEL = 6096,
+             OpConvertFToBF16INTEL = 6116,
+             OpConvertBF16ToFINTEL = 6117,
++            OpTypeJointMatrixINTEL = 6119,
++            OpJointMatrixLoadINTEL = 6120,
++            OpJointMatrixStoreINTEL = 6121,
++            OpJointMatrixMadINTEL = 6122,
+             OpControlBarrierArriveINTEL = 6142,
+             OpControlBarrierWaitINTEL = 6143,
+             OpArithmeticFenceEXT = 6145,
+diff --git a/include/spirv/unified1/spirv.core.grammar.json b/include/spirv/unified1/spirv.core.grammar.json
+index 1c3ed72..06113da 100644
+--- a/include/spirv/unified1/spirv.core.grammar.json
++++ b/include/spirv/unified1/spirv.core.grammar.json
+@@ -10622,6 +10622,67 @@
+       "capabilities" : [ "BFloat16ConversionINTEL" ],
+       "version" : "None"
+     },
++    {
++      "opname" : "OpTypeJointMatrixINTEL",
++      "class"  : "Type-Declaration",
++      "opcode" : 6119,
++      "operands" : [
++        { "kind" : "IdResult" },
++        { "kind" : "IdRef",        "name" : "Component Type" },
++        { "kind" : "IdRef",        "name" : "Rows" },
++        { "kind" : "IdRef",        "name" : "Columns" },
++        { "kind" : "IdRef",        "name" : "Layout" },
++        { "kind" : "IdScope",      "name" : "Scope" },
++        { "kind" : "IdRef",        "name" : "Use" },
++        { "kind" : "IdRef",        "name" : "Component Type Interpretation", "quantifier" : "?" }
++      ],
++      "capabilities" : [ "JointMatrixINTEL" ],
++      "version" : "None"
++    },
++    {
++      "opname" : "OpJointMatrixLoadINTEL",
++      "class"  : "Memory",
++      "opcode" : 6120,
++      "operands" : [
++        { "kind" : "IdResultType" },
++        { "kind" : "IdResult" },
++        { "kind" : "IdRef",             "name" : "Pointer" },
++        { "kind" : "IdRef",             "name" : "Stride" },
++        { "kind" : "IdRef",             "name" : "MemoryLayout" },
++        { "kind" : "MemoryAccess",      "name" : "Memory Operand", "quantifier" : "?" }
++      ],
++      "capabilities" : [ "JointMatrixINTEL" ],
++      "version" : "None"
++    },
++    {
++      "opname" : "OpJointMatrixStoreINTEL",
++      "class"  : "Memory",
++      "opcode" : 6121,
++      "operands" : [
++        { "kind" : "IdRef",             "name" : "Pointer" },
++        { "kind" : "IdRef",             "name" : "Object" },
++        { "kind" : "IdRef",             "name" : "Stride" },
++        { "kind" : "IdRef",             "name" : "MemoryLayout" },
++        { "kind" : "MemoryAccess",      "name" : "Memory Operand", "quantifier" : "?" }
++      ],
++      "capabilities" : [ "JointMatrixINTEL" ],
++      "version" : "None"
++    },
++    {
++      "opname" : "OpJointMatrixMadINTEL",
++      "class"  : "Arithmetic",
++      "opcode" : 6122,
++      "operands" : [
++        { "kind" : "IdResultType" },
++        { "kind" : "IdResult" },
++        { "kind" : "IdRef",             "name" : "A" },
++        { "kind" : "IdRef",             "name" : "B" },
++        { "kind" : "IdRef",             "name" : "C" },
++        { "kind" : "CooperativeMatrixOperands", "name" : "Cooperative Matrix Operands", "quantifier" : "?" }
++      ],
++      "capabilities" : [ "JointMatrixINTEL" ],
++      "version" : "None"
++    },
+     {
+       "opname" : "OpControlBarrierArriveINTEL",
+       "class"  : "Barrier",
+@@ -11723,6 +11784,14 @@
+           "extensions" : [ "SPV_KHR_vulkan_memory_model" ],
+           "version" : "1.5"
+         },
++        {
++          "enumerant" : "MagicPointer",
++          "aliases" : ["MagicPointerINTEL"],
++          "value" : "0x0040",
++          "capabilities" : [ "JointMatrixINTEL" ],
++          "extensions" : [ "SPV_INTEL_joint_matrix" ],
++          "version" : "None"
++        },
+         {
+           "enumerant" : "AliasScopeINTELMask",
+           "value" : "0x10000",
+@@ -17670,6 +17739,12 @@
+           "extensions" : [ "SPV_INTEL_bfloat16_conversion" ],
+           "version" : "None"
+         },
++        {
++          "enumerant" : "JointMatrixINTEL",
++          "value" : 6118,
++          "extensions" : [ "SPV_INTEL_joint_matrix" ],
++          "version" : "None"
++        },
+         {
+           "enumerant" : "SplitBarrierINTEL",
+           "value" : 6141,
+@@ -17937,6 +18012,14 @@
+           "enumerant" : "SaturatingAccumulationKHR",
+           "value" : "0x0010",
+           "version" : "None"
++        },
++        {
++          "enumerant" : "MagicComponents",
++          "aliases" : ["MagicComponentsINTEL"],
++          "value" : "0x0040",
++          "capabilities" : [ "JointMatrixINTEL" ],
++          "extensions" : [ "SPV_INTEL_joint_matrix" ],
++          "version" : "None"
+         }
+       ]
+     },
+diff --git a/include/spirv/unified1/spirv.cs b/include/spirv/unified1/spirv.cs
+index bc04a57..7d8f704 100644
+--- a/include/spirv/unified1/spirv.cs
++++ b/include/spirv/unified1/spirv.cs
+@@ -952,6 +952,8 @@ namespace Spv
+             MakePointerVisibleKHR = 4,
+             NonPrivatePointer = 5,
+             NonPrivatePointerKHR = 5,
++            MagicPointer = 6,
++            MagicPointerINTEL = 6,
+             AliasScopeINTELMask = 16,
+             NoAliasINTELMask = 17,
+             Max = 0x7fffffff,
+@@ -969,6 +971,8 @@ namespace Spv
+             MakePointerVisibleKHR = 0x00000010,
+             NonPrivatePointer = 0x00000020,
+             NonPrivatePointerKHR = 0x00000020,
++            MagicPointer = 0x00000040,
++            MagicPointerINTEL = 0x00000040,
+             AliasScopeINTELMask = 0x00010000,
+             NoAliasINTELMask = 0x00020000,
+         }
+@@ -1298,6 +1302,7 @@ namespace Spv
+             AtomicFloat16AddEXT = 6095,
+             DebugInfoModuleINTEL = 6114,
+             BFloat16ConversionINTEL = 6115,
++            JointMatrixINTEL = 6118,
+             SplitBarrierINTEL = 6141,
+             ArithmeticFenceEXT = 6144,
+             FPGAClusterAttributesV2INTEL = 6150,
+@@ -1450,6 +1455,8 @@ namespace Spv
+             MatrixCSignedComponentsKHR = 2,
+             MatrixResultSignedComponentsKHR = 3,
+             SaturatingAccumulationKHR = 4,
++            MagicComponents = 6,
++            MagicComponentsINTEL = 6,
+             Max = 0x7fffffff,
+         }
+ 
+@@ -1461,6 +1468,8 @@ namespace Spv
+             MatrixCSignedComponentsKHR = 0x00000004,
+             MatrixResultSignedComponentsKHR = 0x00000008,
+             SaturatingAccumulationKHR = 0x00000010,
++            MagicComponents = 0x00000040,
++            MagicComponentsINTEL = 0x00000040,
+         }
+ 
+         public enum CooperativeMatrixLayout
+@@ -2468,6 +2477,10 @@ namespace Spv
+             OpCompositeConstructContinuedINTEL = 6096,
+             OpConvertFToBF16INTEL = 6116,
+             OpConvertBF16ToFINTEL = 6117,
++            OpTypeJointMatrixINTEL = 6119,
++            OpJointMatrixLoadINTEL = 6120,
++            OpJointMatrixStoreINTEL = 6121,
++            OpJointMatrixMadINTEL = 6122,
+             OpControlBarrierArriveINTEL = 6142,
+             OpControlBarrierWaitINTEL = 6143,
+             OpArithmeticFenceEXT = 6145,
+diff --git a/include/spirv/unified1/spirv.h b/include/spirv/unified1/spirv.h
+index 26bc6d9..23c82c4 100644
+--- a/include/spirv/unified1/spirv.h
++++ b/include/spirv/unified1/spirv.h
+@@ -930,6 +930,8 @@ typedef enum SpvMemoryAccessShift_ {
+     SpvMemoryAccessMakePointerVisibleKHRShift = 4,
+     SpvMemoryAccessNonPrivatePointerShift = 5,
+     SpvMemoryAccessNonPrivatePointerKHRShift = 5,
++    SpvMemoryAccessMagicPointerShift = 6,
++    SpvMemoryAccessMagicPointerINTELShift = 6,
+     SpvMemoryAccessAliasScopeINTELMaskShift = 16,
+     SpvMemoryAccessNoAliasINTELMaskShift = 17,
+     SpvMemoryAccessMax = 0x7fffffff,
+@@ -946,6 +948,8 @@ typedef enum SpvMemoryAccessMask_ {
+     SpvMemoryAccessMakePointerVisibleKHRMask = 0x00000010,
+     SpvMemoryAccessNonPrivatePointerMask = 0x00000020,
+     SpvMemoryAccessNonPrivatePointerKHRMask = 0x00000020,
++    SpvMemoryAccessMagicPointerMask = 0x00000040,
++    SpvMemoryAccessMagicPointerINTELMask = 0x00000040,
+     SpvMemoryAccessAliasScopeINTELMaskMask = 0x00010000,
+     SpvMemoryAccessNoAliasINTELMaskMask = 0x00020000,
+ } SpvMemoryAccessMask;
+@@ -1269,6 +1273,7 @@ typedef enum SpvCapability_ {
+     SpvCapabilityAtomicFloat16AddEXT = 6095,
+     SpvCapabilityDebugInfoModuleINTEL = 6114,
+     SpvCapabilityBFloat16ConversionINTEL = 6115,
++    SpvCapabilityJointMatrixINTEL = 6118,
+     SpvCapabilitySplitBarrierINTEL = 6141,
+     SpvCapabilityArithmeticFenceEXT = 6144,
+     SpvCapabilityFPGAClusterAttributesV2INTEL = 6150,
+@@ -1408,6 +1413,8 @@ typedef enum SpvCooperativeMatrixOperandsShift_ {
+     SpvCooperativeMatrixOperandsMatrixCSignedComponentsKHRShift = 2,
+     SpvCooperativeMatrixOperandsMatrixResultSignedComponentsKHRShift = 3,
+     SpvCooperativeMatrixOperandsSaturatingAccumulationKHRShift = 4,
++    SpvCooperativeMatrixOperandsMagicComponentsShift = 6,
++    SpvCooperativeMatrixOperandsMagicComponentsINTELShift = 6,
+     SpvCooperativeMatrixOperandsMax = 0x7fffffff,
+ } SpvCooperativeMatrixOperandsShift;
+ 
+@@ -1418,6 +1425,8 @@ typedef enum SpvCooperativeMatrixOperandsMask_ {
+     SpvCooperativeMatrixOperandsMatrixCSignedComponentsKHRMask = 0x00000004,
+     SpvCooperativeMatrixOperandsMatrixResultSignedComponentsKHRMask = 0x00000008,
+     SpvCooperativeMatrixOperandsSaturatingAccumulationKHRMask = 0x00000010,
++    SpvCooperativeMatrixOperandsMagicComponentsMask = 0x00000040,
++    SpvCooperativeMatrixOperandsMagicComponentsINTELMask = 0x00000040,
+ } SpvCooperativeMatrixOperandsMask;
+ 
+ typedef enum SpvCooperativeMatrixLayout_ {
+@@ -2403,6 +2412,10 @@ typedef enum SpvOp_ {
+     SpvOpCompositeConstructContinuedINTEL = 6096,
+     SpvOpConvertFToBF16INTEL = 6116,
+     SpvOpConvertBF16ToFINTEL = 6117,
++    SpvOpTypeJointMatrixINTEL = 6119,
++    SpvOpJointMatrixLoadINTEL = 6120,
++    SpvOpJointMatrixStoreINTEL = 6121,
++    SpvOpJointMatrixMadINTEL = 6122,
+     SpvOpControlBarrierArriveINTEL = 6142,
+     SpvOpControlBarrierWaitINTEL = 6143,
+     SpvOpArithmeticFenceEXT = 6145,
+@@ -3236,6 +3249,10 @@ inline void SpvHasResultAndType(SpvOp opcode, bool *hasResult, bool *hasResultTy
+     case SpvOpCompositeConstructContinuedINTEL: *hasResult = true; *hasResultType = true; break;
+     case SpvOpConvertFToBF16INTEL: *hasResult = true; *hasResultType = true; break;
+     case SpvOpConvertBF16ToFINTEL: *hasResult = true; *hasResultType = true; break;
++    case SpvOpTypeJointMatrixINTEL: *hasResult = true; *hasResultType = false; break;
++    case SpvOpJointMatrixLoadINTEL: *hasResult = true; *hasResultType = true; break;
++    case SpvOpJointMatrixStoreINTEL: *hasResult = false; *hasResultType = false; break;
++    case SpvOpJointMatrixMadINTEL: *hasResult = true; *hasResultType = true; break;
+     case SpvOpControlBarrierArriveINTEL: *hasResult = false; *hasResultType = false; break;
+     case SpvOpControlBarrierWaitINTEL: *hasResult = false; *hasResultType = false; break;
+     case SpvOpArithmeticFenceEXT: *hasResult = true; *hasResultType = true; break;
+@@ -4226,6 +4243,7 @@ inline const char* SpvCapabilityToString(SpvCapability value) {
+     case SpvCapabilityAtomicFloat16AddEXT: return "AtomicFloat16AddEXT";
+     case SpvCapabilityDebugInfoModuleINTEL: return "DebugInfoModuleINTEL";
+     case SpvCapabilityBFloat16ConversionINTEL: return "BFloat16ConversionINTEL";
++    case SpvCapabilityJointMatrixINTEL: return "JointMatrixINTEL";
+     case SpvCapabilitySplitBarrierINTEL: return "SplitBarrierINTEL";
+     case SpvCapabilityArithmeticFenceEXT: return "ArithmeticFenceEXT";
+     case SpvCapabilityFPGAClusterAttributesV2INTEL: return "FPGAClusterAttributesV2INTEL";
+@@ -5229,6 +5247,10 @@ inline const char* SpvOpToString(SpvOp value) {
+     case SpvOpCompositeConstructContinuedINTEL: return "OpCompositeConstructContinuedINTEL";
+     case SpvOpConvertFToBF16INTEL: return "OpConvertFToBF16INTEL";
+     case SpvOpConvertBF16ToFINTEL: return "OpConvertBF16ToFINTEL";
++    case SpvOpTypeJointMatrixINTEL: return "OpTypeJointMatrixINTEL";
++    case SpvOpJointMatrixLoadINTEL: return "OpJointMatrixLoadINTEL";
++    case SpvOpJointMatrixStoreINTEL: return "OpJointMatrixStoreINTEL";
++    case SpvOpJointMatrixMadINTEL: return "OpJointMatrixMadINTEL";
+     case SpvOpControlBarrierArriveINTEL: return "OpControlBarrierArriveINTEL";
+     case SpvOpControlBarrierWaitINTEL: return "OpControlBarrierWaitINTEL";
+     case SpvOpArithmeticFenceEXT: return "OpArithmeticFenceEXT";
+diff --git a/include/spirv/unified1/spirv.hpp b/include/spirv/unified1/spirv.hpp
+index 086fcc4..1973405 100644
+--- a/include/spirv/unified1/spirv.hpp
++++ b/include/spirv/unified1/spirv.hpp
+@@ -926,6 +926,8 @@ enum MemoryAccessShift {
+     MemoryAccessMakePointerVisibleKHRShift = 4,
+     MemoryAccessNonPrivatePointerShift = 5,
+     MemoryAccessNonPrivatePointerKHRShift = 5,
++    MemoryAccessMagicPointerShift = 6,
++    MemoryAccessMagicPointerINTELShift = 6,
+     MemoryAccessAliasScopeINTELMaskShift = 16,
+     MemoryAccessNoAliasINTELMaskShift = 17,
+     MemoryAccessMax = 0x7fffffff,
+@@ -942,6 +944,8 @@ enum MemoryAccessMask {
+     MemoryAccessMakePointerVisibleKHRMask = 0x00000010,
+     MemoryAccessNonPrivatePointerMask = 0x00000020,
+     MemoryAccessNonPrivatePointerKHRMask = 0x00000020,
++    MemoryAccessMagicPointerMask = 0x00000040,
++    MemoryAccessMagicPointerINTELMask = 0x00000040,
+     MemoryAccessAliasScopeINTELMaskMask = 0x00010000,
+     MemoryAccessNoAliasINTELMaskMask = 0x00020000,
+ };
+@@ -1265,6 +1269,7 @@ enum Capability {
+     CapabilityAtomicFloat16AddEXT = 6095,
+     CapabilityDebugInfoModuleINTEL = 6114,
+     CapabilityBFloat16ConversionINTEL = 6115,
++    CapabilityJointMatrixINTEL = 6118,
+     CapabilitySplitBarrierINTEL = 6141,
+     CapabilityArithmeticFenceEXT = 6144,
+     CapabilityFPGAClusterAttributesV2INTEL = 6150,
+@@ -1404,6 +1409,8 @@ enum CooperativeMatrixOperandsShift {
+     CooperativeMatrixOperandsMatrixCSignedComponentsKHRShift = 2,
+     CooperativeMatrixOperandsMatrixResultSignedComponentsKHRShift = 3,
+     CooperativeMatrixOperandsSaturatingAccumulationKHRShift = 4,
++    CooperativeMatrixOperandsMagicComponentsShift = 6,
++    CooperativeMatrixOperandsMagicComponentsINTELShift = 6,
+     CooperativeMatrixOperandsMax = 0x7fffffff,
+ };
+ 
+@@ -1414,6 +1421,8 @@ enum CooperativeMatrixOperandsMask {
+     CooperativeMatrixOperandsMatrixCSignedComponentsKHRMask = 0x00000004,
+     CooperativeMatrixOperandsMatrixResultSignedComponentsKHRMask = 0x00000008,
+     CooperativeMatrixOperandsSaturatingAccumulationKHRMask = 0x00000010,
++    CooperativeMatrixOperandsMagicComponentsMask = 0x00000040,
++    CooperativeMatrixOperandsMagicComponentsINTELMask = 0x00000040,
+ };
+ 
+ enum CooperativeMatrixLayout {
+@@ -2399,6 +2408,10 @@ enum Op {
+     OpCompositeConstructContinuedINTEL = 6096,
+     OpConvertFToBF16INTEL = 6116,
+     OpConvertBF16ToFINTEL = 6117,
++    OpTypeJointMatrixINTEL = 6119,
++    OpJointMatrixLoadINTEL = 6120,
++    OpJointMatrixStoreINTEL = 6121,
++    OpJointMatrixMadINTEL = 6122,
+     OpControlBarrierArriveINTEL = 6142,
+     OpControlBarrierWaitINTEL = 6143,
+     OpArithmeticFenceEXT = 6145,
+@@ -3232,6 +3245,10 @@ inline void HasResultAndType(Op opcode, bool *hasResult, bool *hasResultType) {
+     case OpCompositeConstructContinuedINTEL: *hasResult = true; *hasResultType = true; break;
+     case OpConvertFToBF16INTEL: *hasResult = true; *hasResultType = true; break;
+     case OpConvertBF16ToFINTEL: *hasResult = true; *hasResultType = true; break;
++    case OpTypeJointMatrixINTEL: *hasResult = true; *hasResultType = false; break;
++    case OpJointMatrixLoadINTEL: *hasResult = true; *hasResultType = true; break;
++    case OpJointMatrixStoreINTEL: *hasResult = false; *hasResultType = false; break;
++    case OpJointMatrixMadINTEL: *hasResult = true; *hasResultType = true; break;
+     case OpControlBarrierArriveINTEL: *hasResult = false; *hasResultType = false; break;
+     case OpControlBarrierWaitINTEL: *hasResult = false; *hasResultType = false; break;
+     case OpArithmeticFenceEXT: *hasResult = true; *hasResultType = true; break;
+@@ -4222,6 +4239,7 @@ inline const char* CapabilityToString(Capability value) {
+     case CapabilityAtomicFloat16AddEXT: return "AtomicFloat16AddEXT";
+     case CapabilityDebugInfoModuleINTEL: return "DebugInfoModuleINTEL";
+     case CapabilityBFloat16ConversionINTEL: return "BFloat16ConversionINTEL";
++    case CapabilityJointMatrixINTEL: return "JointMatrixINTEL";
+     case CapabilitySplitBarrierINTEL: return "SplitBarrierINTEL";
+     case CapabilityArithmeticFenceEXT: return "ArithmeticFenceEXT";
+     case CapabilityFPGAClusterAttributesV2INTEL: return "FPGAClusterAttributesV2INTEL";
+@@ -5225,6 +5243,10 @@ inline const char* OpToString(Op value) {
+     case OpCompositeConstructContinuedINTEL: return "OpCompositeConstructContinuedINTEL";
+     case OpConvertFToBF16INTEL: return "OpConvertFToBF16INTEL";
+     case OpConvertBF16ToFINTEL: return "OpConvertBF16ToFINTEL";
++    case OpTypeJointMatrixINTEL: return "OpTypeJointMatrixINTEL";
++    case OpJointMatrixLoadINTEL: return "OpJointMatrixLoadINTEL";
++    case OpJointMatrixStoreINTEL: return "OpJointMatrixStoreINTEL";
++    case OpJointMatrixMadINTEL: return "OpJointMatrixMadINTEL";
+     case OpControlBarrierArriveINTEL: return "OpControlBarrierArriveINTEL";
+     case OpControlBarrierWaitINTEL: return "OpControlBarrierWaitINTEL";
+     case OpArithmeticFenceEXT: return "OpArithmeticFenceEXT";
+diff --git a/include/spirv/unified1/spirv.hpp11 b/include/spirv/unified1/spirv.hpp11
+index 0a342aa..f98caf7 100644
+--- a/include/spirv/unified1/spirv.hpp11
++++ b/include/spirv/unified1/spirv.hpp11
+@@ -926,6 +926,8 @@ enum class MemoryAccessShift : unsigned {
+     MakePointerVisibleKHR = 4,
+     NonPrivatePointer = 5,
+     NonPrivatePointerKHR = 5,
++    MagicPointer = 6,
++    MagicPointerINTEL = 6,
+     AliasScopeINTELMask = 16,
+     NoAliasINTELMask = 17,
+     Max = 0x7fffffff,
+@@ -942,6 +944,8 @@ enum class MemoryAccessMask : unsigned {
+     MakePointerVisibleKHR = 0x00000010,
+     NonPrivatePointer = 0x00000020,
+     NonPrivatePointerKHR = 0x00000020,
++    MagicPointer = 0x00000040,
++    MagicPointerINTEL = 0x00000040,
+     AliasScopeINTELMask = 0x00010000,
+     NoAliasINTELMask = 0x00020000,
+ };
+@@ -1265,6 +1269,7 @@ enum class Capability : unsigned {
+     AtomicFloat16AddEXT = 6095,
+     DebugInfoModuleINTEL = 6114,
+     BFloat16ConversionINTEL = 6115,
++    JointMatrixINTEL = 6118,
+     SplitBarrierINTEL = 6141,
+     ArithmeticFenceEXT = 6144,
+     FPGAClusterAttributesV2INTEL = 6150,
+@@ -1404,6 +1409,8 @@ enum class CooperativeMatrixOperandsShift : unsigned {
+     MatrixCSignedComponentsKHR = 2,
+     MatrixResultSignedComponentsKHR = 3,
+     SaturatingAccumulationKHR = 4,
++    MagicComponents = 6,
++    MagicComponentsINTEL = 6,
+     Max = 0x7fffffff,
+ };
+ 
+@@ -1414,6 +1421,8 @@ enum class CooperativeMatrixOperandsMask : unsigned {
+     MatrixCSignedComponentsKHR = 0x00000004,
+     MatrixResultSignedComponentsKHR = 0x00000008,
+     SaturatingAccumulationKHR = 0x00000010,
++    MagicComponents = 0x00000040,
++    MagicComponentsINTEL = 0x00000040,
+ };
+ 
+ enum class CooperativeMatrixLayout : unsigned {
+@@ -2399,6 +2408,10 @@ enum class Op : unsigned {
+     OpCompositeConstructContinuedINTEL = 6096,
+     OpConvertFToBF16INTEL = 6116,
+     OpConvertBF16ToFINTEL = 6117,
++    OpTypeJointMatrixINTEL = 6119,
++    OpJointMatrixLoadINTEL = 6120,
++    OpJointMatrixStoreINTEL = 6121,
++    OpJointMatrixMadINTEL = 6122,
+     OpControlBarrierArriveINTEL = 6142,
+     OpControlBarrierWaitINTEL = 6143,
+     OpArithmeticFenceEXT = 6145,
+@@ -3232,6 +3245,10 @@ inline void HasResultAndType(Op opcode, bool *hasResult, bool *hasResultType) {
+     case Op::OpCompositeConstructContinuedINTEL: *hasResult = true; *hasResultType = true; break;
+     case Op::OpConvertFToBF16INTEL: *hasResult = true; *hasResultType = true; break;
+     case Op::OpConvertBF16ToFINTEL: *hasResult = true; *hasResultType = true; break;
++    case Op::OpTypeJointMatrixINTEL: *hasResult = true; *hasResultType = false; break;
++    case Op::OpJointMatrixLoadINTEL: *hasResult = true; *hasResultType = true; break;
++    case Op::OpJointMatrixStoreINTEL: *hasResult = false; *hasResultType = false; break;
++    case Op::OpJointMatrixMadINTEL: *hasResult = true; *hasResultType = true; break;
+     case Op::OpControlBarrierArriveINTEL: *hasResult = false; *hasResultType = false; break;
+     case Op::OpControlBarrierWaitINTEL: *hasResult = false; *hasResultType = false; break;
+     case Op::OpArithmeticFenceEXT: *hasResult = true; *hasResultType = true; break;
+@@ -4222,6 +4239,7 @@ inline const char* CapabilityToString(Capability value) {
+     case Capability::AtomicFloat16AddEXT: return "AtomicFloat16AddEXT";
+     case Capability::DebugInfoModuleINTEL: return "DebugInfoModuleINTEL";
+     case Capability::BFloat16ConversionINTEL: return "BFloat16ConversionINTEL";
++    case Capability::JointMatrixINTEL: return "JointMatrixINTEL";
+     case Capability::SplitBarrierINTEL: return "SplitBarrierINTEL";
+     case Capability::ArithmeticFenceEXT: return "ArithmeticFenceEXT";
+     case Capability::FPGAClusterAttributesV2INTEL: return "FPGAClusterAttributesV2INTEL";
+@@ -5225,6 +5243,10 @@ inline const char* OpToString(Op value) {
+     case Op::OpCompositeConstructContinuedINTEL: return "OpCompositeConstructContinuedINTEL";
+     case Op::OpConvertFToBF16INTEL: return "OpConvertFToBF16INTEL";
+     case Op::OpConvertBF16ToFINTEL: return "OpConvertBF16ToFINTEL";
++    case Op::OpTypeJointMatrixINTEL: return "OpTypeJointMatrixINTEL";
++    case Op::OpJointMatrixLoadINTEL: return "OpJointMatrixLoadINTEL";
++    case Op::OpJointMatrixStoreINTEL: return "OpJointMatrixStoreINTEL";
++    case Op::OpJointMatrixMadINTEL: return "OpJointMatrixMadINTEL";
+     case Op::OpControlBarrierArriveINTEL: return "OpControlBarrierArriveINTEL";
+     case Op::OpControlBarrierWaitINTEL: return "OpControlBarrierWaitINTEL";
+     case Op::OpArithmeticFenceEXT: return "OpArithmeticFenceEXT";
+diff --git a/include/spirv/unified1/spirv.json b/include/spirv/unified1/spirv.json
+index 4d53a16..07c777c 100644
+--- a/include/spirv/unified1/spirv.json
++++ b/include/spirv/unified1/spirv.json
+@@ -907,6 +907,8 @@
+                     "MakePointerVisibleKHR": 4,
+                     "NonPrivatePointer": 5,
+                     "NonPrivatePointerKHR": 5,
++                    "MagicPointer": 6,
++                    "MagicPointerINTEL": 6,
+                     "AliasScopeINTELMask": 16,
+                     "NoAliasINTELMask": 17
+                 }
+@@ -1241,6 +1243,7 @@
+                     "AtomicFloat16AddEXT": 6095,
+                     "DebugInfoModuleINTEL": 6114,
+                     "BFloat16ConversionINTEL": 6115,
++                    "JointMatrixINTEL": 6118,
+                     "SplitBarrierINTEL": 6141,
+                     "ArithmeticFenceEXT": 6144,
+                     "FPGAClusterAttributesV2INTEL": 6150,
+@@ -1388,7 +1391,9 @@
+                     "MatrixBSignedComponentsKHR": 1,
+                     "MatrixCSignedComponentsKHR": 2,
+                     "MatrixResultSignedComponentsKHR": 3,
+-                    "SaturatingAccumulationKHR": 4
++                    "SaturatingAccumulationKHR": 4,
++                    "MagicComponents": 6,
++                    "MagicComponentsINTEL": 6
+                 }
+             },
+             {
+@@ -2380,6 +2385,10 @@
+                     "OpCompositeConstructContinuedINTEL": 6096,
+                     "OpConvertFToBF16INTEL": 6116,
+                     "OpConvertBF16ToFINTEL": 6117,
++                    "OpTypeJointMatrixINTEL": 6119,
++                    "OpJointMatrixLoadINTEL": 6120,
++                    "OpJointMatrixStoreINTEL": 6121,
++                    "OpJointMatrixMadINTEL": 6122,
+                     "OpControlBarrierArriveINTEL": 6142,
+                     "OpControlBarrierWaitINTEL": 6143,
+                     "OpArithmeticFenceEXT": 6145,
+diff --git a/include/spirv/unified1/spirv.lua b/include/spirv/unified1/spirv.lua
+index fc5acc2..70eb2f1 100644
+--- a/include/spirv/unified1/spirv.lua
++++ b/include/spirv/unified1/spirv.lua
+@@ -917,6 +917,8 @@ spv = {
+         MakePointerVisibleKHR = 4,
+         NonPrivatePointer = 5,
+         NonPrivatePointerKHR = 5,
++        MagicPointer = 6,
++        MagicPointerINTEL = 6,
+         AliasScopeINTELMask = 16,
+         NoAliasINTELMask = 17,
+         Max = 0x7fffffff,
+@@ -933,6 +935,8 @@ spv = {
+         MakePointerVisibleKHR = 0x00000010,
+         NonPrivatePointer = 0x00000020,
+         NonPrivatePointerKHR = 0x00000020,
++        MagicPointer = 0x00000040,
++        MagicPointerINTEL = 0x00000040,
+         AliasScopeINTELMask = 0x00010000,
+         NoAliasINTELMask = 0x00020000,
+     },
+@@ -1256,6 +1260,7 @@ spv = {
+         AtomicFloat16AddEXT = 6095,
+         DebugInfoModuleINTEL = 6114,
+         BFloat16ConversionINTEL = 6115,
++        JointMatrixINTEL = 6118,
+         SplitBarrierINTEL = 6141,
+         ArithmeticFenceEXT = 6144,
+         FPGAClusterAttributesV2INTEL = 6150,
+@@ -1395,6 +1400,8 @@ spv = {
+         MatrixCSignedComponentsKHR = 2,
+         MatrixResultSignedComponentsKHR = 3,
+         SaturatingAccumulationKHR = 4,
++        MagicComponents = 6,
++        MagicComponentsINTEL = 6,
+         Max = 0x7fffffff,
+     },
+ 
+@@ -1405,6 +1412,8 @@ spv = {
+         MatrixCSignedComponentsKHR = 0x00000004,
+         MatrixResultSignedComponentsKHR = 0x00000008,
+         SaturatingAccumulationKHR = 0x00000010,
++        MagicComponents = 0x00000040,
++        MagicComponentsINTEL = 0x00000040,
+     },
+ 
+     CooperativeMatrixLayout = {
+@@ -2390,6 +2399,10 @@ spv = {
+         OpCompositeConstructContinuedINTEL = 6096,
+         OpConvertFToBF16INTEL = 6116,
+         OpConvertBF16ToFINTEL = 6117,
++        OpTypeJointMatrixINTEL = 6119,
++        OpJointMatrixLoadINTEL = 6120,
++        OpJointMatrixStoreINTEL = 6121,
++        OpJointMatrixMadINTEL = 6122,
+         OpControlBarrierArriveINTEL = 6142,
+         OpControlBarrierWaitINTEL = 6143,
+         OpArithmeticFenceEXT = 6145,
+diff --git a/include/spirv/unified1/spirv.py b/include/spirv/unified1/spirv.py
+index 4b9c7a9..780884b 100644
+--- a/include/spirv/unified1/spirv.py
++++ b/include/spirv/unified1/spirv.py
+@@ -893,6 +893,8 @@ spv = {
+         'MakePointerVisibleKHR' : 4,
+         'NonPrivatePointer' : 5,
+         'NonPrivatePointerKHR' : 5,
++        'MagicPointer' : 6,
++        'MagicPointerINTEL' : 6,
+         'AliasScopeINTELMask' : 16,
+         'NoAliasINTELMask' : 17,
+     },
+@@ -908,6 +910,8 @@ spv = {
+         'MakePointerVisibleKHR' : 0x00000010,
+         'NonPrivatePointer' : 0x00000020,
+         'NonPrivatePointerKHR' : 0x00000020,
++        'MagicPointer' : 0x00000040,
++        'MagicPointerINTEL' : 0x00000040,
+         'AliasScopeINTELMask' : 0x00010000,
+         'NoAliasINTELMask' : 0x00020000,
+     },
+@@ -1227,6 +1231,7 @@ spv = {
+         'AtomicFloat16AddEXT' : 6095,
+         'DebugInfoModuleINTEL' : 6114,
+         'BFloat16ConversionINTEL' : 6115,
++        'JointMatrixINTEL' : 6118,
+         'SplitBarrierINTEL' : 6141,
+         'ArithmeticFenceEXT' : 6144,
+         'FPGAClusterAttributesV2INTEL' : 6150,
+@@ -1355,6 +1360,8 @@ spv = {
+         'MatrixCSignedComponentsKHR' : 2,
+         'MatrixResultSignedComponentsKHR' : 3,
+         'SaturatingAccumulationKHR' : 4,
++        'MagicComponents' : 6,
++        'MagicComponentsINTEL' : 6,
+     },
+ 
+     'CooperativeMatrixOperandsMask' : {
+@@ -1364,6 +1371,8 @@ spv = {
+         'MatrixCSignedComponentsKHR' : 0x00000004,
+         'MatrixResultSignedComponentsKHR' : 0x00000008,
+         'SaturatingAccumulationKHR' : 0x00000010,
++        'MagicComponents' : 0x00000040,
++        'MagicComponentsINTEL' : 0x00000040,
+     },
+ 
+     'CooperativeMatrixLayout' : {
+@@ -2333,6 +2342,10 @@ spv = {
+         'OpCompositeConstructContinuedINTEL' : 6096,
+         'OpConvertFToBF16INTEL' : 6116,
+         'OpConvertBF16ToFINTEL' : 6117,
++        'OpTypeJointMatrixINTEL' : 6119,
++        'OpJointMatrixLoadINTEL' : 6120,
++        'OpJointMatrixStoreINTEL' : 6121,
++        'OpJointMatrixMadINTEL' : 6122,
+         'OpControlBarrierArriveINTEL' : 6142,
+         'OpControlBarrierWaitINTEL' : 6143,
+         'OpArithmeticFenceEXT' : 6145,
+diff --git a/include/spirv/unified1/spv.d b/include/spirv/unified1/spv.d
+index abfdc94..764d96e 100644
+--- a/include/spirv/unified1/spv.d
++++ b/include/spirv/unified1/spv.d
+@@ -955,6 +955,8 @@ enum MemoryAccessShift : uint
+     MakePointerVisibleKHR = 4,
+     NonPrivatePointer = 5,
+     NonPrivatePointerKHR = 5,
++    MagicPointer = 6,
++    MagicPointerINTEL = 6,
+     AliasScopeINTELMask = 16,
+     NoAliasINTELMask = 17,
+     Max = 0x7fffffff,
+@@ -972,6 +974,8 @@ enum MemoryAccessMask : uint
+     MakePointerVisibleKHR = 0x00000010,
+     NonPrivatePointer = 0x00000020,
+     NonPrivatePointerKHR = 0x00000020,
++    MagicPointer = 0x00000040,
++    MagicPointerINTEL = 0x00000040,
+     AliasScopeINTELMask = 0x00010000,
+     NoAliasINTELMask = 0x00020000,
+ }
+@@ -1301,6 +1305,7 @@ enum Capability : uint
+     AtomicFloat16AddEXT = 6095,
+     DebugInfoModuleINTEL = 6114,
+     BFloat16ConversionINTEL = 6115,
++    JointMatrixINTEL = 6118,
+     SplitBarrierINTEL = 6141,
+     ArithmeticFenceEXT = 6144,
+     FPGAClusterAttributesV2INTEL = 6150,
+@@ -1453,6 +1458,8 @@ enum CooperativeMatrixOperandsShift : uint
+     MatrixCSignedComponentsKHR = 2,
+     MatrixResultSignedComponentsKHR = 3,
+     SaturatingAccumulationKHR = 4,
++    MagicComponents = 6,
++    MagicComponentsINTEL = 6,
+     Max = 0x7fffffff,
+ }
+ 
+@@ -1464,6 +1471,8 @@ enum CooperativeMatrixOperandsMask : uint
+     MatrixCSignedComponentsKHR = 0x00000004,
+     MatrixResultSignedComponentsKHR = 0x00000008,
+     SaturatingAccumulationKHR = 0x00000010,
++    MagicComponents = 0x00000040,
++    MagicComponentsINTEL = 0x00000040,
+ }
+ 
+ enum CooperativeMatrixLayout : uint
+@@ -2471,6 +2480,10 @@ enum Op : uint
+     OpCompositeConstructContinuedINTEL = 6096,
+     OpConvertFToBF16INTEL = 6116,
+     OpConvertBF16ToFINTEL = 6117,
++    OpTypeJointMatrixINTEL = 6119,
++    OpJointMatrixLoadINTEL = 6120,
++    OpJointMatrixStoreINTEL = 6121,
++    OpJointMatrixMadINTEL = 6122,
+     OpControlBarrierArriveINTEL = 6142,
+     OpControlBarrierWaitINTEL = 6143,
+     OpArithmeticFenceEXT = 6145,

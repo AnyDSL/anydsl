@@ -22,7 +22,7 @@
 : ${LLVM_GIT:=false}
 : ${LLVM_GITHUB_ORG:=llvm}
 : ${LLVM_GIT_BRANCH:=release/20.x}
-: ${LLVM_SRC_VERSION:=20.1.5}
+: ${LLVM_SRC_VERSION:=20.1.8}
 
 # set this to false if you don't want to build LLVM with RV support
 : ${RV:=true}

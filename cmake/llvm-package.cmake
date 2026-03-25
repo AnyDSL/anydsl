@@ -35,7 +35,6 @@ if(AnyDSL_PKG_LLVM_AUTOBUILD AND NOT CMAKE_DISABLE_FIND_PACKAGE_LLVM)
     set(LLVM_TARGETS_TO_BUILD "AArch64;AMDGPU;ARM;NVPTX;X86" CACHE STRING "limit targets of LLVM")
     set(LLVM_ENABLE_PROJECTS "clang;lld" CACHE STRING "enable projects of LLVM")
     set(LLVM_INCLUDE_TESTS OFF)
-    set(LLVM_ENABLE_RTTI ON)
 
     message(STATUS "Make LLVM available ...")
     FetchContent_GetProperties(LLVM)
